@@ -148,8 +148,8 @@ function Invoke-RepoValidation {
 
     $gitignorePath = Join-Path $resolvedRoot '.gitignore'
     Test-RequiredText -Issues $issues -Path $gitignorePath -Code 'GITIGNORE_CONTENT' -RequiredPatterns @(
-        '(?m)^/dist/$',
-        '(?m)^/\.work/$'
+        '(?m)^/dist/\r?$',
+        '(?m)^/\.work/\r?$'
     )
 
     $changelogPath = Join-Path $resolvedRoot 'CHANGELOG.md'
