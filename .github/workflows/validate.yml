@@ -1,0 +1,25 @@
+name: Validate and build skills
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prove validator catches invalid fixtures
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\validator\test_validate.ps1
+
+      - name: Validate repository
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate.ps1
+
+      - name: Build and inspect packages
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1

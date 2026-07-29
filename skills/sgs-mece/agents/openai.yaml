@@ -1,0 +1,7 @@
+interface:
+  display_name: "sgs-mece｜电商运营问题结构化拆解顾问"
+  short_description: "把边界不清、跨多个模块的电商运营问题拆成可验证行动"
+  default_prompt: "Use $sgs-mece to structure this ambiguous ecommerce operations problem and identify the first evidence-backed action."
+
+policy:
+  allow_implicit_invocation: true
