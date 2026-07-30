@@ -13,6 +13,7 @@
 - 新增 `skills/README.md`，提供四个平级 Skill 的简明目录、分轨、精确路径与安装入口。
 - 新增 `docs/superpowers/README.md`，说明设计、计划与评测证据的用途，避免与运行时文件混淆。
 - README 中英文版突出稳定版本、CI、Source Available 许可与正式下载入口；工作流明确展示可复现构建检查。
+- GitHub Actions 升级到 Node.js 24 运行时对应的 `actions/checkout@v6` 与 `actions/setup-python@v6`，清除旧 Node.js 20 Action 警告。
 - 扩展 Windows、macOS 与 Python 本地残留忽略规则；四个 Skill 的业务能力、许可边界和 `sg-aibp` 规划状态均未改变。
 
 ## v3.0.0 — 2026-07-30

@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Prove validator catches invalid fixtures
         shell: powershell
@@ -21,7 +21,7 @@ jobs:
         run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate.ps1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
