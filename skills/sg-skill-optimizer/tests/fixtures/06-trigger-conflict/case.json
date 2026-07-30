@@ -1,0 +1,9 @@
+{
+  "id": "real-trigger-overlap",
+  "target": "skills/primary",
+  "skillsRoot": "skills",
+  "expected": {
+    "blocked": false,
+    "crossSkillStatus": "WARN"
+  }
+}

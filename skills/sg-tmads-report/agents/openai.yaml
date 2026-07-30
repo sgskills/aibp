@@ -1,0 +1,4 @@
+interface:
+  display_name: "天猫推广诊断"
+  short_description: "先审表再追问，诊断天猫推广报表、投产、盈亏与计划机会"
+  default_prompt: "Use $sg-tmads-report to audit this Tmall advertising report before diagnosing it."

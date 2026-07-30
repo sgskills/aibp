@@ -1,67 +1,87 @@
-# ecommerce-skills
+# AIBP
 
 简体中文 | [English](README.en.md)
 
-面向电商经营与商业决策的两个 AI Skill。
+**AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
+
+当前是仅供本地验收的候选版本 `3.0.0-rc.1`，没有发布、Tag 或 Release。`sg-aibp` 总路由仍在规划中，本轮没有创建安装入口或调用链接。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
-## Skills
+## 三条逻辑分轨
 
-| Skill | 作用 | 显式调用 |
+分轨只用于理解、README、合同和路由标签。所有 Skill 始终平铺在 `skills/<slug>`，不会建立 `skills/core`、`skills/commerce` 或 `skills/tooling` 分类目录。
+
+| 分轨 | 面向谁 | 典型场景 | 得到什么 |
+| --- | --- | --- | --- |
+| `core` | 经营者与决策者 | 跨行业选择方向、配置资源、规划未来 12 个月 | 有证据的战略选择、条件性路径和停止条件 |
+| `commerce` | 电商经营与投放团队 | 拆清跨模块经营问题，或审计天猫推广报表 | 可验证的问题树、数据审计、诊断和行动优先级 |
+| `tooling` | Skill/Agent 作者与维护者 | 明确要诊断、测试、优化或打包 Skill/Agent | 证据化体检、待确认计划和真实回归结果 |
+
+普通广告、商品、内容或经营“优化”不属于 `tooling`；只有目标本身是 Skill/Agent 时才使用 `sg-skill-optimizer`。
+
+## 按场景选择
+
+| 真实场景 | 推荐 Skill | 结果 |
 | --- | --- | --- |
-| `sg-mece` | 把边界不清、跨模块的电商运营问题，拆成可验证的结构与行动。 | `$sg-mece` |
-| `sg-ceo-vision` | 从经营资料中识别商业机会，按价值与证据排序，并形成 12 个月路径。 | `$sg-ceo-vision` |
+| “几个业务方向只能选一个，未来一年资源怎么配？” | `sg-ceo-vision` | CEO视角的方向选择、资源取舍与年度路径 |
+| “店铺流量、转化和库存都异常，但不知道先查哪里。” | `sg-mece` | 电商经营结构化拆解与第一优先级验证 |
+| “这份天猫推广 CSV 表头混乱，ROI 和盈亏能不能算？” | `sg-tmads-report` | 先审表、再诊断的可追溯报告 |
+| “这个 Skill 触发不稳，想先体检再改并跑回归。” | `sg-skill-optimizer` | 证据、确认计划、修改记录与回归状态 |
 
-`sg-ceo-vision` 默认独立运行；不会自动调用、推荐或依赖其他 Skill。只有用户明确提出时，才与其他 Skill 结合。
+## 能力矩阵
+
+| 中文名称 | slug | 分轨 | 一句话结果 | 本地精确路径 |
+| --- | --- | --- | --- | --- |
+| CEO视角 | `sg-ceo-vision` | `core` | 把商业资料转化为方向、资源与 12 个月路径 | `skills/sg-ceo-vision` |
+| 电商经营结构化拆解 | `sg-mece` | `commerce` | 把模糊跨模块问题拆成可验证原因与行动 | `skills/sg-mece` |
+| 天猫推广诊断 | `sg-tmads-report` | `commerce` | 把天猫推广报表转化为审计、诊断与优先级 | `skills/sg-tmads-report` |
+| SG Skill 优化器 | `sg-skill-optimizer` | `tooling` | 对既有 Skill 做证据驱动优化与回归验证 | `skills/sg-skill-optimizer` |
+
+未来仓库启用后，四个精确详情路径规划为：
+
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-ceo-vision`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-mece`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
+
+以上是目标路径，不表示远端仓库或页面已创建。本地 origin 仍保持原值，本轮不会改名、改 remote 或发布。
 
 ## 构建与安装
 
-在仓库根目录构建安装包：
+在仓库根目录构建：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 ```
 
-构建产物：
+候选产物：
 
-- `dist/sg-mece-2.0.0.zip`
-- `dist/sg-ceo-vision-2.0.0.zip`
-- `dist/ecommerce-skills-2.0.0.zip`
+- `dist/sg-ceo-vision-3.0.0-rc.1.zip`
+- `dist/sg-mece-3.0.0-rc.1.zip`
+- `dist/sg-tmads-report-3.0.0-rc.1.zip`
+- `dist/sg-skill-optimizer-3.0.0-rc.1.zip`
+- `dist/aibp-3.0.0-rc.1.zip`
+- `dist/SHA256SUMS.txt`
 
-本轮仅做本地构建，尚未创建 v2.0.0 Release；GitHub 中两个正式 Skill 的准确来源路径为：
-
-- [sg-mece](https://github.com/sgskills/ecommerce-skills/tree/main/skills/sg-mece)
-- [sg-ceo-vision](https://github.com/sgskills/ecommerce-skills/tree/main/skills/sg-ceo-vision)
-
-### Codex
-
-解压单个安装包，将其中的 Skill 文件夹放入 `~/.codex/skills/`（或你的已配置 Skills 目录），再用 `$sg-mece` 或 `$sg-ceo-vision` 显式调用。
-
-### WorkBuddy
-
-两个 Skill 都使用平台中立的 Agent Skills 结构，WorkBuddy 不需要专属字段。把同一个解压后的 Skill 文件夹安装到 WorkBuddy 已配置的 Skills 目录，并按 WorkBuddy 自己的 Skill 调用方式使用即可。
-
-这里仅完成了结构兼容；在宣称生产可用前，仍需在真实 WorkBuddy 环境完成实机验证。
-
-## 从 v1.x 迁移
-
-`sgs-mece` 已在 v2.0.0 迁移为 `sg-mece`。本次不保留旧名兼容壳：请同步更新本地文件夹名、显式调用和引用。已有 `v1.4.0` Git tag 保留，仍可作为旧名称版本的回退点。
+解压单包后，把其中的 `sg-*` 文件夹放入 Agent 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
 
 ## 仓库结构
 
 ```text
-ecommerce-skills/
+aibp/
 ├── skills/
+│   ├── sg-ceo-vision/
 │   ├── sg-mece/
-│   └── sg-ceo-vision/
+│   ├── sg-skill-optimizer/
+│   └── sg-tmads-report/
 ├── tests/
-│   ├── sg-mece/cases.json
-│   └── sg-ceo-vision/cases.json
 ├── tools/
 ├── LICENSE
 └── VERSION
 ```
+
+未来增加到 10–20 个 Skill 时也继续平铺，只更新分轨导航与能力矩阵。
 
 ## 验证
 
@@ -71,14 +91,20 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\validator\test_valid
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1
 ```
 
-评测样例位于 `tests/sg-mece/cases.json` 与 `tests/sg-ceo-vision/cases.json`。
+optimizer 保留 21 个 `unittest` 与 6 个可执行 Golden cases；tmads 的字段、隐私、scope 与原子写入回归位于 `tests/sg-tmads-report/`。
+
+## 迁移与回退
+
+- `v1.4.0` tag 与完整 Git 历史保留。
+- dirty v2.0 迁移状态的本地 checkpoint 为 `cfcad564de627172e23c0e2d26b7d4e80d620510`。
+- `sgs-mece` 自 v2.0 起迁移为 `sg-mece`，不提供旧名兼容壳。
+- 独立源 `E:\+Skills\sg-tmads-report` 与 `E:\+Skills\sg-skill-optimizer` 不会被本仓库修改或删除。
 
 ## 使用许可
 
-本仓库属于 Source Available，并非开源项目。许可范围内可用于自身电商经营并做内部修改；公开再分发、转售、白标、复刻到付费课程，或作为面向第三方的收费服务，均需书面授权。完整条款见 [LICENSE](./LICENSE)。
+本仓库属于 Source Available，并非严格意义上的开源项目。许可范围内可用于自身经营，以及组织内部的 Skill/Agent 建设、测试与维护；公开再分发、转售、白标、复刻到付费课程或作为面向第三方的收费服务仍需书面授权。完整条款见 [LICENSE](./LICENSE)，正式公开前仍需律师复核。
 
 ---
-
 作者： [诗光聊AI电商](微信公众号/视频号/抖音号) · [Github](https://github.com/sgskills) · [DOUYIN](https://v.douyin.com/O8hIsRzfjqQ/)
 
 Built by  [@xstevenzhang](https://x.com/xstevenzhang)

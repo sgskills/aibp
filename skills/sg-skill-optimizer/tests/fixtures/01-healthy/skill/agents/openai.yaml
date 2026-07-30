@@ -1,0 +1,4 @@
+interface:
+  display_name: "Healthy Reviewer"
+  short_description: "Review structured product notes"
+  default_prompt: "Review these notes"

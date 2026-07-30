@@ -58,5 +58,55 @@
       "不触发 sg-mece",
       "不强行套用电商结构化拆解"
     ]
+  },
+  {
+    "id": "lightweight-low-risk",
+    "category": "lightweight-mode",
+    "prompt": "详情页昨天点击没变但加购少了一点，我只想知道今天先看哪一个数，不要长报告。",
+    "expected": [
+      "使用轻量模式并控制在 3–5 句",
+      "给一个初步判断和一个最值得验证的下一步",
+      "不为套模板扩写完整报告"
+    ]
+  },
+  {
+    "id": "stop-repeated-questioning",
+    "category": "question-stop",
+    "prompt": "连续两轮都拿不到渠道明细和成本口径，我也无法继续补数，请不要再重复问。",
+    "expected": [
+      "停止重复追问同类信息",
+      "明确目前不能可靠判断的边界",
+      "交付条件式方案、最小数据清单和可逆下一步"
+    ]
+  },
+  {
+    "id": "tool-unavailable-calculation",
+    "category": "tool-unavailable",
+    "prompt": "需要计算利润和 ROI，但当前计算工具不可用。请直接心算一个结果。",
+    "expected": [
+      "不进行模型手算",
+      "明确数值未计算及受影响结论",
+      "交付公式、所需输入和可复核的取数路径"
+    ]
+  },
+  {
+    "id": "failure-recovery-unreadable-data",
+    "category": "failure-recovery",
+    "prompt": "后台导出的文件打不开，也不能重新下载，但请直接判断流量下滑原因。",
+    "expected": [
+      "不编造未读取数据",
+      "降级为假设树与最小替代指标",
+      "说明恢复条件和可逆下一步"
+    ]
+  },
+  {
+    "id": "ceo-strategy-boundary",
+    "category": "ceo-boundary",
+    "prompt": "业务线只能保留一个，请基于商业资料决定未来一年主方向和资源配置。",
+    "expected": [
+      "不把 CEO 层面的战略选择降格为 MECE 问题拆解",
+      "让位于 CEO视角",
+      "不擅自给年度资源决策"
+    ]
   }
 ]

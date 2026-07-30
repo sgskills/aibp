@@ -12,25 +12,21 @@ if (-not (Test-Path -LiteralPath $validatorPath -PathType Leaf)) {
 $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $validatorPath -RepoRoot $repoRoot -SelfTest 2>&1
 $exitCode = $LASTEXITCODE
 $output | ForEach-Object { Write-Output $_ }
-
 if ($exitCode -ne 0) {
     throw "Validator self-test failed with exit code $exitCode."
 }
 
-if (($output -join "`n") -notmatch 'SELF-TEST PASS') {
-    throw 'Validator self-test did not emit the required success marker.'
+$joined = $output -join "`n"
+foreach ($marker in @(
+    'FIFTH_SKILL_GREEN PASS',
+    'EXPECTED RED: missing SKILL.md',
+    'EXPECTED RED: nested Skill directory',
+    'EXPECTED RED: bad frontmatter',
+    'SELF-TEST PASS'
+)) {
+    if ($joined -notmatch [regex]::Escape($marker)) {
+        throw "Validator self-test did not emit marker: $marker"
+    }
 }
 
-if (($output -join "`n") -notmatch 'LEGACY_PREFIX_RED_GREEN PASS') {
-    throw 'Validator self-test did not prove legacy-prefix red-to-green handling.'
-}
-
-if (($output -join "`n") -notmatch 'CEO_VISION_CONTRACT_RED_GREEN PASS') {
-    throw 'Validator self-test did not prove CEO Vision control-plane red-to-green handling.'
-}
-
-if (($output -join "`n") -notmatch 'CEO_VISION_IP_RED_GREEN PASS') {
-    throw 'Validator self-test did not prove CEO Vision intellectual-property control red-to-green handling.'
-}
-
-Write-Output 'PASS: validator self-test detects an intentionally invalid fixture.'
+Write-Output 'PASS: validator proved dynamic fifth-Skill expansion and all required red fixtures.'

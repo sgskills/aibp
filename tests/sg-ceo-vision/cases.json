@@ -118,5 +118,45 @@
       "继续按商业价值、证据、可控性和可逆性进行资源取舍",
       "只有后续出现相关信号时才启动知识产权与品牌资产检查点"
     ]
+  },
+  {
+    "id": "saas-resource-allocation",
+    "category": "non-ecommerce-strategy",
+    "prompt": "我们是一家企业 SaaS 公司，研发只能在新行业版本、老客户续费和海外试点中选两项。请结合现有经营资料确定未来 12 个月主线。",
+    "expected": [
+      "触发 CEO视角，而不是因非电商场景拒绝",
+      "比较方向与资源取舍并形成条件性年度路径",
+      "标记事实、推断、待验证项和停止条件"
+    ]
+  },
+  {
+    "id": "offline-manufacturer-strategy",
+    "category": "non-ecommerce-strategy",
+    "prompt": "一家线下工业零部件制造商要在扩产、经销商网络和售后服务产品化之间选方向，请做年度战略审查。",
+    "expected": [
+      "触发 CEO视角并保持跨行业商业判断",
+      "围绕方向、资源和年度路径交付，不强行套用电商指标",
+      "先确认不可逆投入的损失与退出边界"
+    ]
+  },
+  {
+    "id": "mece-decomposition-boundary",
+    "category": "adjacent-skill-boundary",
+    "prompt": "店铺最近流量、转化、客服和库存同时出问题，我不知道问题边界，也还没到年度方向选择，请先帮我拆清原因。",
+    "expected": [
+      "不把跨模块问题定义误判为 CEO 年度战略",
+      "让位于电商经营结构化拆解",
+      "不强行输出资源配置或 12 个月路线图"
+    ]
+  },
+  {
+    "id": "single-specialist-diagnosis-boundary",
+    "category": "adjacent-skill-boundary",
+    "prompt": "只审计这份天猫推广 CSV 的重复表头和 ROI 口径，不需要方向或资源选择。",
+    "expected": [
+      "不触发 CEO视角",
+      "让位于明确的推广报表专业诊断",
+      "不强行生成战略报告"
+    ]
   }
 ]

@@ -17,88 +17,143 @@ if ($exitCode -ne 0) {
 }
 
 $version = ([System.IO.File]::ReadAllText((Join-Path $repoRoot 'VERSION'), [System.Text.Encoding]::UTF8)).Trim()
-$expectedVersion = '2.0.0'
-if ($version -ne $expectedVersion) {
-    throw "VERSION must be $expectedVersion for the dual-skill release; found $version."
+if ($version -ne '3.0.0-rc.1') {
+    throw "Unexpected candidate version: $version"
 }
 
-$meceZip = Join-Path $repoRoot "dist\sg-mece-$version.zip"
-$ceoVisionZip = Join-Path $repoRoot "dist\sg-ceo-vision-$version.zip"
-$bundleZip = Join-Path $repoRoot "dist\ecommerce-skills-$version.zip"
-$checksumPath = Join-Path $repoRoot 'dist\SHA256SUMS.txt'
+$skillDirs = @(
+    Get-ChildItem -LiteralPath (Join-Path $repoRoot 'skills') -Directory |
+        Where-Object {
+            Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf
+        } |
+        Sort-Object Name
+)
+if ($skillDirs.Count -eq 0) {
+    throw 'No skills/*/SKILL.md entries were discovered.'
+}
 
-foreach ($requiredPath in @($meceZip, $ceoVisionZip, $bundleZip, $checksumPath)) {
+function Get-ZipFileEntries {
+    param([string]$ZipPath)
+
+    $entries = @(& tar.exe -tf $ZipPath)
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to list package contents: $ZipPath"
+    }
+    return @(
+        $entries |
+            ForEach-Object { $_.Replace('\', '/') } |
+            Where-Object { $_ -and -not $_.EndsWith('/') }
+    )
+}
+
+function Get-ExpectedSkillEntries {
+    param([System.IO.DirectoryInfo]$SkillDir)
+
+    $entries = New-Object 'System.Collections.Generic.List[string]'
+    [void]$entries.Add("$($SkillDir.Name)/SKILL.md")
+    foreach ($directoryName in @('agents', 'references', 'scripts', 'assets')) {
+        $sourceDirectory = Join-Path $SkillDir.FullName $directoryName
+        if (Test-Path -LiteralPath $sourceDirectory -PathType Container) {
+            foreach ($file in Get-ChildItem -LiteralPath $sourceDirectory -Recurse -File) {
+                $relative = $file.FullName.Substring($SkillDir.FullName.Length + 1).Replace('\', '/')
+                [void]$entries.Add("$($SkillDir.Name)/$relative")
+            }
+        }
+    }
+
+    $runnerPath = Join-Path $SkillDir.FullName 'scripts\run_eval.py'
+    if (Test-Path -LiteralPath $runnerPath -PathType Leaf) {
+        $fixtureRoot = Join-Path $SkillDir.FullName 'tests\fixtures'
+        foreach ($file in Get-ChildItem -LiteralPath $fixtureRoot -Recurse -File) {
+            $relative = $file.FullName.Substring($SkillDir.FullName.Length + 1).Replace('\', '/')
+            [void]$entries.Add("$($SkillDir.Name)/$relative")
+        }
+    }
+    return @($entries | Sort-Object -Unique)
+}
+
+$distPath = Join-Path $repoRoot 'dist'
+$bundlePath = Join-Path $distPath "aibp-$version.zip"
+$checksumPath = Join-Path $distPath 'SHA256SUMS.txt'
+foreach ($requiredPath in @($bundlePath, $checksumPath)) {
     if (-not (Test-Path -LiteralPath $requiredPath -PathType Leaf)) {
         throw "Missing build artifact: $requiredPath"
     }
 }
 
-$meceEntries = @(& tar.exe -tf $meceZip)
-$ceoVisionEntries = @(& tar.exe -tf $ceoVisionZip)
-$bundleEntries = @(& tar.exe -tf $bundleZip)
-if ($LASTEXITCODE -ne 0) {
-    throw 'Unable to list package contents with tar.exe.'
-}
+$allEntries = New-Object 'System.Collections.Generic.List[string]'
+$expectedBundleEntries = New-Object 'System.Collections.Generic.List[string]'
+[void]$expectedBundleEntries.Add('LICENSE.txt')
+foreach ($skillDir in $skillDirs) {
+    $singleZip = Join-Path $distPath "$($skillDir.Name)-$version.zip"
+    if (-not (Test-Path -LiteralPath $singleZip -PathType Leaf)) {
+        throw "Missing single-Skill package: $singleZip"
+    }
 
-$requiredMeceEntries = @(
-    'sg-mece/SKILL.md',
-    'sg-mece/agents/openai.yaml',
-    'sg-mece/references/frameworks.md',
-    'sg-mece/references/mece-principles.md',
-    'sg-mece/references/questions.md',
-    'sg-mece/LICENSE.txt'
-)
-foreach ($entry in $requiredMeceEntries) {
-    if ($meceEntries -notcontains $entry) {
-        throw "sg-mece package is missing: $entry"
+    $expectedRuntimeEntries = @(Get-ExpectedSkillEntries -SkillDir $skillDir)
+    $expectedSingleEntries = @($expectedRuntimeEntries + "$($skillDir.Name)/LICENSE.txt" | Sort-Object -Unique)
+    $singleEntries = @(Get-ZipFileEntries -ZipPath $singleZip | Sort-Object -Unique)
+    if (($singleEntries -join "`n") -ne ($expectedSingleEntries -join "`n")) {
+        $missing = @($expectedSingleEntries | Where-Object { $singleEntries -notcontains $_ })
+        $extra = @($singleEntries | Where-Object { $expectedSingleEntries -notcontains $_ })
+        throw "Package content mismatch for $($skillDir.Name). Missing: $($missing -join ', '); Extra: $($extra -join ', ')"
+    }
+    foreach ($entry in $singleEntries) {
+        [void]$allEntries.Add($entry)
+    }
+    foreach ($entry in $expectedRuntimeEntries) {
+        [void]$expectedBundleEntries.Add($entry)
+    }
+
+    $runnerPath = Join-Path $skillDir.FullName 'scripts\run_eval.py'
+    if (Test-Path -LiteralPath $runnerPath -PathType Leaf) {
+        $fixtureEntries = @($singleEntries | Where-Object { $_ -match '/tests/fixtures/.+/case\.json$' })
+        if ($fixtureEntries.Count -eq 0) {
+            throw "Eval runner package lacks Golden fixtures: $($skillDir.Name)"
+        }
     }
 }
 
-$requiredCeoVisionEntries = @(
-    'sg-ceo-vision/SKILL.md',
-    'sg-ceo-vision/agents/openai.yaml',
-    'sg-ceo-vision/references/evidence-and-opportunity-rubric.md',
-    'sg-ceo-vision/references/report-content-schema.md',
-    'sg-ceo-vision/assets/ceo-vision-report-template.html',
-    'sg-ceo-vision/LICENSE.txt'
-)
-foreach ($entry in $requiredCeoVisionEntries) {
-    if ($ceoVisionEntries -notcontains $entry) {
-        throw "sg-ceo-vision package is missing: $entry"
-    }
+$bundleEntries = @(Get-ZipFileEntries -ZipPath $bundlePath | Sort-Object -Unique)
+$expectedBundle = @($expectedBundleEntries | Sort-Object -Unique)
+if (($bundleEntries -join "`n") -ne ($expectedBundle -join "`n")) {
+    $missing = @($expectedBundle | Where-Object { $bundleEntries -notcontains $_ })
+    $extra = @($bundleEntries | Where-Object { $expectedBundle -notcontains $_ })
+    throw "AIBP package content mismatch. Missing: $($missing -join ', '); Extra: $($extra -join ', ')"
+}
+foreach ($entry in $bundleEntries) {
+    [void]$allEntries.Add($entry)
 }
 
-$requiredBundleEntries = @(
-    'LICENSE.txt',
-    'sg-mece/SKILL.md',
-    'sg-mece/agents/openai.yaml',
-    'sg-ceo-vision/SKILL.md',
-    'sg-ceo-vision/agents/openai.yaml'
+$forbidden = @(
+    $allEntries |
+        Where-Object {
+            $_ -match '(^|/)(README|QUICKREF|CHANGELOG|SKILL\.patch)\.md$' -or
+            $_ -match '(^|/)(tools|\.github|\.work|\.git)/' -or
+            $_ -match '/tests/test_.*\.py$' -or
+            $_ -match '/(agents|assets|references|scripts|tests)/\1/'
+        }
 )
-foreach ($entry in $requiredBundleEntries) {
-    if ($bundleEntries -notcontains $entry) {
-        throw "Bundle package is missing: $entry"
-    }
-}
-
-$allEntries = @($meceEntries + $ceoVisionEntries + $bundleEntries)
-$forbidden = @($allEntries | Where-Object {
-    $_ -match '(^|/)(README|QUICKREF|CHANGELOG)\.md$' -or
-    $_ -match '(^|/)(tests|tools|\.github|\.work)/'
-})
 if ($forbidden.Count -gt 0) {
-    throw ('Development files leaked into packages: ' + ($forbidden -join ', '))
+    throw "Development residue or duplicate nesting leaked into packages: $($forbidden -join ', ')"
 }
 
-$legacyPrefix = 'sg' + 's-'
-$legacyEntries = @($allEntries | Where-Object { $_.Contains($legacyPrefix) })
-if ($legacyEntries.Count -gt 0) {
-    throw ('Legacy skill prefix leaked into packages: ' + ($legacyEntries -join ', '))
+$zipFiles = @(Get-ChildItem -LiteralPath $distPath -Filter '*.zip' -File | Sort-Object Name)
+if ($zipFiles.Count -ne ($skillDirs.Count + 1)) {
+    throw "Expected one package per Skill plus one AIBP package; found $($zipFiles.Count)."
+}
+$checksumLines = @(
+    [System.IO.File]::ReadAllLines($checksumPath, [System.Text.Encoding]::UTF8) |
+        Where-Object { $_.Trim() }
+)
+if ($checksumLines.Count -ne $zipFiles.Count) {
+    throw "SHA256SUMS count $($checksumLines.Count) does not match package count $($zipFiles.Count)."
+}
+foreach ($zipFile in $zipFiles) {
+    $expectedLine = '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 -LiteralPath $zipFile.FullName).Hash, $zipFile.Name
+    if ($checksumLines -notcontains $expectedLine) {
+        throw "Missing or incorrect SHA256 line for $($zipFile.Name)."
+    }
 }
 
-$checksumLines = @([System.IO.File]::ReadAllLines($checksumPath, [System.Text.Encoding]::UTF8) | Where-Object { $_.Trim() })
-if ($checksumLines.Count -ne 3) {
-    throw 'SHA256SUMS.txt must contain exactly three package hashes.'
-}
-
-Write-Output 'PASS: build produced clean single-skill and full-suite packages with checksums.'
+Write-Output "PASS: dynamically inspected $($skillDirs.Count) single packages, one AIBP package, and $($checksumLines.Count) SHA256 hashes."

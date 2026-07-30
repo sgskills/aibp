@@ -1,0 +1,11 @@
+interface:
+  display_name: "SG Skill 优化器"
+  short_description: "独立诊断、优化并回归验证 Agent Skill"
+  brand_color: "#10B981"
+  default_prompt: "使用 $sg-skill-optimizer 体检并优化这个 Skill："
+
+policy:
+  # 允许隐式触发：用户说“优化 Skill / Skill 不触发 / 给 Skill 体检”时自动命中。
+  allow_implicit_invocation: true
+
+# 完全独立运行，不依赖 Darwin、其他 Skill 或外部 MCP。

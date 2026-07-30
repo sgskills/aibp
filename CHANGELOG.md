@@ -1,5 +1,26 @@
 # 更新日志
 
+## v3.0.0-rc.1 — 2026-07-30
+
+### AIBP 本地候选迁移
+
+- 总品牌更新为 AIBP（AI Business Partner），采用 `core`、`commerce`、`tooling` 三条逻辑分轨；四个 Skill 仍平铺在 `skills/<slug>`。
+- 保留完整 Git 历史、`v1.4.0` tag 与旧 origin；本轮不改远端、不创建 tag、不发布 Release。
+- 复制导入 `sg-tmads-report` 与 `sg-skill-optimizer`，两个独立源目录保留；optimizer 仅迁入单层有效内容。
+
+### Skill 优化
+
+- `sg-ceo-vision` 统一中文名称为“CEO视角”，从电商限定扩展为跨行业商业方向、资源与年度路径判断，并新增非电商与相邻任务边界案例。
+- `sg-mece` 统一中文名称为“电商经营结构化拆解”，补齐 CEO/专业诊断边界、轻量模式、停止追问、失败恢复与工具不可用案例。
+- `sg-tmads-report` 增加字段级数值校验、原始字段允许名单、费率 `scope` 闸门、原子写入与可执行回归。
+- `sg-skill-optimizer` 统一内部版本为 `2.5.0`，明确普通业务优化不触发 tooling，并保证安装包中的 runner 同时携带 6 个 Golden fixtures。
+
+### 工程与构建
+
+- validator 与 build 改为动态枚举 `skills/*/SKILL.md`，支持 YAML block description，并检查“功能定义在前、触发信息在后”。
+- validator 自测增加第五个合规 Skill 绿测，以及缺 `SKILL.md`、嵌套目录和坏 frontmatter 红测。
+- 构建输出四个单包、`aibp-3.0.0-rc.1.zip` 与五条 SHA256。
+
 ## v2.0.0 — 2026-07-29
 
 ### 破坏性迁移
