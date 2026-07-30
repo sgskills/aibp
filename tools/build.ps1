@@ -10,6 +10,18 @@ if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
     $RepoRoot = Split-Path -Parent $PSScriptRoot
 }
 
+function Remove-PackageResidue {
+    param([string]$Root)
+
+    Get-ChildItem -LiteralPath $Root -Directory -Filter '__pycache__' -Recurse -Force |
+        Sort-Object FullName -Descending |
+        ForEach-Object { Remove-Item -LiteralPath $_.FullName -Recurse -Force }
+
+    Get-ChildItem -LiteralPath $Root -File -Recurse -Force |
+        Where-Object { $_.Extension -in @('.pyc', '.pyo', '.tmp', '.bak') } |
+        ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
+}
+
 function Copy-RuntimeSkill {
     param(
         [string]$SourceSkill,
@@ -44,6 +56,10 @@ function Copy-RuntimeSkill {
     if ($IncludeLicense) {
         Copy-Item -LiteralPath $LicensePath -Destination (Join-Path $destinationSkill 'LICENSE.txt')
     }
+
+    # Runtime imports may create caches in the source tree. Packages must remain
+    # reproducible and never inherit those machine-local development artifacts.
+    Remove-PackageResidue -Root $destinationSkill
 }
 
 $resolvedRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
