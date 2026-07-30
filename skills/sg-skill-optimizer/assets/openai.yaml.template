@@ -1,0 +1,25 @@
+# Codex Skill 元数据 / 触发开关模板
+# 复制到 <目标skill>/agents/openai.yaml 后按需填写。
+# 对应机制③：UI 元数据 + 触发策略 + 依赖声明。
+
+interface:
+  display_name: "{{用户可见名，如：客服工单分类}}"
+  short_description: "{{一句话用途}}"
+  # icon_small: "../assets/small-logo.svg"   # 可选
+  # icon_large: "../assets/large-logo.png"   # 可选
+  # brand_color: "#3B82F6"                   # 可选
+  # default_prompt: "{{可选：调用时的环绕提示}}"
+
+policy:
+  # true(默认)=Codex 可根据 description 自动触发
+  # false = 只能 $skillname 显式调用 → 用于根治"触发打架"，给次要 skill 设 false
+  allow_implicit_invocation: true
+
+# 仅当 skill 依赖外部 MCP/工具时填写，否则整段删除
+# dependencies:
+#   tools:
+#     - type: "mcp"
+#       value: "{{mcp名，如 sif-mcp / sellersprite}}"
+#       description: "{{依赖说明}}"
+#       transport: "streamable_http"
+#       url: "{{mcp endpoint}}"

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root{color-scheme:light;--ink:#172033;--muted:#667085;--line:#dfe3ea;--paper:#fff;--wash:#f4f6f9;--brand:#c2410c;--brand-soft:#fff4ed;--good:#166534;--warn:#9a3412}
+    *{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:14px/1.55 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    main{max-width:1440px;margin:auto;padding:28px}.hero,.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(23,32,51,.05)}
+    .hero{padding:28px;margin-bottom:16px;border-top:5px solid var(--brand)}h1{margin:0 0 6px;font-size:30px;letter-spacing:-.02em}h2{margin:0 0 14px;font-size:19px}h3{margin:24px 0 10px;font-size:15px}
+    .meta,.muted{color:var(--muted)}.eyebrow{display:block;margin-bottom:4px;color:var(--brand);font-size:11px;font-weight:700;letter-spacing:.12em}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.grid.compact{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}.panel{padding:20px;margin:16px 0}.panel.emphasis{border-left:5px solid var(--brand);background:linear-gradient(135deg,var(--paper),var(--brand-soft))}
+    .card{min-height:86px;padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff}.card.secondary{background:#fafbfc}.card b{display:block;margin-top:5px;font-size:20px}.warn{color:var(--warn)}.good{color:var(--good)}
+    ul,ol{padding-left:22px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.toolbar input{min-width:260px;max-width:100%;padding:8px 10px;border:1px solid #b8c0cc;border-radius:8px;background:#fff}
+    .table-wrap{overflow:auto;max-height:620px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;background:#fff;font-variant-numeric:tabular-nums}
+    th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;vertical-align:top}th{position:sticky;top:0;background:#eef1f5;cursor:pointer;z-index:1}tbody tr:nth-child(even){background:#fafbfc}
+    tr[hidden]{display:none}.raw{max-width:540px;white-space:normal;word-break:break-all;color:var(--muted)}code{background:#eef1f5;border-radius:4px;padding:2px 5px}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:#fff2e8;color:#9a3412;font-size:12px}.badge.neutral{background:#eef1f5;color:#475467}.empty{color:var(--muted);font-style:italic}
+    details.appendix{margin-top:24px;border-top:1px solid var(--line);padding-top:14px}details.appendix summary{cursor:pointer;font-weight:700;color:var(--ink)}
+    footer{padding:16px 4px;color:var(--muted);font-size:12px}@media(max-width:680px){main{padding:12px}.hero,.panel{border-radius:10px}.section-head{display:block}h1{font-size:23px}.toolbar input{min-width:100%}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <h1>{{TITLE}}</h1>
+    <div class="meta">{{SUBTITLE}}</div>
+  </section>
+  {{SUMMARY}}
+  {{DIAGNOSIS}}
+  {{ACTIONS}}
+  {{AUDIT}}
+  {{QUESTIONS}}
+  {{ISLANDS}}
+  {{FORMULAS}}
+  <footer>{{FOOTER}}</footer>
+</main>
+<script>
+(() => {
+  const value = (cell) => {
+    const raw = cell.dataset.sort ?? cell.textContent.trim();
+    const number = Number(raw.replaceAll(",", ""));
+    return raw !== "" && Number.isFinite(number) ? number : raw.toLocaleLowerCase();
+  };
+  document.querySelectorAll("[data-filter-target]").forEach((input) => {
+    const table = document.getElementById(input.dataset.filterTarget);
+    if (!table) return;
+    input.addEventListener("input", () => {
+      const needle = input.value.trim().toLocaleLowerCase();
+      table.querySelectorAll("tbody tr").forEach((row) => {
+        row.hidden = needle !== "" && !row.textContent.toLocaleLowerCase().includes(needle);
+      });
+    });
+  });
+  document.querySelectorAll("table.sortable th").forEach((header) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const body = table.querySelector("tbody");
+      const index = Array.from(header.parentElement.children).indexOf(header);
+      const direction = header.dataset.direction === "asc" ? "desc" : "asc";
+      table.querySelectorAll("th").forEach((item) => delete item.dataset.direction);
+      header.dataset.direction = direction;
+      const rows = Array.from(body.querySelectorAll("tr"));
+      rows.sort((left, right) => {
+        const a = value(left.children[index]);
+        const b = value(right.children[index]);
+        const result = typeof a === "number" && typeof b === "number"
+          ? a - b
+          : String(a).localeCompare(String(b), "zh-CN");
+        return direction === "asc" ? result : -result;
+      });
+      rows.forEach((row) => body.appendChild(row));
+    });
+  });
+})();
+</script>
+</body>
+</html>

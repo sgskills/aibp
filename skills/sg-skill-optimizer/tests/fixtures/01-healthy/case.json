@@ -1,0 +1,10 @@
+{
+  "id": "healthy-minimal-skill",
+  "target": "skill",
+  "expected": {
+    "blocked": false,
+    "minScore": 70,
+    "maxScore": 80,
+    "crossSkillStatus": "N/A"
+  }
+}

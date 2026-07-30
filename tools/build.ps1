@@ -20,7 +20,7 @@ function Copy-RuntimeSkill {
 
     $skillName = Split-Path -Leaf $SourceSkill
     $destinationSkill = Join-Path $DestinationRoot $skillName
-    New-Item -ItemType Directory -Path $destinationSkill -Force | Out-Null
+    [void][System.IO.Directory]::CreateDirectory($destinationSkill)
 
     Copy-Item -LiteralPath (Join-Path $SourceSkill 'SKILL.md') -Destination $destinationSkill
     foreach ($directoryName in @('agents', 'references', 'scripts', 'assets')) {
@@ -28,6 +28,17 @@ function Copy-RuntimeSkill {
         if (Test-Path -LiteralPath $sourceDirectory -PathType Container) {
             Copy-Item -LiteralPath $sourceDirectory -Destination $destinationSkill -Recurse
         }
+    }
+
+    $evalRunner = Join-Path $SourceSkill 'scripts\run_eval.py'
+    $fixtureSource = Join-Path $SourceSkill 'tests\fixtures'
+    if (Test-Path -LiteralPath $evalRunner -PathType Leaf) {
+        if (-not (Test-Path -LiteralPath $fixtureSource -PathType Container)) {
+            throw "Eval runner has no fixtures: $SourceSkill"
+        }
+        $testsDestination = Join-Path $destinationSkill 'tests'
+        [void][System.IO.Directory]::CreateDirectory($testsDestination)
+        Copy-Item -LiteralPath $fixtureSource -Destination $testsDestination -Recurse
     }
 
     if ($IncludeLicense) {
@@ -48,9 +59,15 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $version = ([System.IO.File]::ReadAllText($versionPath, [System.Text.Encoding]::UTF8)).Trim()
-$skillDirs = @(Get-ChildItem -LiteralPath $skillsRoot -Directory | Sort-Object Name)
+$skillDirs = @(
+    Get-ChildItem -LiteralPath $skillsRoot -Directory |
+        Where-Object {
+            Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf
+        } |
+        Sort-Object Name
+)
 if ($skillDirs.Count -eq 0) {
-    throw 'No skill directories were found.'
+    throw 'No skills/*/SKILL.md entries were found.'
 }
 
 $expectedDistPath = [System.IO.Path]::GetFullPath((Join-Path $resolvedRoot 'dist'))
@@ -60,26 +77,26 @@ if ([System.IO.Path]::GetFullPath($distPath) -ne $expectedDistPath) {
 if (Test-Path -LiteralPath $distPath) {
     Remove-Item -LiteralPath $distPath -Recurse -Force
 }
-New-Item -ItemType Directory -Path $distPath -Force | Out-Null
+[void][System.IO.Directory]::CreateDirectory($distPath)
 
-$stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('sgskills-build-' + [guid]::NewGuid().ToString('N'))
+$stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('aibp-build-' + [guid]::NewGuid().ToString('N'))
 try {
     $bundleStage = Join-Path $stagingRoot 'bundle'
-    New-Item -ItemType Directory -Path $bundleStage -Force | Out-Null
+    [void][System.IO.Directory]::CreateDirectory($bundleStage)
     Copy-Item -LiteralPath $licensePath -Destination (Join-Path $bundleStage 'LICENSE.txt')
 
     foreach ($skillDir in $skillDirs) {
         Copy-RuntimeSkill -SourceSkill $skillDir.FullName -DestinationRoot $bundleStage -LicensePath $licensePath
 
         $singleStage = Join-Path $stagingRoot ("single-" + $skillDir.Name)
-        New-Item -ItemType Directory -Path $singleStage -Force | Out-Null
+        [void][System.IO.Directory]::CreateDirectory($singleStage)
         Copy-RuntimeSkill -SourceSkill $skillDir.FullName -DestinationRoot $singleStage -LicensePath $licensePath -IncludeLicense
 
         $singleZip = Join-Path $distPath ("{0}-{1}.zip" -f $skillDir.Name, $version)
         Compress-Archive -Path (Join-Path $singleStage $skillDir.Name) -DestinationPath $singleZip -CompressionLevel Optimal
     }
 
-    $bundleZip = Join-Path $distPath ("ecommerce-skills-{0}.zip" -f $version)
+    $bundleZip = Join-Path $distPath ("aibp-{0}.zip" -f $version)
     Compress-Archive -Path (Join-Path $bundleStage '*') -DestinationPath $bundleZip -CompressionLevel Optimal
 
     $zipFiles = @(Get-ChildItem -LiteralPath $distPath -Filter '*.zip' -File | Sort-Object Name)
@@ -87,9 +104,8 @@ try {
         $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zipFile.FullName).Hash
         '{0}  {1}' -f $hash, $zipFile.Name
     }
-    $checksumPath = Join-Path $distPath 'SHA256SUMS.txt'
     [System.IO.File]::WriteAllLines(
-        $checksumPath,
+        (Join-Path $distPath 'SHA256SUMS.txt'),
         [string[]]$checksumLines,
         (New-Object System.Text.UTF8Encoding($false))
     )
@@ -105,4 +121,4 @@ finally {
     }
 }
 
-Write-Output "BUILD PASS: created $($skillDirs.Count) individual package(s), one suite package, and SHA256SUMS.txt."
+Write-Output "BUILD PASS: created $($skillDirs.Count) individual package(s), one AIBP package, and SHA256SUMS.txt."

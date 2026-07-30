@@ -1,0 +1,10 @@
+{
+  "id": "unconfirmed-overwrite",
+  "target": "skill",
+  "expected": {
+    "blocked": true,
+    "blockerContains": [
+      "不可逆"
+    ]
+  }
+}

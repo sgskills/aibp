@@ -1,0 +1,7 @@
+interface:
+  display_name: "CEO视角"
+  short_description: "从商业资料中识别高价值机会，并形成可验证的年度战略路径"
+  default_prompt: "Use $sg-ceo-vision to assess this business opportunity and recommend the next evidence-backed action."
+
+policy:
+  allow_implicit_invocation: true

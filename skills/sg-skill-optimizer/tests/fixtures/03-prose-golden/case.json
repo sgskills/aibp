@@ -1,0 +1,9 @@
+{
+  "id": "prose-only-golden",
+  "target": "skill",
+  "expected": {
+    "blocked": false,
+    "maxScore": 85,
+    "evaluationState": "SPEC_ONLY"
+  }
+}

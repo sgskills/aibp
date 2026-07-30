@@ -1,4 +1,4 @@
-name: Validate and build skills
+name: Validate and build AIBP candidate
 
 on:
   push:
@@ -19,6 +19,23 @@ jobs:
       - name: Validate repository
         shell: powershell
         run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate.ps1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run optimizer unit and Golden regressions
+        shell: powershell
+        run: |
+          python -B -m unittest discover -s .\skills\sg-skill-optimizer\tests -p "test_*.py"
+          python -B .\skills\sg-skill-optimizer\scripts\run_eval.py
+          python -B .\skills\sg-skill-optimizer\scripts\health_check.py .\skills\sg-skill-optimizer
+          python -B .\skills\sg-skill-optimizer\scripts\audit_description.py .\skills
+
+      - name: Run Tmall report regressions
+        shell: powershell
+        run: python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
 
       - name: Build and inspect packages
         shell: powershell

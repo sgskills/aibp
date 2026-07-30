@@ -1,72 +1,87 @@
-# ecommerce-skills
+# AIBP
 
 [简体中文](README.md) | English
 
-An AI Skills repository for e-commerce sellers and operations teams. The initial release contains one validated Skill. Future Skills will be added only when they are ready, without creating empty placeholder directories.
+**AIBP means AI Business Partner.** This repository turns business materials, operating problems, advertising reports, and Skill/Agent engineering tasks into evidence-backed, bounded, verifiable outcomes for operators, business teams, and Skill authors.
+
+This is a local review candidate, version `3.0.0-rc.1`. No remote release, tag, or Release has been created. The `sg-aibp` umbrella router is planned only; this iteration does not create an invocation or installation link for it.
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
-## Current Skill
+## Three logical tracks
 
-### sgs-mece | Structured Problem Decomposition Advisor for E-commerce Operations
+Tracks are labels used by the README, contracts, and future routing. Every Skill remains physically flat at `skills/<slug>`; there are no `skills/core`, `skills/commerce`, or `skills/tooling` installation layers.
 
-Use this Skill for ambiguous operational problems whose boundaries are unclear or that span multiple areas such as traffic, conversion, product selection, content, customers, profitability, selling points, and workflows. It clarifies the problem, separates facts from assumptions, and establishes a validation sequence. It does not replace specialist Skills for advertising, product selection, review analysis, or other focused domains.
+| Track | Audience | Typical scenario | Outcome |
+| --- | --- | --- | --- |
+| `core` | Operators and decision-makers | Choose a direction, allocate resources, and plan the next 12 months across industries | Evidence-backed strategic choices, conditional paths, and stop conditions |
+| `commerce` | Ecommerce operations and advertising teams | Structure a cross-functional operating problem or audit a Tmall advertising report | Testable issue trees, data audits, diagnoses, and action priorities |
+| `tooling` | Skill/Agent authors and maintainers | Explicitly diagnose, test, optimize, or package a Skill/Agent | Evidence-based assessment, confirmed plan, and real regression results |
 
-Best suited for:
+Ordinary optimization of ads, products, content, or operations is not a `tooling` request. `sg-skill-optimizer` applies only when the target itself is a Skill or Agent.
 
-- Multiple metrics changing at the same time with no clear starting point;
-- Problems spanning several operational areas;
-- Descriptions too ambiguous to turn directly into action;
-- Designing reversible validation steps with limited data.
+## Choose by scenario
 
-Not suited for:
+| Real scenario | Skill | Outcome |
+| --- | --- | --- |
+| “We can fund only one direction. How should we allocate the next year?” | `sg-ceo-vision` | CEO-level direction, resource trade-offs, and a conditional annual path |
+| “Traffic, conversion, and inventory all changed; where do we investigate first?” | `sg-mece` | Structured ecommerce diagnosis and the first evidence-backed test |
+| “This Tmall advertising CSV is messy. Can ROI and contribution profit be trusted?” | `sg-tmads-report` | Audit-first, traceable advertising diagnosis |
+| “This Skill triggers unreliably. Assess it, propose changes, and run regression.” | `sg-skill-optimizer` | Evidence, confirmation checkpoint, change log, and regression state |
 
-- A clearly defined single-domain problem when a corresponding specialist Skill exists;
-- Simple polishing, rewriting, or general-purpose questions;
-- Tasks unrelated to e-commerce operations.
+## Capability matrix
 
-## Build, Install, and Invoke
+| Display name | Slug | Track | Result | Exact local path |
+| --- | --- | --- | --- | --- |
+| CEO视角 | `sg-ceo-vision` | `core` | Turns business materials into direction, resources, and a 12-month path | `skills/sg-ceo-vision` |
+| 电商经营结构化拆解 | `sg-mece` | `commerce` | Turns ambiguous cross-functional issues into testable causes and actions | `skills/sg-mece` |
+| 天猫推广诊断 | `sg-tmads-report` | `commerce` | Turns Tmall advertising reports into an audit, diagnosis, and priorities | `skills/sg-tmads-report` |
+| SG Skill 优化器 | `sg-skill-optimizer` | `tooling` | Improves existing Skills with evidence and regression validation | `skills/sg-skill-optimizer` |
 
-Run the build script first:
+Planned exact detail paths after the future repository is enabled:
+
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-ceo-vision`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-mece`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
+
+These are target paths, not a claim that the remote pages already exist. The local origin remains unchanged, and this iteration does not rename or publish anything remotely.
+
+## Build and install
+
+Build from the repository root:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 ```
 
-### Codex
+Candidate artifacts:
 
-Extract `dist/sgs-mece-1.4.0.zip`, then place the included `sgs-mece` directory in the user-level `~/.agents/skills/` directory or the project-level `.agents/skills/` directory.
+- `dist/sg-ceo-vision-3.0.0-rc.1.zip`
+- `dist/sg-mece-3.0.0-rc.1.zip`
+- `dist/sg-tmads-report-3.0.0-rc.1.zip`
+- `dist/sg-skill-optimizer-3.0.0-rc.1.zip`
+- `dist/aibp-3.0.0-rc.1.zip`
+- `dist/SHA256SUMS.txt`
 
-- Explicit invocation: `$sgs-mece`
-- You can also describe an ambiguous, cross-functional e-commerce operations problem and let Codex decide whether to invoke the Skill from its description.
+Extract a single package and place its `sg-*` folder in the Agent runtime's configured Skills directory. The repository uses a platform-neutral Agent Skill structure. Codex, WorkBuddy, and other runtimes still require separate real-world validation; this structure alone is not a claim of perfect or production compatibility.
 
-### Kimi Code
-
-Place the same `sgs-mece` directory in `~/.config/agents/skills/`.
-
-- Explicit invocation: `/skill:sgs-mece`
-- Kimi Code can read the same `SKILL.md` and `references/` directory.
-
-The initial release has passed a structural compatibility check for Kimi Code. A real-case run in an environment with Kimi Code installed is still required before public release.
-
-## Repository Structure
+## Repository layout
 
 ```text
-ecommerce-skills/
+aibp/
 ├── skills/
-│   └── sgs-mece/
-│       ├── SKILL.md
-│       ├── agents/openai.yaml
-│       └── references/
+│   ├── sg-ceo-vision/
+│   ├── sg-mece/
+│   ├── sg-skill-optimizer/
+│   └── sg-tmads-report/
 ├── tests/
 ├── tools/
-├── .github/workflows/
 ├── LICENSE
-├── VERSION
-└── README.md / README.en.md
+└── VERSION
 ```
 
-`tools/build.ps1` scans only Skill directories that actually exist. It creates both individual Skill packages and a complete suite package without generating placeholders for future Skills.
+The physical layout remains flat even when the portfolio grows to 10–20 Skills.
 
 ## Validation
 
@@ -76,14 +91,20 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\validator\test_valid
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1
 ```
 
-The evaluation fixtures are stored in `tests/sgs-mece/cases.json`. They cover invocation, non-invocation, conflicting data, irreversible decisions, missing data, and deferral to specialist Skills.
+The optimizer retains 21 `unittest` methods and six executable Golden cases. Tmall report regression tests cover field validation, privacy allowlisting, scope, and atomic writes.
+
+## Migration and rollback
+
+- The `v1.4.0` tag and full Git history remain available.
+- The local checkpoint for the dirty v2.0 state is `cfcad564de627172e23c0e2d26b7d4e80d620510`.
+- `sgs-mece` moved to `sg-mece` in v2.0; there is no legacy compatibility shell.
+- The independent sources at `E:\+Skills\sg-tmads-report` and `E:\+Skills\sg-skill-optimizer` are neither modified nor deleted by this repository.
 
 ## License
 
-The source code in this repository is publicly available, but this is not an open-source project as defined by the OSI. Individuals and businesses may use it free of charge for their own e-commerce operations and may modify it internally. Without written permission, you may not redistribute, resell, white-label, package it as a product or service, or reproduce it in a paid course. See [LICENSE](./LICENSE) for the complete terms.
+This repository is source available, not open source. The license permits use for the user's own operations and internal Skill/Agent development, testing, and maintenance. Public redistribution, resale, white-labelling, paid-course reproduction, or paid third-party services still require written permission. See [LICENSE](./LICENSE); counsel review remains necessary before any public release.
 
 ---
-
 作者： [诗光聊AI电商](微信公众号/视频号/抖音号) · [Github](https://github.com/sgskills) · [DOUYIN](https://v.douyin.com/O8hIsRzfjqQ/)
 
 Built by  [@xstevenzhang](https://x.com/xstevenzhang)

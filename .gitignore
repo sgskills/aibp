@@ -1,4 +1,6 @@
 /dist/
 /.work/
+__pycache__/
+*.pyc
 *.tmp
 desktop.ini

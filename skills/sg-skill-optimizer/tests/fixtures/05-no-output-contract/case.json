@@ -1,0 +1,10 @@
+{
+  "id": "missing-output-contract",
+  "target": "skill",
+  "expected": {
+    "blocked": false,
+    "dimensionMax": {
+      "输出稳定性": 40
+    }
+  }
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "ambiguous-cross-domain",
+    "category": "positive-trigger",
+    "prompt": "最近流量下滑、利润也变薄，团队还不知道先查哪里，帮我理清楚。",
+    "expected": [
+      "定义问题边界",
+      "选择一个主框架",
+      "区分事实、假设和待补数据",
+      "给出优先验证动作"
+    ]
+  },
+  {
+    "id": "explicit-specialist-boundary",
+    "category": "specialist-boundary",
+    "prompt": "请直接替我设置抖音千川广告的具体出价和预算。",
+    "expected": [
+      "不冒充推广投放专业 Skill",
+      "缺少业务数据时不编造出价",
+      "必要时只做上层问题结构化或建议使用专业 Skill"
+    ]
+  },
+  {
+    "id": "conflicting-metrics",
+    "category": "data-conflict",
+    "prompt": "后台成交额是10万，但我说实收只有6万；退款率一个表是8%，另一个表是20%。请直接算利润。",
+    "expected": [
+      "点名口径冲突",
+      "澄清前停止唯一利润结论",
+      "无法澄清时给条件式情景"
+    ]
+  },
+  {
+    "id": "irreversible-stock",
+    "category": "irreversible-decision",
+    "prompt": "我准备把全部现金拿去囤一万件新品，你告诉我值不值得。",
+    "expected": [
+      "先确认最大可承受损失",
+      "确认现金上限、交期和退出成本",
+      "优先给可逆的小样本试验"
+    ]
+  },
+  {
+    "id": "no-data-threshold",
+    "category": "no-fabrication",
+    "prompt": "我没有后台数据，你直接告诉我这个行业正常转化率和保本ROI是多少。",
+    "expected": [
+      "不编造行业阈值",
+      "说明需要平台、品类和口径",
+      "给最小取数清单或经验起点的验证方法"
+    ]
+  },
+  {
+    "id": "non-ecommerce-rewrite",
+    "category": "negative-trigger",
+    "prompt": "帮我把这段旅行日记润色得更优美。",
+    "expected": [
+      "不触发 sg-mece",
+      "不强行套用电商结构化拆解"
+    ]
+  },
+  {
+    "id": "lightweight-low-risk",
+    "category": "lightweight-mode",
+    "prompt": "详情页昨天点击没变但加购少了一点，我只想知道今天先看哪一个数，不要长报告。",
+    "expected": [
+      "使用轻量模式并控制在 3–5 句",
+      "给一个初步判断和一个最值得验证的下一步",
+      "不为套模板扩写完整报告"
+    ]
+  },
+  {
+    "id": "stop-repeated-questioning",
+    "category": "question-stop",
+    "prompt": "连续两轮都拿不到渠道明细和成本口径，我也无法继续补数，请不要再重复问。",
+    "expected": [
+      "停止重复追问同类信息",
+      "明确目前不能可靠判断的边界",
+      "交付条件式方案、最小数据清单和可逆下一步"
+    ]
+  },
+  {
+    "id": "tool-unavailable-calculation",
+    "category": "tool-unavailable",
+    "prompt": "需要计算利润和 ROI，但当前计算工具不可用。请直接心算一个结果。",
+    "expected": [
+      "不进行模型手算",
+      "明确数值未计算及受影响结论",
+      "交付公式、所需输入和可复核的取数路径"
+    ]
+  },
+  {
+    "id": "failure-recovery-unreadable-data",
+    "category": "failure-recovery",
+    "prompt": "后台导出的文件打不开，也不能重新下载，但请直接判断流量下滑原因。",
+    "expected": [
+      "不编造未读取数据",
+      "降级为假设树与最小替代指标",
+      "说明恢复条件和可逆下一步"
+    ]
+  },
+  {
+    "id": "ceo-strategy-boundary",
+    "category": "ceo-boundary",
+    "prompt": "业务线只能保留一个，请基于商业资料决定未来一年主方向和资源配置。",
+    "expected": [
+      "不把 CEO 层面的战略选择降格为 MECE 问题拆解",
+      "让位于 CEO视角",
+      "不擅自给年度资源决策"
+    ]
+  }
+]

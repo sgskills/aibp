@@ -1,0 +1,7 @@
+timestamp	skill	eval_id	variant	judge_1	judge_2	eval_mode	note
+2026-07-30	sg-ceo-vision	insufficient-evidence	baseline	4.4	5.4	full_test	Assumed profit rates and supplied monthly targets despite absent operating data.
+2026-07-30	sg-ceo-vision	insufficient-evidence	with_skill	9.2	9.2	full_test	Stopped fabricated forecast and supplied conditional validation path.
+2026-07-30	sg-ceo-vision	irreversible-investment	baseline	7.8	6.8	full_test	Recommended small-batch test but did not enforce a hard loss-boundary gate.
+2026-07-30	sg-ceo-vision	irreversible-investment	with_skill	9.4	9.6	full_test	STOP triggered by missing loss boundary; only reversible next action allowed.
+2026-07-30	sg-ceo-vision	opportunity-scan	baseline	7.2	6.0	full_test	Reasonable tests but still favored scaling A under conflicting data.
+2026-07-30	sg-ceo-vision	opportunity-scan	with_skill	9.0	9.4	full_test	Froze irreversible action, reconciled evidence, and set decision-recovery conditions.

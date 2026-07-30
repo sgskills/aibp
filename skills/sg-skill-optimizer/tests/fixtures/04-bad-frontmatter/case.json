@@ -1,0 +1,10 @@
+{
+  "id": "bad-frontmatter",
+  "target": "skill",
+  "expected": {
+    "blocked": true,
+    "blockerContains": [
+      "frontmatter"
+    ]
+  }
+}
