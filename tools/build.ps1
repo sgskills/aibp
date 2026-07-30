@@ -5,6 +5,7 @@ param(
 
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression
 
 if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
     $RepoRoot = Split-Path -Parent $PSScriptRoot
@@ -20,6 +21,85 @@ function Remove-PackageResidue {
     Get-ChildItem -LiteralPath $Root -File -Recurse -Force |
         Where-Object { $_.Extension -in @('.pyc', '.pyo', '.tmp', '.bak') } |
         ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
+}
+
+function New-DeterministicZip {
+    param(
+        [string]$SourceRoot,
+        [string]$DestinationPath
+    )
+
+    $resolvedSource = (Resolve-Path -LiteralPath $SourceRoot).Path
+    $sourcePrefix = $resolvedSource.TrimEnd(
+        [System.IO.Path]::DirectorySeparatorChar,
+        [System.IO.Path]::AltDirectorySeparatorChar
+    ) + [System.IO.Path]::DirectorySeparatorChar
+    $fixedTimestamp = New-Object System.DateTimeOffset 2000, 1, 1, 0, 0, 0, ([System.TimeSpan]::Zero)
+    $files = @(
+        Get-ChildItem -LiteralPath $resolvedSource -Recurse -File |
+            ForEach-Object {
+                if (-not $_.FullName.StartsWith($sourcePrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+                    throw "Refusing to archive a file outside the source root: $($_.FullName)"
+                }
+                [pscustomobject]@{
+                    FullName = $_.FullName
+                    EntryName = $_.FullName.Substring($sourcePrefix.Length).Replace('\', '/')
+                }
+            } |
+            Sort-Object EntryName
+    )
+    if ($files.Count -eq 0) {
+        throw "Refusing to create an empty package: $DestinationPath"
+    }
+
+    $outputStream = [System.IO.File]::Open(
+        $DestinationPath,
+        [System.IO.FileMode]::CreateNew,
+        [System.IO.FileAccess]::Write,
+        [System.IO.FileShare]::None
+    )
+    $archive = $null
+    try {
+        $archive = New-Object System.IO.Compression.ZipArchive (
+            $outputStream,
+            [System.IO.Compression.ZipArchiveMode]::Create,
+            $true
+        )
+        foreach ($file in $files) {
+            # Stored entries avoid runtime-specific compression differences.
+            # Fixed order and timestamps make identical source trees byte-identical.
+            $entry = $archive.CreateEntry(
+                $file.EntryName,
+                [System.IO.Compression.CompressionLevel]::NoCompression
+            )
+            $entry.LastWriteTime = $fixedTimestamp
+            $entry.ExternalAttributes = 0
+
+            $inputStream = [System.IO.File]::Open(
+                $file.FullName,
+                [System.IO.FileMode]::Open,
+                [System.IO.FileAccess]::Read,
+                [System.IO.FileShare]::Read
+            )
+            $entryStream = $null
+            try {
+                $entryStream = $entry.Open()
+                $inputStream.CopyTo($entryStream)
+            }
+            finally {
+                if ($null -ne $entryStream) {
+                    $entryStream.Dispose()
+                }
+                $inputStream.Dispose()
+            }
+        }
+    }
+    finally {
+        if ($null -ne $archive) {
+            $archive.Dispose()
+        }
+        $outputStream.Dispose()
+    }
 }
 
 function Copy-RuntimeSkill {
@@ -109,11 +189,11 @@ try {
         Copy-RuntimeSkill -SourceSkill $skillDir.FullName -DestinationRoot $singleStage -LicensePath $licensePath -IncludeLicense
 
         $singleZip = Join-Path $distPath ("{0}-{1}.zip" -f $skillDir.Name, $version)
-        Compress-Archive -Path (Join-Path $singleStage $skillDir.Name) -DestinationPath $singleZip -CompressionLevel Optimal
+        New-DeterministicZip -SourceRoot $singleStage -DestinationPath $singleZip
     }
 
     $bundleZip = Join-Path $distPath ("aibp-{0}.zip" -f $version)
-    Compress-Archive -Path (Join-Path $bundleStage '*') -DestinationPath $bundleZip -CompressionLevel Optimal
+    New-DeterministicZip -SourceRoot $bundleStage -DestinationPath $bundleZip
 
     $zipFiles = @(Get-ChildItem -LiteralPath $distPath -Filter '*.zip' -File | Sort-Object Name)
     $checksumLines = foreach ($zipFile in $zipFiles) {

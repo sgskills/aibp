@@ -37,6 +37,6 @@ jobs:
         shell: powershell
         run: python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
 
-      - name: Build and inspect packages
+      - name: Build twice and verify reproducible packages
         shell: powershell
         run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1

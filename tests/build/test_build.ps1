@@ -188,4 +188,20 @@ foreach ($zipFile in $zipFiles) {
     }
 }
 
-Write-Output "PASS: dynamically inspected $($skillDirs.Count) single packages, one AIBP package, and $($checksumLines.Count) SHA256 hashes."
+$firstBuildChecksums = @($checksumLines)
+$secondBuildOutput = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot 2>&1
+$secondBuildExitCode = $LASTEXITCODE
+$secondBuildOutput | ForEach-Object { Write-Output $_ }
+if ($secondBuildExitCode -ne 0) {
+    throw "Second reproducibility build failed with exit code $secondBuildExitCode."
+}
+$secondBuildChecksums = @(
+    [System.IO.File]::ReadAllLines($checksumPath, [System.Text.Encoding]::UTF8) |
+        Where-Object { $_.Trim() }
+)
+if (($firstBuildChecksums -join "`n") -ne ($secondBuildChecksums -join "`n")) {
+    $difference = Compare-Object -ReferenceObject $firstBuildChecksums -DifferenceObject $secondBuildChecksums
+    throw "Consecutive builds are not byte-reproducible: $($difference | Out-String)"
+}
+
+Write-Output "PASS: dynamically inspected $($skillDirs.Count) single packages, one AIBP package, and $($checksumLines.Count) reproducible SHA256 hashes."
