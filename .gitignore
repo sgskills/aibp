@@ -2,5 +2,9 @@
 /.work/
 __pycache__/
 *.pyc
+*.pyo
 *.tmp
+*.bak
 desktop.ini
+Thumbs.db
+.DS_Store

@@ -2,9 +2,13 @@
 
 [简体中文](README.md) | English
 
+[![Stable Release](https://img.shields.io/github/v/release/sgskills/aibp?label=stable)](https://github.com/sgskills/aibp/releases/latest)
+[![Validate and build](https://github.com/sgskills/aibp/actions/workflows/validate.yml/badge.svg)](https://github.com/sgskills/aibp/actions/workflows/validate.yml)
+[![License](https://img.shields.io/badge/license-Source%20Available-orange.svg)](LICENSE)
+
 **AIBP means AI Business Partner.** This repository turns business materials, operating problems, advertising reports, and Skill/Agent engineering tasks into evidence-backed, bounded, verifiable outcomes for operators, business teams, and Skill authors.
 
-The current stable version is `3.0.0`. Its code is on `main`, with verifiable installation packages distributed through a GitHub Release. The `sg-aibp` umbrella router remains planned; the current release provides four independent Skills and does not advertise a router that does not yet exist.
+The current stable version is `3.0.1`. Its code is on `main`, with verifiable installation packages distributed through a GitHub Release. The `sg-aibp` umbrella router remains planned; the current release provides four independent Skills and does not advertise a router that does not yet exist.
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -45,18 +49,18 @@ Live detail paths for the four Skills:
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
 
-Stable release and package downloads: `https://github.com/sgskills/aibp/releases/tag/v3.0.0`
+Stable release and package downloads: `https://github.com/sgskills/aibp/releases/tag/v3.0.1`
 
 ## Build and install
 
 ### Download installation packages
 
-- [CEO Vision](https://github.com/sgskills/aibp/releases/download/v3.0.0/sg-ceo-vision-3.0.0.zip)
-- [Structured Ecommerce Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.0/sg-mece-3.0.0.zip)
-- [Tmall Advertising Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.0/sg-tmads-report-3.0.0.zip)
-- [SG Skill Optimizer](https://github.com/sgskills/aibp/releases/download/v3.0.0/sg-skill-optimizer-3.0.0.zip)
-- [Complete AIBP bundle](https://github.com/sgskills/aibp/releases/download/v3.0.0/aibp-3.0.0.zip)
-- [SHA256 checksum manifest](https://github.com/sgskills/aibp/releases/download/v3.0.0/SHA256SUMS.txt)
+- [CEO Vision](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-ceo-vision-3.0.1.zip)
+- [Structured Ecommerce Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-mece-3.0.1.zip)
+- [Tmall Advertising Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-tmads-report-3.0.1.zip)
+- [SG Skill Optimizer](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-skill-optimizer-3.0.1.zip)
+- [Complete AIBP bundle](https://github.com/sgskills/aibp/releases/download/v3.0.1/aibp-3.0.1.zip)
+- [SHA256 checksum manifest](https://github.com/sgskills/aibp/releases/download/v3.0.1/SHA256SUMS.txt)
 
 Extract a single package and place its `sg-*` folder in the Agent runtime's configured Skills directory. The repository uses a platform-neutral Agent Skill structure. Codex, WorkBuddy, and other runtimes still require separate real-world validation; this structure alone is not a claim of perfect or production compatibility.
 
@@ -70,11 +74,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 Build artifacts:
 
-- `dist/sg-ceo-vision-3.0.0.zip`
-- `dist/sg-mece-3.0.0.zip`
-- `dist/sg-tmads-report-3.0.0.zip`
-- `dist/sg-skill-optimizer-3.0.0.zip`
-- `dist/aibp-3.0.0.zip`
+- `dist/sg-ceo-vision-3.0.1.zip`
+- `dist/sg-mece-3.0.1.zip`
+- `dist/sg-tmads-report-3.0.1.zip`
+- `dist/sg-skill-optimizer-3.0.1.zip`
+- `dist/aibp-3.0.1.zip`
 - `dist/SHA256SUMS.txt`
 
 ## Repository layout
@@ -82,10 +86,12 @@ Build artifacts:
 ```text
 aibp/
 ├── skills/
+│   ├── README.md
 │   ├── sg-ceo-vision/
 │   ├── sg-mece/
 │   ├── sg-skill-optimizer/
 │   └── sg-tmads-report/
+├── docs/superpowers/
 ├── tests/
 ├── tools/
 ├── LICENSE
