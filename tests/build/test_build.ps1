@@ -44,8 +44,8 @@ finally {
 }
 
 $version = ([System.IO.File]::ReadAllText((Join-Path $repoRoot 'VERSION'), [System.Text.Encoding]::UTF8)).Trim()
-if ($version -ne '3.0.0-rc.1') {
-    throw "Unexpected candidate version: $version"
+if ($version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+    throw "VERSION is not valid semantic version text: $version"
 }
 
 $skillDirs = @(

@@ -36,5 +36,5 @@ python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
 
 ## Current status
 
-- `3.0.0-rc.1` is a candidate pre-release, not a stable release.
+- `3.0.0` is the current stable release; `VERSION` remains the source of truth for later versions.
 - `sg-aibp` is planned and must not be linked or advertised as an existing router until implemented.

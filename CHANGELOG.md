@@ -1,11 +1,11 @@
 # 更新日志
 
-## v3.0.0-rc.1 — 2026-07-30
+## v3.0.0 — 2026-07-30
 
-### AIBP 公开候选版本
+### AIBP 正式版本
 
 - 总品牌更新为 AIBP（AI Business Partner），采用 `core`、`commerce`、`tooling` 三条逻辑分轨；四个 Skill 仍平铺在 `skills/<slug>`。
-- 现有仓库改名为 `sgskills/aibp`，保留完整 Git 历史与 `v1.4.0` tag；候选版使用 `v3.0.0-rc.1` Pre-release 分发。
+- 现有仓库改名为 `sgskills/aibp`，保留完整 Git 历史与 `v1.4.0` tag；正式版使用 `v3.0.0` Release 分发。
 - 复制导入 `sg-tmads-report` 与 `sg-skill-optimizer`，两个独立源目录保留；optimizer 仅迁入单层有效内容。
 
 ### Skill 优化
@@ -19,7 +19,7 @@
 
 - validator 与 build 改为动态枚举 `skills/*/SKILL.md`，支持 YAML block description，并检查“功能定义在前、触发信息在后”。
 - validator 自测增加第五个合规 Skill 绿测，以及缺 `SKILL.md`、嵌套目录和坏 frontmatter 红测。
-- 构建输出四个单包、`aibp-3.0.0-rc.1.zip` 与五条 SHA256；GitHub Pre-release 同时提供五个 ZIP 与 `SHA256SUMS.txt`。
+- 构建输出四个单包、`aibp-3.0.0.zip` 与五条 SHA256；GitHub Release 同时提供五个 ZIP 与 `SHA256SUMS.txt`。
 
 ## v2.0.0 — 2026-07-29
 

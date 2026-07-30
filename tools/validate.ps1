@@ -191,6 +191,7 @@ function Invoke-RepoValidation {
     $requiredRootFiles = @(
         'README.md',
         'README.en.md',
+        'AGENTS.md',
         'LICENSE',
         'VERSION',
         'CHANGELOG.md',
@@ -206,11 +207,12 @@ function Invoke-RepoValidation {
     }
 
     $versionPath = Join-Path $rootPath 'VERSION'
-    if (
-        (Test-Path -LiteralPath $versionPath -PathType Leaf) -and
-        (Read-Utf8 -Path $versionPath).Trim() -ne '3.0.0-rc.1'
-    ) {
-        Add-Issue -Issues $issues -Code 'VERSION_INVALID' -Path 'VERSION' -Message 'Local candidate version must be 3.0.0-rc.1.'
+    $version = $null
+    if (Test-Path -LiteralPath $versionPath -PathType Leaf) {
+        $version = (Read-Utf8 -Path $versionPath).Trim()
+        if ($version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+            Add-Issue -Issues $issues -Code 'VERSION_INVALID' -Path 'VERSION' -Message 'VERSION must contain semantic version text.'
+        }
     }
 
     foreach ($readmeName in @('README.md', 'README.en.md')) {
@@ -233,7 +235,9 @@ function Invoke-RepoValidation {
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern '\u81ea\u8eab\u7ecf\u8425' -Message 'License must cover the user or organization own operations.'
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern 'Skill/Agent' -Message 'License must cover internal Skill/Agent construction.'
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern '\u5f8b\u5e08\u590d\u6838|\u6267\u4e1a\u5f8b\u5e08\u590d\u6838' -Message 'License must retain the counsel-review statement.'
-    Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'CHANGELOG.md') -Code 'CHANGELOG_CONTENT' -Pattern '3\.0\.0-rc\.1' -Message 'CHANGELOG must describe the current candidate release.'
+    if ($version) {
+        Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'CHANGELOG.md') -Code 'CHANGELOG_CONTENT' -Pattern ([regex]::Escape($version)) -Message 'CHANGELOG must describe the VERSION release.'
+    }
 
     $skillsRoot = Join-Path $rootPath 'skills'
     if (-not (Test-Path -LiteralPath $skillsRoot -PathType Container)) {
@@ -450,7 +454,7 @@ function Invoke-ValidatorSelfTest {
     $fixtureRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('aibp-validator-' + [guid]::NewGuid().ToString('N'))
     try {
         [void][System.IO.Directory]::CreateDirectory($fixtureRoot)
-        foreach ($fileName in @('README.md', 'README.en.md', 'LICENSE', 'VERSION', 'CHANGELOG.md', '.gitignore')) {
+        foreach ($fileName in @('README.md', 'README.en.md', 'AGENTS.md', 'LICENSE', 'VERSION', 'CHANGELOG.md', '.gitignore')) {
             Copy-Item -LiteralPath (Join-Path $SourceRoot $fileName) -Destination $fixtureRoot
         }
         foreach ($directoryName in @('.github', 'skills', 'tests', 'tools')) {

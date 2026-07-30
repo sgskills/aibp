@@ -1,4 +1,4 @@
-name: Validate and build AIBP candidate
+name: Validate and build AIBP
 
 on:
   push:
