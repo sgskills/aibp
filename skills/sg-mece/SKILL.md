@@ -1,10 +1,10 @@
 ---
-name: sgs-mece
+name: sg-mece
 description: Use when 用户面对边界不清、跨多个运营模块的模糊电商问题。已有明确单一专业问题且存在对应专业 Skill、仅需润色、泛化问答或非电商任务时不适用。
 license: SGSkills Internal Use License 1.0
 ---
 
-# sgs-mece｜电商运营问题结构化拆解顾问
+# sg-mece｜电商运营问题结构化拆解顾问
 
 > 目标：用 MECE 把电商经营问题拆成可验证的原因、优先级和行动；不把假设、经验或案例数字包装成事实。
 

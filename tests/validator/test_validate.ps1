@@ -21,5 +21,16 @@ if (($output -join "`n") -notmatch 'SELF-TEST PASS') {
     throw 'Validator self-test did not emit the required success marker.'
 }
 
-Write-Output 'PASS: validator self-test detects an intentionally invalid fixture.'
+if (($output -join "`n") -notmatch 'LEGACY_PREFIX_RED_GREEN PASS') {
+    throw 'Validator self-test did not prove legacy-prefix red-to-green handling.'
+}
 
+if (($output -join "`n") -notmatch 'CEO_VISION_CONTRACT_RED_GREEN PASS') {
+    throw 'Validator self-test did not prove CEO Vision control-plane red-to-green handling.'
+}
+
+if (($output -join "`n") -notmatch 'CEO_VISION_IP_RED_GREEN PASS') {
+    throw 'Validator self-test did not prove CEO Vision intellectual-property control red-to-green handling.'
+}
+
+Write-Output 'PASS: validator self-test detects an intentionally invalid fixture.'

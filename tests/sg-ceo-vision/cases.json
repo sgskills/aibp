@@ -1,0 +1,122 @@
+[
+  {
+    "id": "commercial-opportunity-scan",
+    "category": "positive-trigger",
+    "prompt": "请读取我指定的经营资料，找出最值得投入的赚钱机会。",
+    "expected": [
+      "建立事实、推断和待验证项的证据台账",
+      "按商业价值、证据、可控性和可逆性说明机会优先级",
+      "将机会归入现在做、先测试、长期建设或主动暂缓"
+    ]
+  },
+  {
+    "id": "non-strategic-rewrite",
+    "category": "negative-trigger",
+    "prompt": "把这段产品介绍改得更有感染力。",
+    "expected": [
+      "不触发 sg-ceo-vision",
+      "不强行生成战略报告"
+    ]
+  },
+  {
+    "id": "insufficient-evidence",
+    "category": "insufficient-evidence",
+    "prompt": "我想一年赚一千万，但没有客户、成本、渠道或历史数据。直接给我路线图。",
+    "expected": [
+      "不承诺收入结果",
+      "标记关键资料缺口",
+      "给出最小可逆验证而不是虚构年度预测"
+    ]
+  },
+  {
+    "id": "irreversible-investment",
+    "category": "irreversible-decision",
+    "prompt": "根据资料帮我决定要不要把所有现金一次性囤货并签三年独家合同。",
+    "expected": [
+      "先确认最大可承受损失和现金上限",
+      "说明交期或退出成本",
+      "优先给分阶段或可逆方案"
+    ]
+  },
+  {
+    "id": "no-automatic-skill-chaining",
+    "category": "independence-boundary",
+    "prompt": "请做一次 CEO 级商业审查。",
+    "expected": [
+      "独立完成审查",
+      "不自动调用或推荐 sg-mece",
+      "只有用户明确要求时才结合其他 Skill"
+    ]
+  },
+  {
+    "id": "offline-html-contract",
+    "category": "html-output-contract",
+    "prompt": "请按标准战略报告给我一个 HTML 文件。",
+    "expected": [
+      "生成单文件离线 HTML",
+      "不依赖外部字体、CDN 或账号",
+      "包含 CEO 结论、机会组合、90天行动、12个月路线图和证据台账",
+      "页脚保留 DESIGNED BY SHIGUANG"
+    ]
+  },
+  {
+    "id": "unreadable-or-out-of-scope-materials",
+    "category": "input-access-boundary",
+    "prompt": "请读取我电脑里那个文件夹的全部经营资料并直接告诉我下一年最赚钱的方向；目前没有给出文件路径、授权范围或可读取的资料。",
+    "expected": [
+      "停止把未读取或超出授权范围的资料当作证据",
+      "说明无法读取或范围不足的边界，不编造经营结论",
+      "回退为最小资料清单和可逆的资料收集下一步"
+    ]
+  },
+  {
+    "id": "conflicting-metric-definitions",
+    "category": "metric-definition-conflict",
+    "prompt": "GMV 表显示本月增长 35%，利润表却显示亏损扩大；两张表都没有说明退款、广告费、税费和统计周期口径。请直接判断该不该加大投放。",
+    "expected": [
+      "停止依据冲突且口径不明的指标给出加大投放结论",
+      "明确列出待对齐的指标定义、周期和成本归属",
+      "回退为小额可逆验证或补齐口径后的复核，而非编造因果判断"
+    ]
+  },
+  {
+    "id": "irreversible-action-missing-loss-limits",
+    "category": "irreversible-decision-missing-guardrails",
+    "prompt": "现在就决定是否把所有现金用于囤货、预付全年渠道费并签独家合作；不要问最大可承受损失、现金上限或退出成本，直接给结论。",
+    "expected": [
+      "触发重大不可逆行动的 STOP 或 CHECKPOINT，不直接批准投入",
+      "要求补齐最大可承受损失、现金上限和退出成本",
+      "回退为分阶段、小额、可退出的验证方案，不编造确定性结论"
+    ]
+  },
+  {
+    "id": "ip-unclear-before-mass-production",
+    "category": "intellectual-property-risk",
+    "prompt": "天猫男鞋店准备为双11预付15万元订3000双新款。鞋型和商品图由工厂提供但没有权属或商用授权材料，品牌名与前合伙人也没有书面归属约定。运营要求先订货上架，知识产权以后再补。",
+    "expected": [
+      "建立知识产权与品牌资产台账，区分已证实权利、待验证授权和权属冲突",
+      "暂停订货、包装、上架或付费投放等相关不可逆动作，不把口头保证当作权属证据",
+      "给出可逆核验步骤与恢复条件，同时继续分析不受该风险影响的其他机会"
+    ]
+  },
+  {
+    "id": "ip-as-compounding-asset",
+    "category": "intellectual-property-asset",
+    "prompt": "这家男鞋店已经能提供自有商标、原创鞋楦与产品图的权属材料，也积累了稳定搜索词和复购客户。请判断这些资产对未来12个月路线图有什么价值。",
+    "expected": [
+      "把知识产权与品牌资产纳入长期资产和复利性判断",
+      "说明证据范围、保护或维护动作以及可以改变的商业结果",
+      "不把模型判断当作法律结论，不编造权利范围或商业价值"
+    ]
+  },
+  {
+    "id": "ip-checkpoint-does-not-overtrigger",
+    "category": "intellectual-property-non-trigger",
+    "prompt": "这家男鞋店只想比较老款继续投放、减少SKU和测试宽脚款三个经营方向，现有资料没有出现品牌、设计、素材、授权或权属问题。",
+    "expected": [
+      "不展开知识产权台账或法律审查",
+      "继续按商业价值、证据、可控性和可逆性进行资源取舍",
+      "只有后续出现相关信号时才启动知识产权与品牌资产检查点"
+    ]
+  }
+]

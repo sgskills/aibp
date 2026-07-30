@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CEO Vision | 战略情报简报</title>
+  <style>
+    :root {
+      --ink: #10182b;
+      --paper: #f2f4f7;
+      --white: #ffffff;
+      --mute: #697386;
+      --line: #cfd6e0;
+      --accent: #315efb;
+      --accent-pale: #e8edff;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, transparent 0 10%, rgb(16 24 43 / .035) 10.1% 10.16%, transparent 10.2% 100%),
+        var(--paper);
+      font-family: "Aptos", "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .report { width: min(1440px, calc(100% - 48px)); margin: 24px auto 72px; }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      padding: 0 0 18px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .brand { font-size: 13px; font-weight: 800; letter-spacing: .16em; }
+    .brand span { color: var(--accent); }
+    .edition { color: var(--mute); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(270px, .7fr);
+      gap: 34px;
+      padding: 48px 0 42px;
+      border-bottom: 1px solid var(--line);
+    }
+    .kicker { color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .13em; }
+    h1 {
+      margin: 12px 0 18px;
+      max-width: 900px;
+      font-size: clamp(42px, 5.4vw, 82px);
+      letter-spacing: -.07em;
+      line-height: .93;
+      font-weight: 850;
+    }
+    .hero p { margin: 0; max-width: 610px; color: #39455d; font-size: 17px; }
+    .hero-note {
+      align-self: end;
+      padding: 18px 0 2px 20px;
+      border-left: 3px solid var(--accent);
+      color: #39455d;
+      font-size: 14px;
+    }
+    .hero-note strong { display: block; color: var(--ink); margin-bottom: 6px; }
+
+    .bar {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .bar-cell { min-height: 108px; padding: 20px 22px; border-right: 1px solid var(--line); }
+    .bar-cell:first-child { background: var(--ink); color: #fff; }
+    .bar-cell:last-child { border-right: 0; }
+    .label { color: var(--mute); font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+    .bar-cell:first-child .label { color: #a9b6d2; }
+    .bar-value { margin-top: 8px; font-size: 17px; font-weight: 760; line-height: 1.25; }
+
+    .chapter { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding: 54px 0; border-bottom: 1px solid var(--line); }
+    .chapter-index { color: var(--accent); font-size: 12px; font-weight: 850; letter-spacing: .11em; padding-top: 4px; }
+    .section-title { margin: 0 0 22px; font-size: clamp(28px, 3vw, 42px); letter-spacing: -.045em; line-height: 1; }
+
+    .verdict {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 20px;
+      padding: 28px 30px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 18px 48px rgb(16 24 43 / .06);
+    }
+    .verdict-mark { color: var(--accent); font-size: 48px; font-weight: 850; letter-spacing: -.09em; line-height: .8; }
+    .verdict-copy { font-size: clamp(20px, 2.15vw, 30px); letter-spacing: -.035em; line-height: 1.22; font-weight: 720; }
+    .verdict-copy em { color: var(--accent); font-style: normal; }
+    .source-line { margin-top: 15px; color: var(--mute); font-size: 12px; }
+
+    .opportunity-grid { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 14px; }
+    .opportunity { position: relative; min-height: 228px; padding: 22px; background: var(--white); border-top: 2px solid var(--ink); }
+    .opportunity.featured { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .opportunity .status { font-size: 11px; letter-spacing: .1em; font-weight: 850; color: var(--accent); }
+    .featured .status { color: #cbd6ff; }
+    .opportunity h3 { margin: 34px 0 12px; font-size: 24px; letter-spacing: -.035em; line-height: 1.05; }
+    .opportunity p { margin: 0; color: #536075; font-size: 14px; }
+    .featured p { color: #e4e9ff; }
+    .evidence { position: absolute; left: 22px; bottom: 19px; font-size: 12px; font-weight: 700; }
+
+    .map { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .quarter { min-height: 250px; padding: 22px; background: var(--white); }
+    .quarter-now { background: var(--ink); color: #fff; }
+    .quarter-label { color: var(--accent); font-size: 12px; font-weight: 850; letter-spacing: .1em; }
+    .quarter-now .quarter-label { color: #aebfff; }
+    .quarter h3 { margin: 11px 0 20px; font-size: 25px; line-height: 1; letter-spacing: -.04em; }
+    .quarter ul { padding: 0; margin: 0; list-style: none; }
+    .quarter li { padding: 10px 0; border-top: 1px solid rgb(16 24 43 / .11); color: #536075; font-size: 14px; }
+    .quarter-now li { border-color: rgb(255 255 255 / .15); color: #dce4ff; }
+
+    .action-list { border-top: 2px solid var(--ink); }
+    .action { display: grid; grid-template-columns: 42px minmax(220px, 1.2fr) 1.35fr .8fr .85fr; gap: 18px; align-items: center; padding: 19px 0; border-bottom: 1px solid var(--line); }
+    .action-no { color: var(--accent); font-size: 20px; font-weight: 850; }
+    .action h3 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+    .action p { margin: 0; color: var(--mute); font-size: 13px; }
+    .metric { font-size: 13px; font-weight: 750; }
+    .deadline { color: var(--accent); font-size: 13px; font-weight: 800; text-align: right; }
+
+    .evidence-ledger { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; }
+    .ledger-block { padding-top: 14px; border-top: 2px solid var(--ink); }
+    .ledger-block h3 { margin: 0 0 14px; font-size: 18px; letter-spacing: -.025em; }
+    .ledger-item { display: grid; grid-template-columns: 92px 1fr; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); font-size: 14px; }
+    .ledger-tag { color: var(--accent); font-size: 11px; font-weight: 850; letter-spacing: .09em; }
+
+    footer { display: flex; justify-content: space-between; gap: 16px; padding-top: 22px; color: var(--mute); font-size: 12px; }
+    @media (max-width: 900px) {
+      .report { width: min(100% - 28px, 1440px); }
+      .hero, .chapter, .evidence-ledger { grid-template-columns: 1fr; gap: 20px; }
+      .bar, .opportunity-grid, .map { grid-template-columns: 1fr 1fr; }
+      .bar-cell:nth-child(2) { border-right: 0; }
+      .action { grid-template-columns: 32px 1fr; gap: 8px 14px; }
+      .action p, .metric, .deadline { grid-column: 2; text-align: left; }
+    }
+    @media (max-width: 620px) {
+      .report { width: min(100% - 20px, 1440px); margin-top: 10px; }
+      .hero { padding: 34px 0 30px; }
+      .bar, .opportunity-grid, .map { grid-template-columns: 1fr; }
+      .bar-cell { border-right: 0; border-bottom: 1px solid var(--line); }
+      .chapter { padding: 38px 0; }
+      .verdict { grid-template-columns: 1fr; padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="report">
+    <header class="masthead">
+      <div class="brand">CEO VISION</div>
+      <div class="edition">STRATEGIC INTELLIGENCE BRIEF · 2026 / 07</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="kicker">战略样稿 / 仅展示信息设计</div>
+        <h1>把未来 12 个月的资源，压在真正改变商业结果的少数事情上。</h1>
+        <p>这不是一份漂亮的总结。它是一份让创始人能判断何时加码、何时测试、何时停止的决策简报。</p>
+      </div>
+      <aside class="hero-note">
+        <strong>报告纪律</strong>
+        每个关键结论都区分事实、推断与待验证项。证据不够时，报告只能建议实验，不能假装确定。
+      </aside>
+    </section>
+
+    <section class="bar">
+      <div class="bar-cell"><div class="label">CEO 结论</div><div class="bar-value">先集中，再验证，最后放大。</div></div>
+      <div class="bar-cell"><div class="label">当前重心</div><div class="bar-value">一条主增长线</div></div>
+      <div class="bar-cell"><div class="label">最大不确定性</div><div class="bar-value">关键假设是否成立</div></div>
+      <div class="bar-cell"><div class="label">下一复盘点</div><div class="bar-value">30 天后看证据</div></div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter-index">01 / CEO VERDICT</div>
+      <div>
+        <h2 class="section-title">结论应该比过程更早出现。</h2>
+        <div class="verdict">
+          <div class="verdict-mark">01</div>
+          <div>
+            <div class="verdict-copy">未来一个周期的首要任务，不是同时追逐更多项目，而是把资源集中到 <em>证据最强、可验证最快、能产生复利</em> 的机会之上。</div>
+            <div class="source-line">结论来源：指定资料夹中的经营数据、复盘材料、用户反馈与既有计划。具体来源在最终报告中逐条列出。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter-index">02 / PORTFOLIO</div>
+      <div>
+        <h2 class="section-title">机会不是平铺罗列，而是资源配置。</h2>
+        <div class="opportunity-grid">
+          <article class="opportunity featured"><div class="status">NOW / 优先推进</div><h3>一个已经有证据的核心增长机会</h3><p>用事实说明它为什么值得立即投入，并写清可承受投入与复盘阈值。</p><div class="evidence">证据强度：高</div></article>
+          <article class="opportunity"><div class="status">TEST / 先验证</div><h3>一个价值大但关键假设未证实的机会</h3><p>不直接扩大投入。先用最小实验获取足以改变决策的信号。</p><div class="evidence">证据强度：待验证</div></article>
+          <article class="opportunity"><div class="status">BUILD / 长期建设</div><h3>一个需要长期积累的品牌或能力资产</h3><p>按阶段里程碑建设，而不拿短期收益要求它立刻证明自己。</p><div class="evidence">证据强度：中</div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter-index">03 / 12 MONTHS</div>
+      <div>
+        <h2 class="section-title">每一季都要有明确的战略任务。</h2>
+        <div class="map">
+          <article class="quarter quarter-now"><div class="quarter-label">0–30 DAYS</div><h3>确认方向</h3><ul><li>锁定最重要的商业问题</li><li>完成关键假设验证</li><li>设置现金和时间边界</li></ul></article>
+          <article class="quarter"><div class="quarter-label">Q1</div><h3>建立盈利单元</h3><ul><li>跑通一条可复用路径</li><li>验证单位经济账</li><li>淘汰低价值投入</li></ul></article>
+          <article class="quarter"><div class="quarter-label">Q2–Q3</div><h3>复制与积累</h3><ul><li>放大有效动作</li><li>建设客户与内容资产</li><li>降低单一依赖</li></ul></article>
+          <article class="quarter"><div class="quarter-label">Q4</div><h3>形成选择权</h3><ul><li>复盘增长质量</li><li>决定加码或改道</li><li>为下一周期下注</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter-index">04 / 90 DAYS</div>
+      <div>
+        <h2 class="section-title">建议的价值，在于下一步能不能做。</h2>
+        <div class="action-list">
+          <div class="action"><div class="action-no">01</div><div><h3>最小验证实验</h3><p>只验证最可能改变优先级的关键假设。</p></div><p>投入必须低于预先设定的可承受损失。</p><div class="metric">成功指标<br>明确可测</div><div class="deadline">第 14 天复盘</div></div>
+          <div class="action"><div class="action-no">02</div><div><h3>资源重排</h3><p>停止或延后低证据、低复利的项目。</p></div><p>将释放出的时间、现金和注意力投向主线。</p><div class="metric">决策标准<br>优先级清晰</div><div class="deadline">本周完成</div></div>
+          <div class="action"><div class="action-no">03</div><div><h3>建立季度复盘</h3><p>以证据更新路线图，不为原计划硬撑。</p></div><p>复盘收入质量、利润、资产沉淀和风险暴露。</p><div class="metric">复盘产物<br>继续或改道</div><div class="deadline">第 30 天首次</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter-index">05 / EVIDENCE</div>
+      <div>
+        <h2 class="section-title">让结论有出处，也让不确定性有位置。</h2>
+        <div class="evidence-ledger">
+          <div class="ledger-block"><h3>证据台账</h3><div class="ledger-item"><span class="ledger-tag">事实</span><span>来自资料夹中的可核验数据、用户原话、财务记录或已完成实验。</span></div><div class="ledger-item"><span class="ledger-tag">推断</span><span>基于已知事实作出的解释，必须说明推断链条。</span></div><div class="ledger-item"><span class="ledger-tag">待验证</span><span>缺失后会改变资源配置的关键问题，必须给出取数或实验路径。</span></div></div>
+          <div class="ledger-block"><h3>决策红线</h3><div class="ledger-item"><span class="ledger-tag">现金</span><span>没有风险边界，不建议一次性重投入。</span></div><div class="ledger-item"><span class="ledger-tag">可逆</span><span>优先选择能测试、能停止、能复盘的路径。</span></div><div class="ledger-item"><span class="ledger-tag">权属</span><span>如触发知识产权与品牌资产检查点，权属或授权不清时只暂停受影响动作。</span></div><div class="ledger-item"><span class="ledger-tag">承诺</span><span>所有延后与放弃的事项必须记录重启条件。</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer><span>CEO VISION · Strategic Intelligence Brief</span><span>单文件 HTML · 离线可读 · 具体内容由本次资料分析生成</span><span>DESIGNED BY SHIGUANG</span></footer>
+  </main>
+</body>
+</html>

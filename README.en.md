@@ -2,71 +2,66 @@
 
 [简体中文](README.md) | English
 
-An AI Skills repository for e-commerce sellers and operations teams. The initial release contains one validated Skill. Future Skills will be added only when they are ready, without creating empty placeholder directories.
+Two focused AI Skills for e-commerce decision-making and commercial planning.
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
-## Current Skill
+## Skills
 
-### sgs-mece | Structured Problem Decomposition Advisor for E-commerce Operations
+| Skill | What it does | Explicit invocation |
+| --- | --- | --- |
+| `sg-mece` | Structures ambiguous, cross-functional e-commerce operations problems into evidence-backed actions. | `$sg-mece` |
+| `sg-ceo-vision` | Finds commercial opportunities, prioritises them by evidence and value, and turns them into a 12-month path. | `$sg-ceo-vision` |
 
-Use this Skill for ambiguous operational problems whose boundaries are unclear or that span multiple areas such as traffic, conversion, product selection, content, customers, profitability, selling points, and workflows. It clarifies the problem, separates facts from assumptions, and establishes a validation sequence. It does not replace specialist Skills for advertising, product selection, review analysis, or other focused domains.
+`sg-ceo-vision` runs independently by default. It does not automatically invoke, recommend, or depend on another Skill. Combine Skills only when the user explicitly asks for that.
 
-Best suited for:
+## Build and install
 
-- Multiple metrics changing at the same time with no clear starting point;
-- Problems spanning several operational areas;
-- Descriptions too ambiguous to turn directly into action;
-- Designing reversible validation steps with limited data.
-
-Not suited for:
-
-- A clearly defined single-domain problem when a corresponding specialist Skill exists;
-- Simple polishing, rewriting, or general-purpose questions;
-- Tasks unrelated to e-commerce operations.
-
-## Build, Install, and Invoke
-
-Run the build script first:
+Build the packages from the repository root:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 ```
 
+The resulting packages are:
+
+- `dist/sg-mece-2.0.0.zip`
+- `dist/sg-ceo-vision-2.0.0.zip`
+- `dist/ecommerce-skills-2.0.0.zip`
+
+This iteration is local-only and does not create a v2.0.0 Release. The exact GitHub source paths for the two official Skills are:
+
+- [sg-mece](https://github.com/sgskills/ecommerce-skills/tree/main/skills/sg-mece)
+- [sg-ceo-vision](https://github.com/sgskills/ecommerce-skills/tree/main/skills/sg-ceo-vision)
+
 ### Codex
 
-Extract `dist/sgs-mece-1.4.0.zip`, then place the included `sgs-mece` directory in the user-level `~/.agents/skills/` directory or the project-level `.agents/skills/` directory.
+Extract an individual package and put its Skill directory in `~/.codex/skills/` (or the equivalent configured Skill directory). Invoke it explicitly with `$sg-mece` or `$sg-ceo-vision`.
 
-- Explicit invocation: `$sgs-mece`
-- You can also describe an ambiguous, cross-functional e-commerce operations problem and let Codex decide whether to invoke the Skill from its description.
+### WorkBuddy
 
-### Kimi Code
+Both Skills use a platform-neutral Agent Skills structure, so WorkBuddy does not need platform-specific fields. Install the same extracted Skill directory in WorkBuddy's configured Skills directory and invoke it according to WorkBuddy's own Skill mechanism.
 
-Place the same `sgs-mece` directory in `~/.config/agents/skills/`.
+This is structural compatibility only. A real WorkBuddy run is still required before claiming production compatibility.
 
-- Explicit invocation: `/skill:sgs-mece`
-- Kimi Code can read the same `SKILL.md` and `references/` directory.
+## Migration from v1.x
 
-The initial release has passed a structural compatibility check for Kimi Code. A real-case run in an environment with Kimi Code installed is still required before public release.
+`sgs-mece` has moved to `sg-mece` in v2.0.0. There is no legacy compatibility shell: update folder names, explicit calls, and any local references. The existing `v1.4.0` Git tag remains the rollback point for the old name.
 
-## Repository Structure
+## Repository structure
 
 ```text
 ecommerce-skills/
 ├── skills/
-│   └── sgs-mece/
-│       ├── SKILL.md
-│       ├── agents/openai.yaml
-│       └── references/
+│   ├── sg-mece/
+│   └── sg-ceo-vision/
 ├── tests/
+│   ├── sg-mece/cases.json
+│   └── sg-ceo-vision/cases.json
 ├── tools/
-├── .github/workflows/
 ├── LICENSE
-├── VERSION
-└── README.md / README.en.md
+└── VERSION
 ```
-
-`tools/build.ps1` scans only Skill directories that actually exist. It creates both individual Skill packages and a complete suite package without generating placeholders for future Skills.
 
 ## Validation
 
@@ -76,11 +71,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\validator\test_valid
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1
 ```
 
-The evaluation fixtures are stored in `tests/sgs-mece/cases.json`. They cover invocation, non-invocation, conflicting data, irreversible decisions, missing data, and deferral to specialist Skills.
+Evaluation fixtures are in `tests/sg-mece/cases.json` and `tests/sg-ceo-vision/cases.json`.
 
 ## License
 
-The source code in this repository is publicly available, but this is not an open-source project as defined by the OSI. Individuals and businesses may use it free of charge for their own e-commerce operations and may modify it internally. Without written permission, you may not redistribute, resell, white-label, package it as a product or service, or reproduce it in a paid course. See [LICENSE](./LICENSE) for the complete terms.
+This repository is source available, not open source. Internal e-commerce use and internal modification are allowed under the license; redistribution, resale, white-labelling, paid-course reproduction, and offering it as a paid third-party service require written permission. See [LICENSE](./LICENSE).
 
 ---
 

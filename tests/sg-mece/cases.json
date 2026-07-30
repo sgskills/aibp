@@ -55,7 +55,7 @@
     "category": "negative-trigger",
     "prompt": "帮我把这段旅行日记润色得更优美。",
     "expected": [
-      "不触发 sgs-mece",
+      "不触发 sg-mece",
       "不强行套用电商结构化拆解"
     ]
   }
