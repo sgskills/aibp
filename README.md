@@ -4,7 +4,7 @@
 
 **AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前是仅供本地验收的候选版本 `3.0.0-rc.1`，没有发布、Tag 或 Release。`sg-aibp` 总路由仍在规划中，本轮没有创建安装入口或调用链接。
+当前公开候选版本为 `3.0.0-rc.1`，代码位于 `main`，并通过 GitHub Pre-release 提供可校验安装包。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -31,23 +31,36 @@
 
 ## 能力矩阵
 
-| 中文名称 | slug | 分轨 | 一句话结果 | 本地精确路径 |
+| 中文名称 | slug | 分轨 | 一句话结果 | 仓库精确路径 |
 | --- | --- | --- | --- | --- |
 | CEO视角 | `sg-ceo-vision` | `core` | 把商业资料转化为方向、资源与 12 个月路径 | `skills/sg-ceo-vision` |
 | 电商经营结构化拆解 | `sg-mece` | `commerce` | 把模糊跨模块问题拆成可验证原因与行动 | `skills/sg-mece` |
 | 天猫推广诊断 | `sg-tmads-report` | `commerce` | 把天猫推广报表转化为审计、诊断与优先级 | `skills/sg-tmads-report` |
 | SG Skill 优化器 | `sg-skill-optimizer` | `tooling` | 对既有 Skill 做证据驱动优化与回归验证 | `skills/sg-skill-optimizer` |
 
-未来仓库启用后，四个精确详情路径规划为：
+四个 Skill 的在线详情路径：
 
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-ceo-vision`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-mece`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
 
-以上是目标路径，不表示远端仓库或页面已创建。本地 origin 仍保持原值，本轮不会改名、改 remote 或发布。
+候选版本与安装包下载页：`https://github.com/sgskills/aibp/releases/tag/v3.0.0-rc.1`
 
 ## 构建与安装
+
+### 直接下载安装包
+
+- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.0-rc.1/sg-ceo-vision-3.0.0-rc.1.zip)
+- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.0-rc.1/sg-mece-3.0.0-rc.1.zip)
+- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.0-rc.1/sg-tmads-report-3.0.0-rc.1.zip)
+- [SG Skill 优化器](https://github.com/sgskills/aibp/releases/download/v3.0.0-rc.1/sg-skill-optimizer-3.0.0-rc.1.zip)
+- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.0-rc.1/aibp-3.0.0-rc.1.zip)
+- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.0-rc.1/SHA256SUMS.txt)
+
+解压单包后，把其中的 `sg-*` 文件夹放入 Agent Runtime 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
+
+### 从源码构建
 
 在仓库根目录构建：
 
@@ -55,7 +68,7 @@
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 ```
 
-候选产物：
+构建产物：
 
 - `dist/sg-ceo-vision-3.0.0-rc.1.zip`
 - `dist/sg-mece-3.0.0-rc.1.zip`
@@ -63,8 +76,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 - `dist/sg-skill-optimizer-3.0.0-rc.1.zip`
 - `dist/aibp-3.0.0-rc.1.zip`
 - `dist/SHA256SUMS.txt`
-
-解压单包后，把其中的 `sg-*` 文件夹放入 Agent 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
 
 ## 仓库结构
 
@@ -98,11 +109,11 @@ optimizer 保留 21 个 `unittest` 与 6 个可执行 Golden cases；tmads 的�
 - `v1.4.0` tag 与完整 Git 历史保留。
 - dirty v2.0 迁移状态的本地 checkpoint 为 `cfcad564de627172e23c0e2d26b7d4e80d620510`。
 - `sgs-mece` 自 v2.0 起迁移为 `sg-mece`，不提供旧名兼容壳。
-- 独立源 `E:\+Skills\sg-tmads-report` 与 `E:\+Skills\sg-skill-optimizer` 不会被本仓库修改或删除。
+- 迁移时使用的两个独立源目录仍在仓库外保留；本仓库只维护迁入后的副本。
 
 ## 使用许可
 
-本仓库属于 Source Available，并非严格意义上的开源项目。许可范围内可用于自身经营，以及组织内部的 Skill/Agent 建设、测试与维护；公开再分发、转售、白标、复刻到付费课程或作为面向第三方的收费服务仍需书面授权。完整条款见 [LICENSE](./LICENSE)，正式公开前仍需律师复核。
+本仓库属于 Source Available，并非严格意义上的开源项目。许可范围内可用于自身经营，以及组织内部的 Skill/Agent 建设、测试与维护；公开再分发、转售、白标、复刻到付费课程或作为面向第三方的收费服务仍需书面授权。完整条款见 [LICENSE](./LICENSE)。当前为候选预发布；宣布正式稳定版本或开展商业授权前仍需律师复核。
 
 ---
 作者： [诗光聊AI电商](微信公众号/视频号/抖音号) · [Github](https://github.com/sgskills) · [DOUYIN](https://v.douyin.com/O8hIsRzfjqQ/)

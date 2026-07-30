@@ -233,7 +233,7 @@ function Invoke-RepoValidation {
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern '\u81ea\u8eab\u7ecf\u8425' -Message 'License must cover the user or organization own operations.'
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern 'Skill/Agent' -Message 'License must cover internal Skill/Agent construction.'
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern '\u5f8b\u5e08\u590d\u6838|\u6267\u4e1a\u5f8b\u5e08\u590d\u6838' -Message 'License must retain the counsel-review statement.'
-    Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'CHANGELOG.md') -Code 'CHANGELOG_CONTENT' -Pattern '3\.0\.0-rc\.1' -Message 'CHANGELOG must describe the local candidate.'
+    Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'CHANGELOG.md') -Code 'CHANGELOG_CONTENT' -Pattern '3\.0\.0-rc\.1' -Message 'CHANGELOG must describe the current candidate release.'
 
     $skillsRoot = Join-Path $rootPath 'skills'
     if (-not (Test-Path -LiteralPath $skillsRoot -PathType Container)) {

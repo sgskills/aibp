@@ -9,11 +9,38 @@ if (-not (Test-Path -LiteralPath $buildPath -PathType Leaf)) {
     throw "RED: build script not implemented: $buildPath"
 }
 
-$output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot 2>&1
-$exitCode = $LASTEXITCODE
-$output | ForEach-Object { Write-Output $_ }
-if ($exitCode -ne 0) {
-    throw "Build failed with exit code $exitCode."
+$probeScriptsDirectory = @(
+    Get-ChildItem -LiteralPath (Join-Path $repoRoot 'skills') -Directory |
+        ForEach-Object { Join-Path $_.FullName 'scripts' } |
+        Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
+        Select-Object -First 1
+)
+if ($probeScriptsDirectory.Count -eq 0) {
+    throw 'No Skill scripts directory is available for the package-residue regression probe.'
+}
+$probeCacheDirectory = Join-Path $probeScriptsDirectory[0] '__pycache__'
+$probeCacheDirectoryExisted = Test-Path -LiteralPath $probeCacheDirectory -PathType Container
+[void][System.IO.Directory]::CreateDirectory($probeCacheDirectory)
+$probeCacheFile = Join-Path $probeCacheDirectory 'package-residue-probe.pyc'
+[System.IO.File]::WriteAllBytes($probeCacheFile, [byte[]](0x50, 0x59, 0x43))
+
+try {
+    $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot 2>&1
+    $exitCode = $LASTEXITCODE
+    $output | ForEach-Object { Write-Output $_ }
+    if ($exitCode -ne 0) {
+        throw "Build failed with exit code $exitCode."
+    }
+}
+finally {
+    if (Test-Path -LiteralPath $probeCacheFile -PathType Leaf) {
+        Remove-Item -LiteralPath $probeCacheFile -Force
+    }
+    if (-not $probeCacheDirectoryExisted -and
+        (Test-Path -LiteralPath $probeCacheDirectory -PathType Container) -and
+        @(Get-ChildItem -LiteralPath $probeCacheDirectory -Force).Count -eq 0) {
+        Remove-Item -LiteralPath $probeCacheDirectory -Force
+    }
 }
 
 $version = ([System.IO.File]::ReadAllText((Join-Path $repoRoot 'VERSION'), [System.Text.Encoding]::UTF8)).Trim()
@@ -56,7 +83,10 @@ function Get-ExpectedSkillEntries {
         if (Test-Path -LiteralPath $sourceDirectory -PathType Container) {
             foreach ($file in Get-ChildItem -LiteralPath $sourceDirectory -Recurse -File) {
                 $relative = $file.FullName.Substring($SkillDir.FullName.Length + 1).Replace('\', '/')
-                [void]$entries.Add("$($SkillDir.Name)/$relative")
+                if ($relative -notmatch '(^|/)__pycache__(/|$)' -and
+                    $relative -notmatch '\.(pyc|pyo|tmp|bak)$') {
+                    [void]$entries.Add("$($SkillDir.Name)/$relative")
+                }
             }
         }
     }
@@ -130,6 +160,8 @@ $forbidden = @(
         Where-Object {
             $_ -match '(^|/)(README|QUICKREF|CHANGELOG|SKILL\.patch)\.md$' -or
             $_ -match '(^|/)(tools|\.github|\.work|\.git)/' -or
+            $_ -match '(^|/)__pycache__(/|$)' -or
+            $_ -match '\.(pyc|pyo|tmp|bak)$' -or
             $_ -match '/tests/test_.*\.py$' -or
             $_ -match '/(agents|assets|references|scripts|tests)/\1/'
         }
