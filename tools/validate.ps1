@@ -221,7 +221,7 @@ function Invoke-RepoValidation {
             'AIBP',
             'AI Business Partner',
             'core',
-            'commerce',
+            '(?m)\|\s*`ecommerce`\s*\|',
             'tooling',
             'Source Available',
             'Not Open Source',
@@ -229,6 +229,10 @@ function Invoke-RepoValidation {
             '\u89c4\u5212|planned'
         )) {
             Require-Pattern -Issues $issues -Path $readmePath -Code 'README_CONTENT' -Pattern $requiredPattern -Message "README is missing required AIBP content: $requiredPattern"
+        }
+        $readmeContent = Read-Utf8 -Path $readmePath
+        if ($readmeContent -match '`commerce`|skills/commerce') {
+            Add-Issue -Issues $issues -Code 'LEGACY_TRACK' -Path $readmeName -Message 'README still uses the retired commerce track label.'
         }
     }
     Require-Pattern -Issues $issues -Path (Join-Path $rootPath 'LICENSE') -Code 'LICENSE_CONTENT' -Pattern 'Source Available' -Message 'License must preserve the source-available intent.'
@@ -499,6 +503,15 @@ interface:
             throw "Fifth-Skill extension fixture failed: $((@($extensionGreen | ForEach-Object { $_.Code + ':' + $_.Path })) -join ', ')"
         }
         Write-Output 'FIFTH_SKILL_GREEN PASS'
+
+        $readmePath = Join-Path $fixtureRoot 'README.md'
+        $currentReadme = Read-Utf8 -Path $readmePath
+        $legacyReadme = $currentReadme.Replace('`ecommerce`', '`commerce`').Replace('skills/ecommerce', 'skills/commerce')
+        Write-Utf8 -Path $readmePath -Content $legacyReadme
+        $legacyTrackIssues = @(Invoke-RepoValidation -Root $fixtureRoot)
+        Assert-ContainsCode -Issues $legacyTrackIssues -ExpectedCode 'LEGACY_TRACK' -Label 'Legacy commerce track fixture'
+        Write-Output 'EXPECTED RED: legacy commerce track'
+        Write-Utf8 -Path $readmePath -Content $currentReadme
 
         $missingSkillDir = Join-Path $fixtureRoot 'skills\sg-missing-probe'
         [void][System.IO.Directory]::CreateDirectory($missingSkillDir)

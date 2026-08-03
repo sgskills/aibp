@@ -1,5 +1,5 @@
 interface:
-  display_name: "SG Skill 优化器"
+  display_name: "SG Skill 优化师"
   short_description: "独立诊断、优化并回归验证 Agent Skill"
   brand_color: "#10B981"
   default_prompt: "使用 $sg-skill-optimizer 体检并优化这个 Skill："

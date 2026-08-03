@@ -8,18 +8,18 @@
 
 **AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前稳定版本为 `3.0.1`，代码位于 `main`，并通过 GitHub Release 提供可校验安装包。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
+当前稳定版本为 `3.0.2`，代码位于 `main`，并通过 GitHub Release 提供可校验安装包。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
 ## 三条逻辑分轨
 
-分轨只用于理解、README、合同和路由标签。所有 Skill 始终平铺在 `skills/<slug>`，不会建立 `skills/core`、`skills/commerce` 或 `skills/tooling` 分类目录。
+分轨只用于理解、README、合同和路由标签。所有 Skill 始终平铺在 `skills/<slug>`，不会建立 `skills/core`、`skills/ecommerce` 或 `skills/tooling` 分类目录。`ecommerce` 同时覆盖中国市场与跨境市场，不等于“只做跨境”。
 
 | 分轨 | 面向谁 | 典型场景 | 得到什么 |
 | --- | --- | --- | --- |
 | `core` | 经营者与决策者 | 跨行业选择方向、配置资源、规划未来 12 个月 | 有证据的战略选择、条件性路径和停止条件 |
-| `commerce` | 电商经营与投放团队 | 拆清跨模块经营问题，或审计天猫推广报表 | 可验证的问题树、数据审计、诊断和行动优先级 |
+| `ecommerce` | 电商经营与投放团队 | 拆清跨模块经营问题，或审计天猫推广报表 | 可验证的问题树、数据审计、诊断和行动优先级 |
 | `tooling` | Skill/Agent 作者与维护者 | 明确要诊断、测试、优化或打包 Skill/Agent | 证据化体检、待确认计划和真实回归结果 |
 
 普通广告、商品、内容或经营“优化”不属于 `tooling`；只有目标本身是 Skill/Agent 时才使用 `sg-skill-optimizer`。
@@ -38,9 +38,9 @@
 | 中文名称 | slug | 分轨 | 一句话结果 | 仓库精确路径 |
 | --- | --- | --- | --- | --- |
 | CEO视角 | `sg-ceo-vision` | `core` | 把商业资料转化为方向、资源与 12 个月路径 | `skills/sg-ceo-vision` |
-| 电商经营结构化拆解 | `sg-mece` | `commerce` | 把模糊跨模块问题拆成可验证原因与行动 | `skills/sg-mece` |
-| 天猫推广诊断 | `sg-tmads-report` | `commerce` | 把天猫推广报表转化为审计、诊断与优先级 | `skills/sg-tmads-report` |
-| SG Skill 优化器 | `sg-skill-optimizer` | `tooling` | 对既有 Skill 做证据驱动优化与回归验证 | `skills/sg-skill-optimizer` |
+| 电商经营结构化拆解 | `sg-mece` | `ecommerce` | 把模糊跨模块问题拆成可验证原因与行动 | `skills/sg-mece` |
+| 天猫推广诊断 | `sg-tmads-report` | `ecommerce` | 把天猫推广报表转化为审计、诊断与优先级 | `skills/sg-tmads-report` |
+| SG Skill 优化师 | `sg-skill-optimizer` | `tooling` | 对既有 Skill 做证据驱动优化与回归验证 | `skills/sg-skill-optimizer` |
 
 四个 Skill 的在线详情路径：
 
@@ -49,18 +49,18 @@
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
 
-正式版本与安装包下载页：`https://github.com/sgskills/aibp/releases/tag/v3.0.1`
+正式版本与安装包下载页：`https://github.com/sgskills/aibp/releases/tag/v3.0.2`
 
 ## 构建与安装
 
 ### 直接下载安装包
 
-- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-ceo-vision-3.0.1.zip)
-- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-mece-3.0.1.zip)
-- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-tmads-report-3.0.1.zip)
-- [SG Skill 优化器](https://github.com/sgskills/aibp/releases/download/v3.0.1/sg-skill-optimizer-3.0.1.zip)
-- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.1/aibp-3.0.1.zip)
-- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.1/SHA256SUMS.txt)
+- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-ceo-vision-3.0.2.zip)
+- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-mece-3.0.2.zip)
+- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-tmads-report-3.0.2.zip)
+- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-skill-optimizer-3.0.2.zip)
+- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.2/aibp-3.0.2.zip)
+- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.2/SHA256SUMS.txt)
 
 解压单包后，把其中的 `sg-*` 文件夹放入 Agent Runtime 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
 
@@ -74,11 +74,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 构建产物：
 
-- `dist/sg-ceo-vision-3.0.1.zip`
-- `dist/sg-mece-3.0.1.zip`
-- `dist/sg-tmads-report-3.0.1.zip`
-- `dist/sg-skill-optimizer-3.0.1.zip`
-- `dist/aibp-3.0.1.zip`
+- `dist/sg-ceo-vision-3.0.2.zip`
+- `dist/sg-mece-3.0.2.zip`
+- `dist/sg-tmads-report-3.0.2.zip`
+- `dist/sg-skill-optimizer-3.0.2.zip`
+- `dist/aibp-3.0.2.zip`
 - `dist/SHA256SUMS.txt`
 
 ## 仓库结构
