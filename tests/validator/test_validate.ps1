@@ -19,6 +19,7 @@ if ($exitCode -ne 0) {
 $joined = $output -join "`n"
 foreach ($marker in @(
     'FIFTH_SKILL_GREEN PASS',
+    'EXPECTED RED: legacy commerce track',
     'EXPECTED RED: missing SKILL.md',
     'EXPECTED RED: nested Skill directory',
     'EXPECTED RED: bad frontmatter',

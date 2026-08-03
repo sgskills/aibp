@@ -3,7 +3,8 @@
 ## Purpose
 
 - AIBP is a Source Available repository of platform-neutral Agent Skills.
-- All Skills stay flat under `skills/<slug>`; `core`, `commerce`, and `tooling` are documentation and routing labels only.
+- All Skills stay flat under `skills/<slug>`; `core`, `ecommerce`, and `tooling` are documentation and routing labels only.
+- `ecommerce` covers both domestic and cross-border ecommerce; it is not a physical installation directory.
 - `VERSION` is the authoritative repository version.
 
 ## Required checks
@@ -31,10 +32,11 @@ python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
 
 - Preserve the restrictive Source Available intent in `LICENSE`; do not describe the project as open source.
 - Keep the exact author block already present in README files. Do not infer additional authors, sources, courses, or contributors.
+- Prefer personified, professional-role wording for human-facing Chinese Skill names when it expresses the capability naturally; `sg-skill-optimizer` is displayed as `SG Skill 优化师`, not `SG Skill 优化器`.
 - Do not claim perfect compatibility with Codex, WorkBuddy, or another runtime without real installation validation.
 - Never commit secrets, tokens, local absolute paths, caches, temporary output, or `.work/`.
 
 ## Current status
 
-- `3.0.1` is the current stable release; `VERSION` remains the source of truth for later versions.
+- `3.0.2` is the current stable release; `VERSION` remains the source of truth for later versions.
 - `sg-aibp` is planned and must not be linked or advertised as an existing router until implemented.
