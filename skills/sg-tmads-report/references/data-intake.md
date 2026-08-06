@@ -61,6 +61,7 @@
 - **重复**：找完全重复行和关键键重复；不得静默去重。说明是否排除以及理由。
 - **合计**：识别“合计/总计/汇总”行，保留审计记录但不与明细重复求和。
 - **日期**：标出无法解析、超出用户周期和中间缺失日期；缺失不自动补 0。
+- **计划日期覆盖**：以每个计划自身最早、最晚可解析源日期为审计边界，分别记录源文件缺日、存在但因异常被隔离的日期、整日无可用行的日期。这个边界不是投放排期证明；没有用户确认的应投日期时只能写“待确认”，不能据此断言漏投。
 - **身份**：计划、商品优先使用 ID。同名不同 ID 分开；缺 ID 的名称分组标记低可信。
 - **数值**：区分空值、0、百分比和金额字符串；空值不得自动当 0。展现、点击、花费、成交笔数、成交人数和总成交金额默认非负。
 - **异常值**：核心字段出现负数时，记录数据集、原行号、字段和值，整行进入审表日志并排除普通汇总；若是退款、冲销或修正，先确认专属口径后另行建模。
@@ -100,8 +101,28 @@
   "request": {
     "goal": "要支持的经营决策",
     "store_name": "可选",
-    "budget_constraints": "可选",
-    "non_pause_constraints": "可选"
+    "checkpoint_status": "awaiting_user | bypassed_by_user | no_roundtrip | answered",
+    "budget_constraints": [
+      {
+        "id": "budget-1",
+        "amount": 7000,
+        "period": "daily",
+        "scope_type": "dataset | portfolio",
+        "dataset_ids": ["ds-standard"],
+        "hard_limit": true,
+        "spend_additivity_confirmed": false,
+        "source": "user"
+      }
+    ],
+    "non_pause_constraints": [
+      {
+        "id": "protect-1",
+        "dataset_id": "ds-standard",
+        "campaign_id": "p-1",
+        "constraint": "no_pause",
+        "source": "user"
+      }
+    ]
   },
   "assumptions": {
     "gross_margin_rate": "40% 或 0.4，可选；不要写裸数 40",
@@ -110,9 +131,13 @@
   },
   "datasets": [
     {
+      "dataset_id": "ds-standard",
       "name": "原 Sheet 名",
       "report_type": "用户确认值；未知写 unknown",
-      "attribution_window": "用户确认值；未知写 unknown",
+      "attribution_window": "窗口值；未知写 unknown",
+      "attribution_status": "unknown | reported | user_confirmed | conflict",
+      "attribution_source": "unknown | sheet_label | export_metadata | user",
+      "conversion_overlap": "unknown | confirmed_disjoint | known_overlap",
       "rows": [
         {"日期": "2026-05-01", "计划ID": "p-1", "花费(元)": 100}
       ]
@@ -120,6 +145,10 @@
   ]
 }
 ```
+
+旧输入只有非空 `attribution_window` 时，为兼容仅登记为 `reported + legacy_field`，不得升级为 `user_confirmed`。`user_confirmed` 与非用户来源冲突时必须关闭归因措辞并追问。相同窗口不证明成交互斥；跨岛成交汇总还必须有 `conversion_overlap=confirmed_disjoint`。
+
+预算必须同时确认金额、周期和范围。`scope_type=dataset` 只计算列出的 `dataset_ids`；`scope_type=portfolio` 还必须有 `spend_additivity_confirmed=true`，否则预算检查为 `not_computable`，不得宣称超限。硬上限不允许凭空增加总预算。不可暂停计划按数据岛与计划 ID 匹配，不按名称模糊匹配。
 
 `scope` 缺失、含糊或不是 `store-wide` 时，脚本保留已解析费率供审计，但关闭推广贡献盈亏和保本 PPC。若需要逐商品或逐日费率，应先扩展输入模型并提供对应映射，不能把全店统一值冒充细粒度真实口径。
 

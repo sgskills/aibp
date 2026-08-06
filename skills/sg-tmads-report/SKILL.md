@@ -64,7 +64,14 @@ license: SGSkills Internal Use License 1.0
 4. 报表来源、数据粒度与归因窗口中尚未确认且会改变合并/解释的部分；
 5. 预算上限、不可暂停计划或其他执行约束。
 
-交互允许等待时，问完后等待用户回答再给最终诊断。用户明确不回答、要求直接继续，或当前客户端不能完成追问闭环时，仍输出无假设的标准数据报告，并把缺口列为“未确认口径”。缺毛利率或退款金额率时，**不得**输出推广贡献盈亏和保本线；未知归因窗口时，**不得**写增量或因果结论。
+追问时必须显式记录 `checkpoint_status`：
+
+- `awaiting_user`：当前 Runtime 支持继续对话，首轮只交付审表结论与问题，然后真正停止；不得提前给计划排名、财务结论或执行动作。
+- `bypassed_by_user`：用户明确不回答或要求直接继续；输出无假设标准报告，把缺口列为未确认。
+- `no_roundtrip`：当前 Runtime 无法等待下一轮；同一回复继续无假设标准报告，并说明未获得回答。
+- `answered`：先登记回答台账，再进入计算。每项回答记录 `value / status(user_confirmed|reported|unknown|conflict) / source`；不得把报表文字或模型推断登记为用户确认。
+
+缺毛利率或退款率时，**不得**输出推广贡献盈亏和保本线；未知归因窗口时，**不得**写增量或因果结论。
 
 ## 🔴 CHECKPOINT 2 · 合并与计算闸门
 
@@ -74,6 +81,11 @@ license: SGSkills Internal Use License 1.0
 - 商品毛利率或退款金额率缺失：关闭推广贡献盈亏与保本 PPC。
 - 商品毛利率与退款金额率已给出但未明确 `scope: store-wide`（全店统一）：关闭推广贡献盈亏与保本 PPC，并追问适用范围。
 - 归因窗口未知：关闭增量和因果措辞；即使窗口已知，没有实验或对照也只写“报表归因成交”。
+
+先建立两张小台账，不能只保留自由文本：
+
+- **归因台账（逐数据岛）**：`window_value / window_status(unknown|reported|user_confirmed|conflict) / source / conversion_overlap(unknown|confirmed_disjoint|known_overlap)`。旧报表中出现“7 天”等窗口只算 `reported`；相同窗口不等于成交互斥。只有口径可比且 `conversion_overlap=confirmed_disjoint` 才可开放跨岛汇总，任何情况下归因都不等于因果。
+- **执行约束台账**：预算记录 `amount / period / scope_type / dataset_ids / hard_limit / spend_additivity_confirmed / source`；不可暂停对象记录数据岛、计划 ID 与来源。同名计划按 ID 匹配。预算周期、范围或花费可加性未确认时，不得写“超预算”；全店预算不得误套到单个推广类型。
 
 任一闸门未通过时，不阻塞整个报告；只停止受影响的合并、指标或措辞，其余部分继续。
 
@@ -87,6 +99,15 @@ python scripts/analyze_report.py --input normalized.json
 
 脚本只使用 Python 标准库，负责可复核聚合、公式、数据岛隔离和可选安全 HTML。脚本输出是证据底稿，不代替业务判断；遇到歧义映射、重复风险、异常数值或未知归因，先处理警告。
 
+按当前 Runtime 的真实能力选择计算路径，并在报告中披露 `calculation_mode` 与 `file_status`：
+
+1. 有现成表格能力：只读解析工作簿，完成文件/Sheet/隐藏内容盘点，再转规范长表。
+2. 能运行本 Skill 脚本：用脚本生成确定性证据模型，标 `calculation_mode=script`；不要声称脚本原生读取了 XLSX。
+3. 无 Python/不能运行脚本但能读出可核验表格：严格按同一字段映射、总分子÷总分母和零分母规则人工汇总，标 `calculation_mode=manual`，列出复核过的分子分母。
+4. 连算术或源表都无法核验：标 `calculation_mode=not_computable`，只交付审表、映射、风险和精确补数清单。
+
+任何降级都不得伪造“脚本已运行、XLSX 已解析、HTML 已生成”或跨平台实机兼容；文件未创建时 `file_status=not_created`。
+
 诊断必须同时满足：
 
 - 所有比率均用“周期总分子 ÷ 周期总分母”，禁止平均每日比率。
@@ -99,6 +120,38 @@ python scripts/analyze_report.py --input normalized.json
 - 一个全店统一毛利率/退款金额率套用于多商品或多个日期时，仅将推广贡献盈亏与保本 PPC 标为“情景估算”。
 - 观察、推断、假设、待核验事实分开书写。建议必须能追溯到输入数据、公式或用户约束。
 
+## 🔴 ACTION GATE · 先验动作再交付
+
+每条诊断至少记录 `claim_type / object_type / dataset_id / object_id / evidence_refs`。行动采用“双层决策”而不是单一标签：
+
+- `target_action`：证据继续成立且门禁补齐后，最终希望采取的方向；
+- `allowed_action`：以当前证据真正允许运营现在做的动作；
+- `action_code`：为兼容 Runtime，必须与 `allowed_action` 一致；
+- `action_level`：`execute | experiment | investigate | blocked`。
+
+例如，计划可能是“目标：暂停，当前：先核验”，此时 `target_action=pause`、`allowed_action=investigate`、`action_code=investigate`；不能把候选暂停写成已经允许执行。目标动作与当前允许动作不同时，必须提供 `upgrade_conditions`。
+
+动作枚举限于：`maintain / investigate / request_data / increase_budget / decrease_budget / reallocate / increase_bid / decrease_bid / pause / close`。每条行动还要记录 `object_type / dataset_id / object_id / evidence_refs / preconditions / constraints / review_metrics / review_trigger`；有控制实验时补 `stop_conditions`，暂停时补 `resume_conditions`。证据引用必须能解析到同一 `ReportModel` 中的数据岛、对象、指标或审计项，不能只写“数据表明”。
+
+逐条执行以下门禁：
+
+- 对象所在数据岛没有关键词、受众、创意或商品字段时，禁止生成该维度动作；不能借另一个数据岛的字段越权。
+- 归因未知、冲突或日期不完整时，零成交只能支持 `investigate` 类核验动作；不得直接升级为“暂停、关闭、增减预算、增减出价或广告无效”。
+- `increase_bid` 与 `decrease_bid` 是两个独立方向。CPC 是实际结果，不是后台出价；只有用户确认该计划存在可控出价杠杆，并将确认写入 `request.control_levers` 后，才能引用 `control_ref` 提出出价实验。增长目标、预算受限/流量机会、效率与归因成熟度共同支持“增加出价”；成本压力、可控出价、可比效率证据和停止条件共同支持“降低出价”。不得只凭 CPC 高低下结论。
+- `increase_budget` 需要规模目标、预算空间或可追溯资金来源，以及“确实受预算限制”的证据；盈利或 ROI 较好本身不等于应该加预算。`decrease_budget` 也不能用通用 ROI 阈值触发。
+- `pause` 是可恢复动作，必须写恢复条件；`close` 比暂停更严格，只有成熟可比证据、完整日期、无保护约束且用户在 `request.action_confirmations` 中明确确认关闭时，才可成为当前允许动作。否则只可作为 `target_action=close` 的候选，`allowed_action` 必须先核验。
+- 命中不可暂停计划 ID 时，`pause` 与 `close` 都必须阻断；同名但不同 ID 不得连带阻断。
+- 硬预算上限存在时，禁止无资金来源的总预算增加；`reallocate` 必须同时写明调出对象、调入对象和复核条件。预算迁移不得跨未确认可比的数据岛制造伪排名。
+- 变化金额或比例只能来自用户确认、已登记预算空间或可闭合的资金迁移；若没有来源，写“幅度待确认”，不得默认 ±10%、±20% 或固定天数。
+- 直接控制动作必须把复核写成合同：`review_metrics + review_trigger + stop_conditions`；不要发明统一观察天数，优先使用“对应归因窗口成熟后”或用户确认的业务触发点。
+- 缺证据引用、引用不存在、引用对象错位或引用不可计算指标时，行动降级为 `blocked` 并列出补证据项。
+- 动作正文不得绕过结构化代码，例如 `action_code=investigate` 却写“立即关闭计划”。
+- `causal_language_allowed=false` 时禁止肯定式因果主张；“不能证明广告带来新增成交”这类边界说明不应被误判为因果结论。
+
+多计划报告必须逐计划覆盖：每个可识别计划 ID 生成一条独立行动记录，不把多个 ID 合并成一个对象，也不只给 Top N 后遗漏其余计划。按“证据成熟度 → 用户经营目标 → 经济/效率证据 → 控制杠杆 → 可逆性与复核合同”逐项判断；不能安全动作的计划也要明确写 `investigate` 或 `request_data`。具体决策矩阵见 [诊断方法](references/diagnosis.md)。
+
+任一阻断级叙事错误存在时，`report_status` 保持 `evidence_only`，不得称完整诊断，也不得把被阻断动作展示给用户。
+
 ## 🔴 CHECKPOINT 3 · HTML 需要用户确认
 
 默认在对话中完成问题解决，不因为客户端可以写文件就自动创建 HTML。诊断完成后最多询问一次：
@@ -107,8 +160,10 @@ python scripts/analyze_report.py --input normalized.json
 
 - 用户不回答、拒绝或没有明确提出文件需求：不生成 HTML，不创建输出目录。
 - 用户一开始已经要求 HTML：视为已确认，不重复询问。
-- 用户确认后：将已交付的执行摘要、诊断与行动写入结构化叙事 JSON，再运行 `--narrative-input ... --html-output ...`；没有诊断与行动时只能称“数据分析附件”。
+- 用户确认后：将已交付的执行摘要、诊断与行动写入结构化叙事 JSON，再运行 `--narrative-input ... --html-output ...`；没有诊断与行动时只能称“数据分析附件”。叙事 JSON 必填 `executive_summary / diagnoses / actions`；`summary_cards` 与 `insights` 可选项——脚本已从证据模型自动聚合默认版本，Agent 基于证据写出更有判断力的版本时可整体覆盖，不得为空覆盖。
+- HTML 首屏先展示行动驾驶舱，再展示分岛指标。每个计划同时展示“目标动作”和“当前允许动作”，并可按当前允许级别、目标动作（含增加出价/降低出价/暂停/关闭）、数据岛、商品、受保护状态、归因状态、日期异常和计划文本筛选；筛选只改变报告视图，不得伪装成后台操作。
 - 用户没有指定保存路径时，使用新的时间戳或运行 ID 子目录；用户指定路径时尊重其路径。
+- 店铺名通过 `--store-name` 传入并写入副标题（店铺/诊断时间/诊断人/数据周期）；HTML 文件名强制按《{店铺}店铺{平台}推广诊断报告-YYMMDD》规范命名，即使用户指定了其他文件名也按规范名落盘并提示。呈现层详细规则（三分钟看完版、梯队、低价值信息黑名单、经验沉淀收尾）遵循 [输出契约](references/output-contract.md) 的「呈现层契约」。
 - 默认拒绝覆盖已有文件；只有用户明确确认覆盖后才使用 `--force`。输入与输出同路径、JSON 与 HTML 同路径始终拒绝。
 - 默认不序列化未知列原始值。即使用户明确使用 `--include-raw`，也只输出已进入安全字段映射允许名单的原始列；未知列值不进入 JSON/HTML，手机号、邮箱等命中内容信号时仍强制脱敏。
 

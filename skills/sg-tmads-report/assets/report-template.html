@@ -5,75 +5,212 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{{TITLE}}</title>
   <style>
-    :root{color-scheme:light;--ink:#172033;--muted:#667085;--line:#dfe3ea;--paper:#fff;--wash:#f4f6f9;--brand:#c2410c;--brand-soft:#fff4ed;--good:#166534;--warn:#9a3412}
-    *{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:14px/1.55 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
-    main{max-width:1440px;margin:auto;padding:28px}.hero,.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(23,32,51,.05)}
-    .hero{padding:28px;margin-bottom:16px;border-top:5px solid var(--brand)}h1{margin:0 0 6px;font-size:30px;letter-spacing:-.02em}h2{margin:0 0 14px;font-size:19px}h3{margin:24px 0 10px;font-size:15px}
-    .meta,.muted{color:var(--muted)}.eyebrow{display:block;margin-bottom:4px;color:var(--brand);font-size:11px;font-weight:700;letter-spacing:.12em}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.grid.compact{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}.panel{padding:20px;margin:16px 0}.panel.emphasis{border-left:5px solid var(--brand);background:linear-gradient(135deg,var(--paper),var(--brand-soft))}
-    .card{min-height:86px;padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff}.card.secondary{background:#fafbfc}.card b{display:block;margin-top:5px;font-size:20px}.warn{color:var(--warn)}.good{color:var(--good)}
-    ul,ol{padding-left:22px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.toolbar input{min-width:260px;max-width:100%;padding:8px 10px;border:1px solid #b8c0cc;border-radius:8px;background:#fff}
-    .table-wrap{overflow:auto;max-height:620px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;background:#fff;font-variant-numeric:tabular-nums}
-    th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;vertical-align:top}th{position:sticky;top:0;background:#eef1f5;cursor:pointer;z-index:1}tbody tr:nth-child(even){background:#fafbfc}
-    tr[hidden]{display:none}.raw{max-width:540px;white-space:normal;word-break:break-all;color:var(--muted)}code{background:#eef1f5;border-radius:4px;padding:2px 5px}
-    .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:#fff2e8;color:#9a3412;font-size:12px}.badge.neutral{background:#eef1f5;color:#475467}.empty{color:var(--muted);font-style:italic}
-    details.appendix{margin-top:24px;border-top:1px solid var(--line);padding-top:14px}details.appendix summary{cursor:pointer;font-weight:700;color:var(--ink)}
-    footer{padding:16px 4px;color:var(--muted);font-size:12px}@media(max-width:680px){main{padding:12px}.hero,.panel{border-radius:10px}.section-head{display:block}h1{font-size:23px}.toolbar input{min-width:100%}}
+    :root{
+      color-scheme:light;--ink:#13213b;--ink-soft:#30415f;--muted:#66758f;
+      --line:#d6deec;--line-strong:#b7c5dd;--paper:#fff;--wash:#f2f6fb;
+      --brand:#2453d4;--brand-deep:#173a9b;--brand-soft:#edf3ff;
+      --teal:#087f78;--teal-soft:#e8f8f5;--amber:#a85400;--amber-soft:#fff5df;
+      --red:#b42318;--red-soft:#fff0ee;--green:#087443;--green-soft:#eaf8f0;
+      --shadow:0 14px 38px rgba(21,45,92,.08);--radius:18px
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:14px/1.62 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    button,input,select{font:inherit}button,input,select,summary{outline:none}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid rgba(36,83,212,.28);outline-offset:2px}
+    .hero{background:linear-gradient(118deg,var(--brand-deep),var(--brand) 58%,#3d68df);color:#fff}.hero-inner{max-width:1240px;margin:auto;padding:34px 28px 30px;display:flex;justify-content:space-between;gap:28px;align-items:flex-end}
+    .brand-kicker{display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:#dce7ff}.hero h1{margin:0 0 7px;font-size:36px;line-height:1.12;letter-spacing:-.025em}.hero .meta{max-width:900px;color:#e9efff}.hero-mark{min-width:180px;text-align:right;font-weight:750;color:#fff}.hero-mark small{display:block;margin-top:5px;font-weight:400;color:#dce7ff}
+    .report-nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);box-shadow:0 5px 18px rgba(21,45,92,.05);backdrop-filter:blur(12px)}.nav-inner{max-width:1240px;margin:auto;padding:9px 28px;display:flex;gap:5px;overflow:auto}.nav-inner a,.nav-inner button{flex:0 0 auto;border:0;background:transparent;color:var(--ink-soft);text-decoration:none;font-weight:750;padding:8px 11px;border-radius:9px;cursor:pointer}.nav-inner a:hover,.nav-inner button:hover{background:var(--brand-soft);color:var(--brand)}
+    main{max-width:1240px;margin:auto;padding:24px 28px 44px}.risk-strip{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;margin-bottom:18px;padding:14px 17px;border:1px solid #efc875;border-left:5px solid var(--amber);border-radius:14px;background:var(--amber-soft);box-shadow:0 7px 18px rgba(168,84,0,.05)}.risk-strip b{color:#713b00}.risk-strip span:last-child{font-size:12px;color:var(--amber);font-weight:800}
+    .panel,.section-shell{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.panel{padding:22px;margin:18px 0}.section-shell{padding:20px 22px;margin-top:18px}.panel.emphasis{border-left:5px solid var(--brand);background:linear-gradient(135deg,#fff,var(--brand-soft))}
+    h1,h2,h3,p{overflow-wrap:anywhere}h2{margin:0 0 14px;font-size:21px;line-height:1.28;letter-spacing:-.01em}h3{margin:24px 0 10px;font-size:16px}.lead{max-width:920px;margin:-2px 0 16px;color:var(--ink-soft);font-size:15px}.eyebrow{display:block;margin-bottom:3px;color:var(--brand);font-size:10px;font-weight:850;letter-spacing:.15em;text-transform:uppercase}.muted,.meta{color:var(--muted)}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.section-title{display:flex;align-items:center;gap:12px}.section-number{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:var(--brand);color:#fff;font-weight:850;font-variant-numeric:tabular-nums}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(205px,100%),1fr));gap:14px}.grid.compact{grid-template-columns:repeat(auto-fit,minmax(min(165px,100%),1fr))}.card{min-width:0;min-height:88px;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow-wrap:anywhere}.card.secondary{background:#f8faff}.card b{display:block;margin-top:6px;font-size:21px;line-height:1.25;font-variant-numeric:tabular-nums}.good{color:var(--green)}.warn{color:var(--amber)}
+    .badge,.status{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800;line-height:1.3}.badge{background:var(--amber-soft);color:var(--amber)}.badge.neutral{background:#eef2f7;color:#47556f}.status-execute{background:var(--green-soft);color:var(--green)}.status-experiment{background:#e9f7f5;color:var(--teal)}.status-investigate{background:var(--amber-soft);color:var(--amber)}.status-blocked{background:var(--red-soft);color:var(--red)}
+    ul,ol{padding-left:22px}.decision-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.decision-card{display:flex;min-height:112px;flex-direction:column;align-items:flex-start;padding:14px;border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:13px;background:#fff;color:var(--ink);text-align:left;cursor:pointer}.decision-card:hover,.decision-card[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);transform:translateY(-1px)}.decision-card span{font-weight:800}.decision-card strong{margin:5px 0 3px;font-size:30px;line-height:1;color:var(--brand);font-variant-numeric:tabular-nums}.decision-card small{color:var(--muted)}
+    .priority-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.priority-card{padding:17px;border:1px solid var(--line);border-radius:14px;background:#f9fbff}.priority-head{display:flex;justify-content:space-between;gap:12px}.priority-head h3{margin:0 0 2px;font-size:18px}.priority-head p{margin:0}.decision-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:13px 0}.decision-pair p{margin:0;padding:10px;border-radius:10px;background:#fff;border:1px solid var(--line)}.decision-pair span{display:block;color:var(--muted);font-size:11px}.decision-pair b{display:block;margin-top:3px}.metric-strip{padding:9px 11px;border-radius:9px;background:var(--brand-soft);color:var(--brand-deep);font-variant-numeric:tabular-nums}
+    .action-filters,.toolbar{display:flex;align-items:flex-end;gap:9px;flex-wrap:wrap;margin:12px 0}.action-filters label{display:grid;gap:4px;color:var(--muted);font-size:11px;font-weight:750}.action-filters select,.action-filters input,.toolbar input{min-height:39px;padding:7px 9px;border:1px solid var(--line-strong);border-radius:9px;background:#fff;color:var(--ink)}.filter-search{flex:1 1 230px}.filter-search input{width:100%}.secondary-button{min-height:39px;padding:7px 12px;border:1px solid var(--line-strong);border-radius:9px;background:#fff;color:var(--ink-soft);font-weight:750;cursor:pointer}.secondary-button:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}.secondary-button:disabled{cursor:not-allowed;opacity:.45}.filter-result{margin:7px 0;color:var(--ink-soft);font-weight:750}.pagination{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:11px;color:var(--muted)}.pagination label{display:flex;align-items:center;gap:5px}.pagination select{padding:6px;border:1px solid var(--line-strong);border-radius:8px;background:#fff}
+    .table-wrap{overflow:auto;max-height:650px;border:1px solid var(--line);border-radius:12px;background:#fff}table{width:100%;border-collapse:collapse;background:#fff;font-variant-numeric:tabular-nums}th,td{padding:10px 11px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;vertical-align:top}th{position:sticky;top:0;background:#eef3fb;color:#30415f;z-index:2;font-size:12px}tbody tr:nth-child(even){background:#fafcff}tbody tr:hover{background:#f2f6ff}tr[hidden]{display:none}.wrap{min-width:220px;max-width:380px;white-space:normal}.raw{max-width:560px;white-space:normal;word-break:break-all;color:var(--muted)}.sort-button{width:100%;border:0;background:transparent;color:inherit;text-align:left;font-weight:800;cursor:pointer;padding:0}.sort-button::after{content:"";margin-left:5px}.sortable th[aria-sort="ascending"] .sort-button::after{content:"↑"}.sortable th[aria-sort="descending"] .sort-button::after{content:"↓"}.action-table-wrap{max-height:720px}.action-table td:nth-child(6){min-width:245px;white-space:normal}.action-table details{min-width:210px}.action-table summary{cursor:pointer;font-weight:800;color:var(--brand)}
+    .island-tabs{display:flex;gap:8px;overflow:auto;margin-top:14px;padding-bottom:2px}.island-tabs button{flex:0 0 auto;min-height:42px;padding:8px 14px;border:1px solid var(--line-strong);border-radius:10px;background:#fff;color:var(--ink-soft);font-weight:800;cursor:pointer}.island-tabs button[aria-selected="true"]{border-color:var(--brand);background:var(--brand);color:#fff}.island-panel{margin-top:12px}.island-panel[hidden]{display:none}details.appendix{margin-top:25px;border-top:1px solid var(--line);padding-top:14px}details.appendix summary{cursor:pointer;font-weight:800;color:var(--ink)}
+    .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px}.summary-card{padding:16px 18px;border:1px solid var(--line);border-left:5px solid var(--muted);border-radius:13px;background:#fff;overflow-wrap:anywhere}.summary-card h3{margin:0 0 7px;font-size:14px}.summary-card p{margin:0;color:var(--ink-soft);line-height:1.7}.summary-card.tone-red{border-left-color:var(--red);background:var(--red-soft)}.summary-card.tone-amber{border-left-color:var(--amber);background:var(--amber-soft)}.summary-card.tone-green{border-left-color:var(--green);background:var(--green-soft)}.summary-card.tone-blue{border-left-color:var(--brand);background:var(--brand-soft)}.summary-card.tone-gray{border-left-color:#94a3b8;background:#f4f7fb}
+    .diag-grid{display:grid;gap:12px}.diag-card{padding:17px 19px;border:1px solid var(--line);border-radius:13px;background:#fff;overflow-wrap:anywhere}.diag-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}.diag-level{display:inline-flex;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800}.diag-fact{background:var(--green-soft);color:var(--green)}.diag-inference{background:var(--amber-soft);color:var(--amber)}.diag-scenario{background:var(--brand-soft);color:var(--brand-deep)}.diag-pending{background:#eef2f7;color:#47556f}.diag-object{font-weight:800;color:var(--ink-soft)}.diag-finding{margin:0 0 6px;font-size:15px;line-height:1.75}.diag-alt{margin:0;font-size:13px}.diag-refs{margin-top:8px}.diag-refs summary{cursor:pointer;font-weight:800;color:var(--brand);font-size:12px}
+    .lamp{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}.lamp-green{background:var(--green)}.lamp-red{background:var(--red)}
+    .gate-note{margin:0 0 14px;padding:10px 14px;border:1px dashed var(--line-strong);border-radius:10px;background:#fbfdff;color:var(--ink-soft);font-size:12.5px}
+    .act-cut{color:var(--red)}.act-boost{color:var(--green)}.act-move{color:var(--brand)}.act-check{color:var(--amber)}.act-neutral{color:var(--ink)}
+    .priority-card.needs-change{border-color:#f0c4bd;border-left:5px solid var(--red);background:#fffafa}
+    .audit-block{margin:12px 0;border:1px solid var(--line);border-radius:12px;background:#fbfdff}.audit-block>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px 16px;cursor:pointer;font-weight:800;color:var(--ink-soft)}.audit-block[open]>summary{border-bottom:1px solid var(--line)}.audit-status{font-size:12px;font-weight:750;color:var(--muted)}.audit-body{padding:14px 16px}.audit-body .table-wrap{max-height:420px}
+    .closing{border-left:5px solid var(--brand)}
+    .summary-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .badge.good{background:var(--green-soft);color:var(--green)}.badge.bad{background:var(--red-soft);color:var(--red)}
+    .three-min{border-left:5px solid var(--brand)}.anchor-bar{margin:0 0 14px;padding:12px 16px;border-radius:10px;background:var(--brand-soft);color:var(--brand-deep);font-weight:750;line-height:1.7}.one-thing{margin:10px 0 0;padding:10px 14px;border-left:4px solid var(--red);background:#fff;border-radius:0 8px 8px 0}.one-thing:last-of-type{border-left-color:var(--amber)}
+    .tier-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.tier-card{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:120px;padding:13px;border:1px solid var(--line);border-top:4px solid var(--muted);border-radius:12px;background:#fff;text-align:left;cursor:pointer;color:var(--ink)}.tier-card:hover,.tier-card[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}.tier-card span{font-weight:800;font-size:12.5px}.tier-card strong{font-size:27px;line-height:1.1;font-variant-numeric:tabular-nums}.tier-card small{color:var(--muted)}.tier-card .tier-rule{font-size:11px;line-height:1.5}.tier-card.tier-p0,.tier-card.tier-p1{border-top-color:var(--red)}.tier-card.tier-p0 strong,.tier-card.tier-p1 strong{color:var(--red)}.tier-card.tier-p2{border-top-color:var(--amber)}.tier-card.tier-p2 strong{color:var(--amber)}.tier-card.tier-p3{border-top-color:var(--brand)}.tier-card.tier-p3 strong{color:var(--brand)}.tier-card.tier-healthy{border-top-color:var(--green)}.tier-card.tier-healthy strong{color:var(--green)}.tier-card.tier-watch{border-top-color:#94a3b8}.tier-card.tier-watch strong{color:#64748b}
+    .tier-chip{display:inline-flex;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}.tier-chip.tier-p0,.tier-chip.tier-p1{background:var(--red-soft);color:var(--red)}.tier-chip.tier-p2{background:var(--amber-soft);color:var(--amber)}.tier-chip.tier-p3{background:var(--brand-soft);color:var(--brand-deep)}.tier-chip.tier-healthy{background:var(--green-soft);color:var(--green)}.tier-chip.tier-watch{background:#eef2f7;color:#47556f}
+    .release-line{margin:12px 0 0;padding:10px 14px;border:1px dashed var(--line-strong);border-radius:10px;background:#fbfdff;color:var(--ink-soft)}
+    .preop-check{margin:0 0 14px;padding:10px 14px;border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:0 8px 8px 0;color:#0a524d}
+    .island-decision{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0 10px}.idec{min-width:0;padding:16px 18px;border:1px solid var(--line);border-radius:13px;background:#fff;overflow-wrap:anywhere}.idec span{display:block;color:var(--muted);font-size:12px;font-weight:750}.idec b{display:block;margin-top:5px;font-size:26px;line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.01em}.idec .badge{margin-top:6px}.idec .lamp{margin-top:6px;margin-left:0}
+    .island-lead{margin:12px 0 0;font-size:15px;line-height:1.75;color:var(--ink);font-weight:650}
+    .slim-strip{margin:8px 0 0;padding:10px 14px;border-radius:10px;background:#f8faff;color:var(--ink-soft);font-size:12.5px;line-height:1.8}
+    tbody tr.row-loss{background:#fff5f4}tbody tr.row-loss:nth-child(even){background:#ffedeb}tbody tr.row-loss:hover{background:#ffe4e1}
+    .lessons-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lessons-col{padding:17px 19px;border-radius:13px;border:1px solid var(--line)}.lessons-col h3{margin:0 0 8px;font-size:15px}.lessons-good{background:var(--green-soft);border-color:#cdeeda}.lessons-bad{background:var(--red-soft);border-color:#f3d2cd}.lessons-col li{margin:6px 0;line-height:1.7}
+    .rules-list li{margin:8px 0;line-height:1.7}
+    @media(max-width:1080px){.tier-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.island-decision{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:980px){.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:680px){.summary-grid{grid-template-columns:1fr}.tier-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lessons-grid{grid-template-columns:1fr}.island-decision{grid-template-columns:1fr}}
+    .audit-zone{margin-top:22px;padding-top:3px}.empty{color:var(--muted);font-style:italic}code{background:#edf2fa;border-radius:5px;padding:2px 5px}footer{padding:18px 4px;color:var(--muted);font-size:12px;text-align:center}
+    @media(max-width:980px){.decision-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.priority-grid{grid-template-columns:1fr}.hero-inner{align-items:flex-start}.hero-mark{text-align:left}.hero-inner{flex-direction:column}}
+    @media(max-width:680px){.hero-inner{padding:26px 13px 24px}.hero h1{font-size:29px}.nav-inner{padding:8px 8px}main{padding:14px 12px 34px}.panel,.section-shell{border-radius:14px;padding:16px}.risk-strip{grid-template-columns:1fr}.decision-grid{grid-template-columns:1fr}.decision-card{min-height:96px}.decision-pair{grid-template-columns:1fr}.section-head{display:block}.badge.neutral{margin-top:8px}.action-filters label,.filter-search{flex:1 1 100%}.action-filters select,.action-filters input{width:100%}.pagination{justify-content:space-between;flex-wrap:wrap}.priority-head{display:block}.priority-head .status{margin-top:8px}}
+    @media print{body{background:#fff}.hero{background:#fff;color:#000;border-bottom:2px solid #000}.hero .meta,.brand-kicker,.hero-mark{color:#333}.report-nav,.action-filters,.pagination,.decision-card{display:none!important}main{max-width:none;padding:0}.panel,.section-shell{box-shadow:none;break-inside:avoid}.table-wrap{max-height:none;overflow:visible}.island-panel[hidden]{display:block}.action-table tr[hidden]{display:table-row}details>*{display:block!important}details summary{list-style:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.decision-card{transition:none!important}}
   </style>
 </head>
 <body>
-<main>
-  <section class="hero">
-    <h1>{{TITLE}}</h1>
-    <div class="meta">{{SUBTITLE}}</div>
-  </section>
-  {{SUMMARY}}
-  {{DIAGNOSIS}}
-  {{ACTIONS}}
-  {{AUDIT}}
-  {{QUESTIONS}}
-  {{ISLANDS}}
-  {{FORMULAS}}
-  <footer>{{FOOTER}}</footer>
-</main>
-<script>
-(() => {
-  const value = (cell) => {
-    const raw = cell.dataset.sort ?? cell.textContent.trim();
-    const number = Number(raw.replaceAll(",", ""));
-    return raw !== "" && Number.isFinite(number) ? number : raw.toLocaleLowerCase();
-  };
-  document.querySelectorAll("[data-filter-target]").forEach((input) => {
-    const table = document.getElementById(input.dataset.filterTarget);
-    if (!table) return;
-    input.addEventListener("input", () => {
-      const needle = input.value.trim().toLocaleLowerCase();
-      table.querySelectorAll("tbody tr").forEach((row) => {
-        row.hidden = needle !== "" && !row.textContent.toLocaleLowerCase().includes(needle);
+  <header class="hero">
+    <div class="hero-inner">
+      <div><span class="brand-kicker">SGSKILLS · TMALL ADS AUDIT</span><h1>{{TITLE}}</h1><div class="meta">{{SUBTITLE}}</div></div>
+      <div class="hero-mark">决策证据报告<small>审表 → 追问 → 计算 → 动作门禁</small></div>
+    </div>
+  </header>
+  <nav class="report-nav" aria-label="报告章节"><div class="nav-inner">
+    <a href="#decision-summary">决策摘要</a><a href="#action-cockpit">行动驾驶舱</a><a href="#island-analysis">分岛分析</a><a href="#audit-ledger">审表台账</a><a href="#full-appendix">完整附录</a><button type="button" id="print-report">打印/另存PDF</button>
+  </div></nav>
+  <main>
+    <aside class="risk-strip"><b>最大风险门禁</b><span>不同推广类型、归因窗口或成交互斥性未确认时，禁止跨岛相加；目标动作不等于当前允许动作。</span><span>需人工确认执行</span></aside>
+    <div id="decision-summary">{{SUMMARY}}</div>
+    {{ACTIONS}}
+    {{DIAGNOSIS}}
+    {{ISLANDS}}
+    <div class="audit-zone" id="audit-ledger">{{AUDIT}}</div>
+    {{QUESTIONS}}
+    <div id="full-appendix">{{FORMULAS}}</div>
+    {{CLOSING}}
+    <footer>{{FOOTER}}</footer>
+  </main>
+  <script>
+  (() => {
+    "use strict";
+    const qs = (selector, root = document) => root.querySelector(selector);
+    const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+    const sortableValue = (cell) => {
+      const raw = cell.dataset.sort ?? cell.textContent.trim();
+      const normalized = raw.replaceAll(",", "").replace(/^¥/, "");
+      const number = Number(normalized);
+      return raw !== "" && Number.isFinite(number) ? number : raw.toLocaleLowerCase("zh-CN");
+    };
+
+    qsa("[data-filter-target]").forEach((input) => {
+      const table = document.getElementById(input.dataset.filterTarget);
+      if (!table) return;
+      input.addEventListener("input", () => {
+        const needle = input.value.trim().toLocaleLowerCase("zh-CN");
+        qsa("tbody tr", table).forEach((row) => {
+          row.hidden = needle !== "" && !row.textContent.toLocaleLowerCase("zh-CN").includes(needle);
+        });
       });
     });
-  });
-  document.querySelectorAll("table.sortable th").forEach((header) => {
-    header.addEventListener("click", () => {
-      const table = header.closest("table");
-      const body = table.querySelector("tbody");
-      const index = Array.from(header.parentElement.children).indexOf(header);
-      const direction = header.dataset.direction === "asc" ? "desc" : "asc";
-      table.querySelectorAll("th").forEach((item) => delete item.dataset.direction);
-      header.dataset.direction = direction;
-      const rows = Array.from(body.querySelectorAll("tr"));
-      rows.sort((left, right) => {
-        const a = value(left.children[index]);
-        const b = value(right.children[index]);
-        const result = typeof a === "number" && typeof b === "number"
-          ? a - b
-          : String(a).localeCompare(String(b), "zh-CN");
-        return direction === "asc" ? result : -result;
+
+    const actionTable = qs("#actions");
+    const actionControls = {
+      level: qs("#action-level-filter"), target: qs("#action-target-filter"),
+      island: qs("#action-island-filter"), item: qs("#action-item-filter"),
+      protected: qs("#action-protected-filter"), attribution: qs("#action-attribution-filter"),
+      anomaly: qs("#action-anomaly-filter"), search: qs("#action-search"),
+      tier: qs("#action-tier-filter"),
+      pageSize: qs("#action-page-size")
+    };
+    let actionPage = 1;
+    const renderActions = () => {
+      if (!actionTable) return;
+      const rows = qsa("tbody tr", actionTable);
+      const search = (actionControls.search?.value || "").trim().toLocaleLowerCase("zh-CN");
+      const matches = rows.filter((row) => {
+        const level = actionControls.level?.value || "all";
+        return (level === "all" || (level === "protected" ? row.dataset.protected === "yes" : row.dataset.level === level))
+          && ((actionControls.target?.value || "all") === "all" || row.dataset.target === actionControls.target.value)
+          && ((actionControls.island?.value || "all") === "all" || row.dataset.island === actionControls.island.value)
+          && ((actionControls.item?.value || "all") === "all" || row.dataset.item === actionControls.item.value)
+          && ((actionControls.protected?.value || "all") === "all" || row.dataset.protected === actionControls.protected.value)
+          && ((actionControls.attribution?.value || "all") === "all" || row.dataset.attribution === actionControls.attribution.value)
+          && ((actionControls.anomaly?.value || "all") === "all" || row.dataset.anomaly === actionControls.anomaly.value)
+          && ((actionControls.tier?.value || "all") === "all" || row.dataset.tier === actionControls.tier.value)
+          && (search === "" || (row.dataset.search || "").includes(search));
       });
-      rows.forEach((row) => body.appendChild(row));
+      const size = Number(actionControls.pageSize?.value || 20);
+      const pages = Math.max(1, Math.ceil(matches.length / size));
+      actionPage = Math.min(actionPage, pages);
+      const start = (actionPage - 1) * size;
+      const visible = new Set(matches.slice(start, start + size));
+      rows.forEach((row) => { row.hidden = !visible.has(row); });
+      const result = qs("#action-result");
+      if (result) result.textContent = matches.length ? `当前显示 ${start + 1}–${Math.min(start + size, matches.length)}，共 ${matches.length} 个计划动作` : "当前筛选没有匹配动作";
+      const pageStatus = qs("#action-page-status");
+      if (pageStatus) pageStatus.textContent = `第 ${actionPage}/${pages} 页`;
+      const prev = qs("#action-prev"), next = qs("#action-next");
+      if (prev) prev.disabled = actionPage <= 1;
+      if (next) next.disabled = actionPage >= pages;
+    };
+    if (actionTable) {
+      Object.values(actionControls).filter(Boolean).forEach((control) => control.addEventListener("input", () => { actionPage = 1; renderActions(); }));
+      qs("#action-reset")?.addEventListener("click", () => {
+        Object.entries(actionControls).forEach(([key, control]) => { if (control && key !== "pageSize") control.value = key === "search" ? "" : "all"; });
+        qsa("[data-action-level-card]").forEach((card) => card.setAttribute("aria-pressed", "false"));
+        qsa("[data-tier-card]").forEach((card) => card.setAttribute("aria-pressed", "false"));
+        actionPage = 1; renderActions();
+      });
+      qs("#action-prev")?.addEventListener("click", () => { actionPage -= 1; renderActions(); });
+      qs("#action-next")?.addEventListener("click", () => { actionPage += 1; renderActions(); });
+      qsa("[data-action-level-card]").forEach((card) => card.addEventListener("click", () => {
+        const selected = card.getAttribute("aria-pressed") === "true";
+        qsa("[data-action-level-card]").forEach((item) => item.setAttribute("aria-pressed", "false"));
+        card.setAttribute("aria-pressed", String(!selected));
+        if (actionControls.level) actionControls.level.value = selected ? "all" : card.dataset.actionLevelCard;
+        actionPage = 1; renderActions();
+      }));
+      qsa("[data-tier-card]").forEach((card) => card.addEventListener("click", () => {
+        const selected = card.getAttribute("aria-pressed") === "true";
+        qsa("[data-tier-card]").forEach((item) => item.setAttribute("aria-pressed", "false"));
+        card.setAttribute("aria-pressed", String(!selected));
+        if (actionControls.tier) actionControls.tier.value = selected ? "all" : card.dataset.tierCard;
+        actionPage = 1; renderActions();
+      }));
+      renderActions();
+    }
+
+    qsa("table.sortable .sort-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const header = button.closest("th"), table = button.closest("table"), body = qs("tbody", table);
+        if (!header || !table || !body) return;
+        const index = Array.from(header.parentElement.children).indexOf(header);
+        const direction = header.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+        qsa("th", table).forEach((item) => item.setAttribute("aria-sort", "none"));
+        header.setAttribute("aria-sort", direction);
+        const rows = qsa("tr", body).sort((left, right) => {
+          const a = sortableValue(left.children[index]), b = sortableValue(right.children[index]);
+          const compared = typeof a === "number" && typeof b === "number" ? a - b : String(a).localeCompare(String(b), "zh-CN");
+          return direction === "ascending" ? compared : -compared;
+        });
+        rows.forEach((row) => body.appendChild(row));
+        if (table.id === "actions") renderActions();
+      });
     });
-  });
-})();
-</script>
+
+    const islandTabs = qsa("[data-island-tab]");
+    const activateIsland = (tab) => {
+      islandTabs.forEach((item) => {
+        const active = item === tab;
+        item.setAttribute("aria-selected", String(active));
+        item.tabIndex = active ? 0 : -1;
+        const panel = document.getElementById(item.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !active;
+      });
+    };
+    islandTabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activateIsland(tab));
+      tab.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        const targetIndex = event.key === "Home" ? 0 : event.key === "End" ? islandTabs.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + islandTabs.length) % islandTabs.length;
+        islandTabs[targetIndex].focus(); activateIsland(islandTabs[targetIndex]);
+      });
+    });
+    if (islandTabs.length) activateIsland(islandTabs[0]);
+    qs("#print-report")?.addEventListener("click", () => window.print());
+  })();
+  </script>
 </body>
 </html>
