@@ -1,5 +1,11 @@
 # 更新日志
 
+## v3.0.5 — 2026-08-07
+
+### sg-tmads-report 多平台诊断交付一致性加固
+
+- SKILL.md 的 HTML 生成指令中显性写明 `--platform` 用法：非天猫报表必须按审表确认的平台显式传入（如 `--platform 抖音`），避免 Agent 只读主说明时漏传参数、报告退回默认天猫名；与 `references/output-contract.md` 契约表述一致。
+
 ## v3.0.4 — 2026-08-06
 
 ### sg-tmads-report 平台名参数化
