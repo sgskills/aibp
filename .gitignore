@@ -5,6 +5,9 @@ __pycache__/
 *.pyo
 *.tmp
 *.bak
+*.bak-*
+.preview*
+skills/*/tests/fixtures-local/
 desktop.ini
 Thumbs.db
 .DS_Store
