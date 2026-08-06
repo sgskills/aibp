@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""sg-tmads-report 一键回归：跑诊断 + 12 条断言自动验收。
+"""sg-tmads-report 一键回归：跑诊断 + 断言自动验收。
 
 用法：
     python tests/run_regression.py           # 脱敏 demo 数据（公开 fixture）
@@ -110,6 +110,21 @@ def main():
 
     second = run_analyze(norm, narr, store, out_dir)  # 同目录第二次，应被拒绝
 
+    # 平台参数验证：--platform 抖音 应改变文件名与标题，且不带「天猫」
+    douyin_dir = Path(tempfile.mkdtemp(prefix="tmads-regression-douyin-"))
+    dyr = subprocess.run(
+        [sys.executable, str(SKILL_ROOT / "scripts" / "analyze_report.py"),
+         "--input", str(norm), "--narrative-input", str(narr),
+         "--json-output", str(douyin_dir / "report.json"),
+         "--html-output", str(douyin_dir / "report.html"),
+         "--checkpoint-status", "answered",
+         "--store-name", "抖优选", "--platform", "抖音"],
+        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
+    dy_files = [p for p in douyin_dir.glob("*.html")] if dyr.returncode == 0 else []
+    dy_html = dy_files[0].read_text(encoding="utf-8") if dy_files else ""
+    dy_title = re.search(r"<title>(.*?)</title>", dy_html, re.S)
+    dy_title = dy_title.group(1) if dy_title else ""
+
     checks = []
 
     def check(name, ok, detail=""):
@@ -120,6 +135,17 @@ def main():
     check("文件名规范化《XX店铺天猫推广诊断报告-YYMMDD》",
           re.match(r"^[^\\/]+店铺天猫推广诊断报告-\d{6}\.html$", fname or ""), fname)
     check("店铺名归一化（无「店店铺」）", "店店铺" not in fname, fname)
+
+    # 1b 平台参数：文件名与标题跟随 --platform
+    dy_fname = dy_files[0].name if dy_files else ""
+    check("--platform 抖音：文件名与标题跟随平台",
+          re.match(r"^抖优选店铺抖音推广诊断报告-\d{6}\.html$", dy_fname or "")
+          and "抖音推广诊断报告" in dy_title
+          and "天猫" not in dy_fname and "天猫" not in dy_title,
+          f"文件 {dy_fname} ｜ 标题 {dy_title}")
+
+    # 1c 副标题含平台标识
+    check("副标题含平台标识", "平台：抖音" in dy_html and "平台：天猫" in html)
 
     # 2 副标题三要素
     check("副标题含 诊断时间/诊断人/数据周期",

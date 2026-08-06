@@ -3272,7 +3272,7 @@ def _build_action_dashboard(
     )
 
 
-def render_html(result: Mapping[str, Any]) -> str:
+def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
     """从同一 ReportModel 渲染离线 HTML；缺叙事时明确标为数据附件。"""
 
     template_path = Path(__file__).resolve().parents[1] / "assets" / "report-template.html"
@@ -3305,7 +3305,7 @@ def render_html(result: Mapping[str, Any]) -> str:
     coverage = result.get("coverage") or {}
     report_status = str(coverage.get("report_status") or "evidence_only")
     is_full = report_status == "full"
-    title = "天猫推广诊断报告" if is_full else "天猫推广数据分析附件"
+    title = f"{platform}推广诊断报告" if is_full else f"{platform}推广数据分析附件"
     store_name = _normalize_store_label(context.get("store_name")) or "未提供店铺名"
     status_labels = {
         "complete": "可完整分析",
@@ -3324,7 +3324,7 @@ def render_html(result: Mapping[str, Any]) -> str:
     period_text = f"{all_dates[0]} ~ {all_dates[-1]}" if all_dates else "未确认"
     diag_time = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     subtitle = (
-        f"店铺：{store_name}｜诊断时间：{diag_time}｜诊断人：sg-tmads-report v3.0"
+        f"店铺：{store_name}｜平台：{_esc(platform)}｜诊断时间：{diag_time}｜诊断人：sg-tmads-report v3.0"
         f"｜数据周期：{period_text}｜审表等级："
         f"{status_labels.get(str(audit.get('status')), audit.get('status', '未确认'))}"
         f"｜独立数据岛：{len(islands)}｜模型：v{_esc(result.get('schema_version'))}"
@@ -4259,12 +4259,18 @@ def _normalize_store_label(name: Any) -> str:
     return store
 
 
-def _canonical_html_filename(result: Mapping[str, Any]) -> str:
+def _normalize_platform_label(name: Any) -> str:
+    """归一化平台名：去空白与文件名非法字符，最长 12 字，为空回退「天猫」。"""
+    platform = re.sub(r"\s+", "", str(name or ""))
+    platform = re.sub(r'[\\/:*?"<>|\r\n]+', "", platform)
+    return platform[:12] or "天猫"
+
+
+def _canonical_html_filename(result: Mapping[str, Any], platform: str = "天猫") -> str:
     """规范文件名：《XX店铺XX平台推广诊断报告-YYMMDD》。"""
     context = result.get("context") or {}
     store = _normalize_store_label(context.get("store_name")) or "未命名店铺"
     store = re.sub(r'[\\/:*?"<>|\r\n]+', "", store)
-    platform = "天猫"
     coverage = result.get("coverage") or {}
     kind = (
         "推广诊断报告"
@@ -4433,6 +4439,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--dataset-name", default="", help="CSV/TSV 数据岛名称")
     parser.add_argument("--store-name", default="", help="店铺名；用于副标题与规范文件名")
+    parser.add_argument(
+        "--platform",
+        default="天猫",
+        help="平台名（如 天猫/抖音/京东）；用于报告标题、副标题与规范文件名，默认 天猫",
+    )
     parser.add_argument("--report-type", default="unknown", help="CSV/TSV 报表类型")
     parser.add_argument(
         "--attribution-window", default="unknown", help="CSV/TSV 归因窗口"
@@ -4487,12 +4498,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             if isinstance(context, dict):
                 context["store_name"] = args.store_name
         json_text = json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False)
-        html_text = render_html(result) if args.html_output else None
+        platform = _normalize_platform_label(args.platform)
+        html_text = render_html(result, platform=platform) if args.html_output else None
         if args.json_output:
             _write_text(args.json_output, json_text, force=args.force)
         if args.html_output and html_text is not None:
             html_path = args.html_output
-            canonical = _canonical_html_filename(result)
+            canonical = _canonical_html_filename(result, platform=platform)
             if html_path.name != canonical:
                 html_path = html_path.parent / canonical
                 if html_path != args.html_output:
