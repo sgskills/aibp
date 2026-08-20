@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$RepoRoot
+    [string]$RepoRoot,
+    [long]$SourceDateEpoch = 0
 )
 
 Set-StrictMode -Version 2.0
@@ -26,7 +27,8 @@ function Remove-PackageResidue {
 function New-DeterministicZip {
     param(
         [string]$SourceRoot,
-        [string]$DestinationPath
+        [string]$DestinationPath,
+        [System.DateTimeOffset]$ArchiveTimestamp
     )
 
     $resolvedSource = (Resolve-Path -LiteralPath $SourceRoot).Path
@@ -34,7 +36,6 @@ function New-DeterministicZip {
         [System.IO.Path]::DirectorySeparatorChar,
         [System.IO.Path]::AltDirectorySeparatorChar
     ) + [System.IO.Path]::DirectorySeparatorChar
-    $fixedTimestamp = New-Object System.DateTimeOffset 2000, 1, 1, 0, 0, 0, ([System.TimeSpan]::Zero)
     $files = @(
         Get-ChildItem -LiteralPath $resolvedSource -Recurse -File |
             ForEach-Object {
@@ -67,12 +68,13 @@ function New-DeterministicZip {
         )
         foreach ($file in $files) {
             # Stored entries avoid runtime-specific compression differences.
-            # Fixed order and timestamps make identical source trees byte-identical.
+            # Fixed order plus one caller-supplied build timestamp make identical
+            # source trees byte-identical without giving extracted files a fake year 2000 date.
             $entry = $archive.CreateEntry(
                 $file.EntryName,
                 [System.IO.Compression.CompressionLevel]::NoCompression
             )
-            $entry.LastWriteTime = $fixedTimestamp
+            $entry.LastWriteTime = $ArchiveTimestamp
             $entry.ExternalAttributes = 0
 
             $inputStream = [System.IO.File]::Open(
@@ -143,6 +145,16 @@ function Copy-RuntimeSkill {
 }
 
 $resolvedRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
+$archiveEpoch = if ($SourceDateEpoch -gt 0) {
+    $SourceDateEpoch
+}
+else {
+    [System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+}
+# ZIP timestamps have two-second precision. Normalize once so every entry and
+# every reproducibility build receives the same representable instant.
+$archiveEpoch -= ($archiveEpoch % 2)
+$archiveTimestamp = [System.DateTimeOffset]::FromUnixTimeSeconds($archiveEpoch).ToLocalTime()
 $validatorPath = Join-Path $resolvedRoot 'tools\validate.ps1'
 $versionPath = Join-Path $resolvedRoot 'VERSION'
 $licensePath = Join-Path $resolvedRoot 'LICENSE'
@@ -189,11 +201,11 @@ try {
         Copy-RuntimeSkill -SourceSkill $skillDir.FullName -DestinationRoot $singleStage -LicensePath $licensePath -IncludeLicense
 
         $singleZip = Join-Path $distPath ("{0}-{1}.zip" -f $skillDir.Name, $version)
-        New-DeterministicZip -SourceRoot $singleStage -DestinationPath $singleZip
+        New-DeterministicZip -SourceRoot $singleStage -DestinationPath $singleZip -ArchiveTimestamp $archiveTimestamp
     }
 
     $bundleZip = Join-Path $distPath ("aibp-{0}.zip" -f $version)
-    New-DeterministicZip -SourceRoot $bundleStage -DestinationPath $bundleZip
+    New-DeterministicZip -SourceRoot $bundleStage -DestinationPath $bundleZip -ArchiveTimestamp $archiveTimestamp
 
     $zipFiles = @(Get-ChildItem -LiteralPath $distPath -Filter '*.zip' -File | Sort-Object Name)
     $checksumLines = foreach ($zipFile in $zipFiles) {
@@ -217,4 +229,4 @@ finally {
     }
 }
 
-Write-Output "BUILD PASS: created $($skillDirs.Count) individual package(s), one AIBP package, and SHA256SUMS.txt."
+Write-Output "BUILD PASS: created $($skillDirs.Count) individual package(s), one AIBP package, and SHA256SUMS.txt; archive timestamp $($archiveTimestamp.ToString('o'))."

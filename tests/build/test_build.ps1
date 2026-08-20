@@ -4,6 +4,8 @@ param()
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $buildPath = Join-Path $repoRoot 'tools\build.ps1'
+$buildEpoch = [System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+$buildEpoch -= ($buildEpoch % 2)
 
 if (-not (Test-Path -LiteralPath $buildPath -PathType Leaf)) {
     throw "RED: build script not implemented: $buildPath"
@@ -25,7 +27,7 @@ $probeCacheFile = Join-Path $probeCacheDirectory 'package-residue-probe.pyc'
 [System.IO.File]::WriteAllBytes($probeCacheFile, [byte[]](0x50, 0x59, 0x43))
 
 try {
-    $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot 2>&1
+    $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot -SourceDateEpoch $buildEpoch 2>&1
     $exitCode = $LASTEXITCODE
     $output | ForEach-Object { Write-Output $_ }
     if ($exitCode -ne 0) {
@@ -188,8 +190,28 @@ foreach ($zipFile in $zipFiles) {
     }
 }
 
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$expectedArchiveTimestamp = [System.DateTimeOffset]::FromUnixTimeSeconds($buildEpoch)
+foreach ($zipFile in $zipFiles) {
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($zipFile.FullName)
+    try {
+        foreach ($entry in $archive.Entries) {
+            $actual = $entry.LastWriteTime.ToUniversalTime()
+            if ([Math]::Abs(($actual - $expectedArchiveTimestamp).TotalSeconds) -gt 2) {
+                throw "Archive timestamp mismatch in $($zipFile.Name): $($entry.FullName) has $actual, expected $expectedArchiveTimestamp"
+            }
+            if ($actual.Year -le 2000) {
+                throw "Archive entry still uses a fake legacy timestamp: $($zipFile.Name) / $($entry.FullName) / $actual"
+            }
+        }
+    }
+    finally {
+        $archive.Dispose()
+    }
+}
+
 $firstBuildChecksums = @($checksumLines)
-$secondBuildOutput = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot 2>&1
+$secondBuildOutput = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildPath -RepoRoot $repoRoot -SourceDateEpoch $buildEpoch 2>&1
 $secondBuildExitCode = $LASTEXITCODE
 $secondBuildOutput | ForEach-Object { Write-Output $_ }
 if ($secondBuildExitCode -ne 0) {

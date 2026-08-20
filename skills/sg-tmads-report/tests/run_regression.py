@@ -147,6 +147,41 @@ def main():
     # 1c 副标题含平台标识
     check("副标题含平台标识", "平台：抖音" in dy_html and "平台：天猫" in html)
 
+    # 1d 平台仅替换品牌文字，CSS / DOM / 交互结构保持一致
+    tmall_style = re.search(r"<style>(.*?)</style>", html, re.S)
+    douyin_style = re.search(r"<style>(.*?)</style>", dy_html, re.S)
+    required_ids = {
+        "decision-summary", "action-cockpit", "island-analysis",
+        "audit-ledger", "full-appendix", "action-search",
+        "action-target-filter", "action-level-filter",
+    }
+    tmall_ids = set(re.findall(r'id="([^"]+)"', html))
+    douyin_ids = set(re.findall(r'id="([^"]+)"', dy_html))
+    check("多平台品牌标识动态化（无 TMALL 硬编码）",
+          "SGSKILLS · 天猫 ADS AUDIT" in html
+          and "SGSKILLS · 抖音 ADS AUDIT" in dy_html
+          and "TMALL ADS AUDIT" not in dy_html)
+    check("天猫/抖音共用同一 CSS 与关键 DOM",
+          bool(tmall_style and douyin_style)
+          and tmall_style.group(1) == douyin_style.group(1)
+          and required_ids <= tmall_ids
+          and required_ids <= douyin_ids
+          and all(len(re.findall(pattern, html)) == len(re.findall(pattern, dy_html))
+                  for pattern in (r"<section\b", r"<table\b", r"<input\b", r"<select\b")))
+
+    # 1e 用户可见财务术语、证据标签与版本
+    check("推广毛利标签完整且无旧表头/净亏",
+          "推广毛利盈亏（情景）" in html
+          and "推广毛利状态" in html
+          and all(token not in html for token in (
+              "<th>盈亏</th>", "<th>情景盈亏</th>", "<th>当日盈亏</th>",
+              "<span>情景盈亏合计</span>", "净亏",
+              "成交、ROI 与盈亏为分岛之和",
+              "当日盈亏为商品毛利口径情景估算",
+          )))
+    check("诊断标签无未标注且副标题为 3.0.6",
+          "未标注" not in html and "sg-tmads-report 3.0.6" in html)
+
     # 2 副标题三要素
     check("副标题含 诊断时间/诊断人/数据周期",
           all(k in html for k in ("诊断时间", "诊断人", "数据周期")))
@@ -200,6 +235,16 @@ def main():
     check("报告 actions 逐计划全覆盖", len(actions) == exp["plan_count"],
           f"actions {len(actions)} / 应有 {exp['plan_count']}")
 
+    # 13 默认交付合同：文字关键结论 + 标准 HTML，不预先询问
+    skill_text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+    contract_text = (SKILL_ROOT / "references" / "output-contract.md").read_text(encoding="utf-8")
+    prompt_text = (SKILL_ROOT / "agents" / "openai.yaml").read_text(encoding="utf-8")
+    check("默认文字 + 标准 HTML 且不预先询问",
+          "默认交付是对话关键结论与标准离线 HTML" in skill_text
+          and "不得先询问" in contract_text
+          and "without asking first" in prompt_text
+          and "最多询问一次是否需要离线 HTML" not in skill_text)
+
     print("=" * 64)
     print(f"sg-tmads-report 回归验收 ｜ 数据：{label} ｜ 计划数：{exp['plan_count']}")
     print("=" * 64)
@@ -215,9 +260,9 @@ def main():
     print("-" * 64)
     print(f"结果：{len(checks) - failed}/{len(checks)} 通过 ｜ 输出目录 {out_dir}")
     if failed:
-        print("状态：❌ 有退化，请修复后重跑")
+        print("状态：FAIL，有退化，请修复后重跑")
         sys.exit(1)
-    print("状态：✅ 全部通过")
+    print("状态：PASS，全部通过")
     sys.exit(0)
 
 

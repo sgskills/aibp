@@ -9,6 +9,8 @@
 - **情景估算**：依赖全店统一毛利率、退款金额率或其他用户假设。
 - **待核验**：需要后台口径、归因窗口、商品结构或官方来源确认。
 
+结构化诊断必须显式写 `evidence_level`。若上游叙事遗漏，合并器按 `claim_type` 确定性补齐：`data_fact|fact|observation|attributed` → 数据事实，`structural_inference|inference` → 结构性推断，`scenario_estimate|scenario` → 情景估算，其余一律 → 待核验。显式但非法的值同样降为待核验；正式 HTML 不得显示“未标注”。
+
 归因报表不是增量实验。即使归因窗口已知，也不要把相关性或归因记账写成真实因果增量。
 
 确定性脚本只生成证据模型，不自行补写经营诊断或动作。Agent 必须在审表、追问和计算后，把执行摘要、诊断与行动整理成结构化叙事，再与证据合并为同一个 `ReportModel v2.1`。任何叙事都要引用模型中的数据岛、对象、字段、指标、公式或用户约束。
@@ -95,7 +97,7 @@
 
 同一计划可能同时出现“效率好但没有预算受限证据”“效率差但归因未成熟”等冲突。不要强行选直接动作：保留目标方向，把当前允许动作降级为核验，并把冲突写进 `constraints`。
 
-结构化诊断至少包含：`claim_type / object_type / dataset_id / object_id / evidence_refs / finding / alternative`。结构化行动至少包含：`target_action / allowed_action / action_code / action_level / object_type / dataset_id / object_id / evidence_refs / preconditions / constraints / review_metrics / review_trigger`；目标与当前动作不同时填 `upgrade_conditions`，控制实验填 `stop_conditions`，暂停填 `resume_conditions`，出价动作填可解析的 `control_ref`，关闭动作填可解析的 `confirmation_ref`，预算迁移填 `funding_source_ref / funding_target_ref`。
+结构化诊断至少包含：`evidence_level / claim_type / object_type / dataset_id / object_id / evidence_refs / finding / alternative`。结构化行动至少包含：`target_action / allowed_action / action_code / action_level / object_type / dataset_id / object_id / evidence_refs / preconditions / constraints / review_metrics / review_trigger`；目标与当前动作不同时填 `upgrade_conditions`，控制实验填 `stop_conditions`，暂停填 `resume_conditions`，出价动作填可解析的 `control_ref`，关闭动作填可解析的 `confirmation_ref`，预算迁移填 `funding_source_ref / funding_target_ref`。
 
 `evidence_refs` 必须能解析到同一个报告模型中的对象和指标，且与行动对象一致。以下任一情况都属于阻断错误：缺证据、引用不存在或错对象；目标数据岛没有对应维度；未知/冲突归因下直接把零成交升级为暂停；受保护计划被暂停；硬预算上限下无资金来源地增加总预算；肯定式因果主张。阻断时不展示该叙事，`report_status` 保持 `evidence_only`，HTML 只能叫“数据分析附件”。
 

@@ -27,6 +27,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 
 LOGGER = logging.getLogger("sg-tmads-report")
+SKILL_VERSION = "3.0.6"
 SCHEMA_VERSION = "2.1"
 UNKNOWN_VALUES = {"", "unknown", "未知", "未确认", "n/a", "na", "none", "null"}
 TOTAL_LABELS = {"合计", "总计", "汇总", "全部"}
@@ -554,6 +555,35 @@ def _infer_report_type(name: str, explicit: Any) -> tuple[str, bool]:
 def _enum_value(value: Any) -> str:
     text = unicodedata.normalize("NFKC", "" if value is None else str(value))
     return text.strip().lower().replace("-", "_").replace(" ", "_")
+
+
+EVIDENCE_LEVELS = {"数据事实", "结构性推断", "情景估算", "待核验"}
+CLAIM_TYPE_EVIDENCE_LEVELS = {
+    "data_fact": "数据事实",
+    "fact": "数据事实",
+    "observation": "数据事实",
+    "attributed": "数据事实",
+    "structural_inference": "结构性推断",
+    "inference": "结构性推断",
+    "scenario_estimate": "情景估算",
+    "scenario": "情景估算",
+    "boundary": "待核验",
+    "unknown": "待核验",
+}
+
+
+def _resolve_evidence_level(record: Mapping[str, Any]) -> str:
+    """给诊断卡确定性分级；未知或非法值安全降级为“待核验”。"""
+
+    explicit = str(record.get("evidence_level") or "").strip()
+    if explicit in EVIDENCE_LEVELS:
+        return explicit
+    if explicit:
+        return "待核验"
+    return CLAIM_TYPE_EVIDENCE_LEVELS.get(
+        _enum_value(record.get("claim_type")),
+        "待核验",
+    )
 
 
 def _normalize_attribution(
@@ -1094,7 +1124,7 @@ def _build_questions(
         add(
             "gross_margin_rate",
             "商品毛利率是多少，是否仅按成交金额扣商品成本，适用于全店还是指定商品？",
-            "缺少该口径时不能计算相关盈亏与保本数值。",
+            "缺少该口径时不能计算推广毛利盈亏与保本数值。",
         )
     if refund_amount_rate is None:
         add(
@@ -1110,7 +1140,7 @@ def _build_questions(
         add(
             "scope",
             "这组商品毛利率和退款金额率是否为全店统一口径（store-wide）？",
-            "费率适用范围未确认时不能计算推广贡献盈亏与保本 PPC。",
+            "费率适用范围未确认时不能计算推广毛利盈亏与保本 PPC。",
         )
     context_gaps = [
         str(dataset.get("name"))
@@ -1318,7 +1348,7 @@ def analyze_payload(
         and refund_amount_rate is not None
         and scope_error
     ):
-        warnings.append(f"费率适用范围无效：{scope_error}；已关闭推广贡献盈亏与保本 PPC。")
+        warnings.append(f"费率适用范围无效：{scope_error}；已关闭推广毛利盈亏与保本 PPC。")
     effective_gross_margin_rate = (
         gross_margin_rate if financial_scope == "store-wide" else None
     )
@@ -1421,7 +1451,7 @@ def analyze_payload(
             warnings.append(
                 f"{dataset['name']} 的"
                 + "、".join(scenario_reasons)
-                + "；推广贡献盈亏与保本 PPC 仅为情景估算。"
+                + "；推广毛利盈亏与保本 PPC 仅为情景估算。"
             )
         islands.append(
             {
@@ -2343,15 +2373,15 @@ def _build_evidence_insights(result: Mapping[str, Any]) -> dict[str, Any]:
         win_in_cls = sum(1 for r in winners if r["cls"] == best)
         good_patterns.append(
             f"「{best}」类计划 {int(n)} 个：花费 {sp:,.0f} 元、ROI {_cls_roi(best):.2f}、"
-            f"情景盈亏 {pf:+,.0f} 元；{len(winners)} 个盈利计划中 {win_in_cls} 个属此类——本期合计盈亏最好的计划大类。"
+            f"推广毛利盈亏（情景）{pf:+,.0f} 元；{len(winners)} 个推广毛利为正计划中 {win_in_cls} 个属此类——本期推广毛利盈亏合计最好的计划大类。"
         )
     if winners:
         roi_list = sorted(r["roi"] for r in winners if r["roi"] is not None)
         median = roi_list[len(roi_list) // 2] if roi_list else None
         total_win = sum(r["profit"] for r in winners)
-        line = f"盈利 {len(winners)} 个计划合计情景盈亏 +{total_win:,.0f} 元"
+        line = f"推广毛利为正的 {len(winners)} 个计划合计推广毛利盈亏（情景）+{total_win:,.0f} 元"
         if median is not None:
-            line += f"，盈利计划 ROI 中位数 {median:.2f}"
+            line += f"，推广毛利为正计划 ROI 中位数 {median:.2f}"
         good_patterns.append(line + "。")
     island_profit = [
         (str(island.get("source_dataset") or island.get("dataset_id")), island.get("metrics") or {})
@@ -2365,7 +2395,7 @@ def _build_evidence_insights(result: Mapping[str, Any]) -> dict[str, Any]:
         if m["promotion_contribution_profit"] > 0:
             roi_txt = f"{m['roi']:.2f}" if isinstance(m.get("roi"), (int, float)) else "不可计算"
             good_patterns.append(
-                f"「{name}」岛：ROI {roi_txt}、情景盈亏 {m['promotion_contribution_profit']:+,.0f} 元——本期效率主力。"
+                f"「{name}」岛：ROI {roi_txt}、推广毛利盈亏（情景）{m['promotion_contribution_profit']:+,.0f} 元——本期效率主力。"
             )
 
     bad_patterns: list[str] = []
@@ -2375,14 +2405,14 @@ def _build_evidence_insights(result: Mapping[str, Any]) -> dict[str, Any]:
         n, sp, _, pf = cls_agg[cls]
         roi = _cls_roi(cls)
         be_txt = f"（低于情景保本线 {breakeven:.2f}）" if breakeven and roi < breakeven else ""
-        only_txt = "——唯一整体亏损的计划大类" if len(loss_classes) == 1 else "——整体亏损的计划大类"
+        only_txt = "——唯一推广毛利为负的计划大类" if len(loss_classes) == 1 else "——推广毛利为负的计划大类"
         bad_patterns.append(
-            f"「{cls}」类 {int(n)} 个：花费 {sp:,.0f} 元、ROI {roi:.2f}{be_txt}、情景盈亏 {pf:+,.0f} 元{only_txt}。"
+            f"「{cls}」类 {int(n)} 个：花费 {sp:,.0f} 元、ROI {roi:.2f}{be_txt}、推广毛利盈亏（情景）{pf:+,.0f} 元{only_txt}。"
         )
     if len(new_losers) >= 3 and losers:
         bad_patterns.append(
-            f"{len(losers)} 个亏损计划中 {len(new_losers)} 个是投放不足 15 天的新建计划"
-            f"（合计 {sum(r['profit'] for r in new_losers):+,.0f} 元）——新建计划是本期亏损的重要来源。"
+            f"{len(losers)} 个推广毛利为负计划中 {len(new_losers)} 个是投放不足 15 天的新建计划"
+            f"（推广毛利盈亏合计 {sum(r['profit'] for r in new_losers):+,.0f} 元）——新建计划是本期推广毛利为负的重要来源。"
         )
     if zero_mature:
         top = zero_mature[:2]
@@ -2416,7 +2446,7 @@ def _build_evidence_insights(result: Mapping[str, Any]) -> dict[str, Any]:
     next_time_rules.append(
         {
             "rule": "加码只给有「预算顶格」证据的成熟计划；投放 <7 天或花费 <1,000 元的小样本高 ROI 不加码。",
-            "basis": "小样本 ROI 波动大，本期亏损计划中包含投放不足 15 天的新建计划。",
+            "basis": "小样本 ROI 波动大，本期推广毛利为负计划中包含投放不足 15 天的新建计划。",
             "status": "待验证",
         }
     )
@@ -2443,7 +2473,7 @@ def _build_evidence_insights(result: Mapping[str, Any]) -> dict[str, Any]:
     if attribution_unknown:
         review_hooks.append("归因窗口是否已确认（决定砍减类候选动作能否升级为执行）")
     if breakeven:
-        review_hooks.append(f"下期复核亏损计划是否按情景保本线 {breakeven:.2f} 收敛")
+        review_hooks.append(f"下期复核推广毛利为负计划是否按情景保本线 {breakeven:.2f} 收敛")
 
     return {
         "good_patterns": good_patterns,
@@ -2476,7 +2506,7 @@ def _build_default_summary_cards(result: Mapping[str, Any]) -> list[dict[str, st
     cards: list[dict[str, str]] = []
     if losers:
         body = (
-            f"{len(losers)} 个情景亏损计划合计 {sum(r['profit'] for r in losers):+,.0f} 元、"
+            f"{len(losers)} 个推广毛利为负计划合计 {sum(r['profit'] for r in losers):+,.0f} 元、"
             f"消耗 {sum(r['spend'] for r in losers):,.0f} 元"
         )
         if zero_mature:
@@ -2504,17 +2534,17 @@ def _build_default_summary_cards(result: Mapping[str, Any]) -> list[dict[str, st
                 {
                     "tone": "green",
                     "title": "表现良好",
-                    "body": f"「{name}」岛 ROI {roi_txt}、情景盈亏 {m['promotion_contribution_profit']:+,.0f} 元，为本期效率主力。",
+                    "body": f"「{name}」岛 ROI {roi_txt}、推广毛利盈亏（情景）{m['promotion_contribution_profit']:+,.0f} 元，为本期效率主力。",
                 }
             )
     boundary = "全部成交为报表归因记录，不能证明广告带来新增成交。" if attribution_unknown else "成交口径以报表归因为准。"
     if assumptions.get("financial_calculation_enabled") and breakeven:
         boundary += (
-            f"盈亏类指标按毛利率 {margin:.0%}、退款金额率 {refund:.0%} 全店统一假设计算，"
+            f"推广毛利盈亏类指标按毛利率 {margin:.0%}、退款金额率 {refund:.0%} 全店统一假设计算，"
             f"情景保本 ROI {breakeven:.2f}；属情景估算，不是净利润。"
         )
     else:
-        boundary += "未提供毛利率/退款金额率，本报告不做盈亏判断。"
+        boundary += "未提供毛利率/退款金额率，本报告不做推广毛利盈亏判断。"
     cards.append({"tone": "gray", "title": "口径边界（先看这条）", "body": boundary})
     return cards
 
@@ -2549,6 +2579,8 @@ def merge_narrative(
         ),
         ("evidence_refs",),
     )
+    for diagnosis in diagnoses:
+        diagnosis["evidence_level"] = _resolve_evidence_level(diagnosis)
     actions = _normalize_records(
         narrative.get("actions"),
         "actions",
@@ -2604,11 +2636,18 @@ def merge_narrative(
         diagnoses,
         actions,
     )
+    raw_insights = narrative.get("insights")
+    valid_insights = raw_insights if isinstance(raw_insights, Mapping) else None
     audit = copy.deepcopy(merged.get("audit") or {})
     audit["narrative_validation"] = {
         "status": "blocked" if violations else "passed",
         "violations": violations,
     }
+    if raw_insights is not None and valid_insights is None:
+        audit["narrative_insights"] = {
+            "status": "fallback_invalid",
+            "reason": "insights 必须是对象；已保留确定性证据模型生成的经验沉淀。",
+        }
     merged["audit"] = audit
     if violations:
         coverage = copy.deepcopy(merged.get("coverage") or {})
@@ -2626,7 +2665,7 @@ def merge_narrative(
 
     merged["executive_summary"] = executive_summary
     merged["summary_cards"] = narrative.get("summary_cards") or merged.get("summary_cards") or []
-    merged["insights"] = narrative.get("insights") or merged.get("insights") or {}
+    merged["insights"] = valid_insights or merged.get("insights") or {}
     merged["diagnoses"] = diagnoses
     merged["actions"] = actions
     coverage = copy.deepcopy(merged.get("coverage") or {})
@@ -2674,7 +2713,7 @@ def _format_number(value: Any, metric: str = "") -> str:
         return _esc(value)
     if metric == "profit_signal":
         lamp = "green" if value >= 0 else "red"
-        text = "盈利" if value >= 0 else "亏损"
+        text = "为正" if value >= 0 else "为负"
         return f'<span class="lamp lamp-{lamp}" aria-hidden="true"></span>{text}'
     if metric in {"ctr", "order_cvr", "buyer_cvr"}:
         return f"{value:.2%}"
@@ -2887,7 +2926,7 @@ def _metric_line(snapshot: Mapping[str, Any], compact: bool = False) -> str:
     if snapshot.get("roi") is not None:
         metrics.append(f"ROI {_format_number(snapshot.get('roi'), 'roi')}")
     if snapshot.get("profit") is not None:
-        profit_label = "盈亏" if compact else "商品毛利口径推广贡献盈亏"
+        profit_label = "推广毛利盈亏" if compact else "商品毛利口径推广贡献盈亏"
         metrics.append(
             profit_label
             + " "
@@ -2903,7 +2942,7 @@ def _metric_line(snapshot: Mapping[str, Any], compact: bool = False) -> str:
 
 TIER_LABELS = {
     "p0": "P0 成熟零成交",
-    "p1": "P1 净亏",
+    "p1": "P1 推广毛利为负",
     "p2": "P2 贴近保本",
     "p3": "P3 加码候选",
     "healthy": "保持健康",
@@ -2911,10 +2950,10 @@ TIER_LABELS = {
 }
 TIER_RULES = {
     "p0": "≥14 天且花费 ≥1,000 元仍零成交，无产出无损，核验后优先关停",
-    "p1": "情景盈亏为负但有成交，核验后砍减",
-    "p2": "盈利但 ROI 低于 3.0（贴线观察，不加码）",
+    "p1": "推广毛利盈亏（情景）为负但有成交，核验后砍减",
+    "p2": "推广毛利为正但 ROI 低于 3.0（贴线观察，不加码）",
     "p3": "保本线以上且有预算顶格证据的成熟计划，可做小步加码实验",
-    "healthy": "ROI ≥ 3.0 且盈利，保持并每周复查",
+    "healthy": "ROI ≥ 3.0 且推广毛利为正，保持并每周复查",
     "watch": "投放 <7 天或累计花费 <1,000 元，证据不足以支持动作",
 }
 
@@ -3063,7 +3102,7 @@ def _build_action_dashboard(
         '<p class="release-line"><b>可释放预算（事实数）：</b>'
         + _esc(
             f"P0+P1 合计消耗 {releasable_spend:,.2f} 元，"
-            f"这些计划情景净亏合计 {loss_profit_sum:,.0f} 元；"
+            f"这些计划推广毛利盈亏（情景）合计 {loss_profit_sum:,.0f} 元；"
             "核验落地后预算可按 P3 方向重新分配，幅度待确认，不编造。"
         )
         + "</p>"
@@ -3255,7 +3294,7 @@ def _build_action_dashboard(
         '<div class="action-filters" aria-label="行动筛选">'
         '<label>当前允许<select id="action-level-filter"><option value="all">全部</option><option value="execute">可直接执行</option><option value="experiment">小范围实验</option><option value="investigate">先核验</option><option value="protected">受保护</option></select></label>'
         '<label>目标动作<select id="action-target-filter"><option value="all">全部</option><option value="increase_budget">增加预算</option><option value="decrease_budget">减少预算</option><option value="increase_bid">增加出价</option><option value="decrease_bid">降低出价</option><option value="reallocate">预算重分配</option><option value="maintain">保持并观察</option><option value="pause">暂停投放</option><option value="close">关闭候选</option><option value="investigate">先核验</option><option value="request_data">补数后判断</option></select></label>'
-        '<label>梯队<select id="action-tier-filter"><option value="all">全部</option><option value="p0">P0 成熟零成交</option><option value="p1">P1 净亏</option><option value="p2">P2 贴近保本</option><option value="p3">P3 加码候选</option><option value="healthy">保持健康</option><option value="watch">观察区</option></select></label>'
+        '<label>梯队<select id="action-tier-filter"><option value="all">全部</option><option value="p0">P0 成熟零成交</option><option value="p1">P1 推广毛利为负</option><option value="p2">P2 贴近保本</option><option value="p3">P3 加码候选</option><option value="healthy">保持健康</option><option value="watch">观察区</option></select></label>'
         f'<label>数据岛<select id="action-island-filter"><option value="all">全部</option>{island_options}</select></label>'
         f'{item_filter_html}'
         '<label>受保护<select id="action-protected-filter"><option value="all">全部</option><option value="yes">是</option><option value="no">否</option></select></label>'
@@ -3275,6 +3314,7 @@ def _build_action_dashboard(
 def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
     """从同一 ReportModel 渲染离线 HTML；缺叙事时明确标为数据附件。"""
 
+    platform = _normalize_platform_label(platform)
     template_path = Path(__file__).resolve().parents[1] / "assets" / "report-template.html"
     try:
         template = template_path.read_text(encoding="utf-8")
@@ -3324,7 +3364,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
     period_text = f"{all_dates[0]} ~ {all_dates[-1]}" if all_dates else "未确认"
     diag_time = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     subtitle = (
-        f"店铺：{store_name}｜平台：{_esc(platform)}｜诊断时间：{diag_time}｜诊断人：sg-tmads-report v3.0"
+        f"店铺：{store_name}｜平台：{_esc(platform)}｜诊断时间：{diag_time}｜诊断人：sg-tmads-report {SKILL_VERSION}"
         f"｜数据周期：{period_text}｜审表等级："
         f"{status_labels.get(str(audit.get('status')), audit.get('status', '未确认'))}"
         f"｜独立数据岛：{len(islands)}｜模型：v{_esc(result.get('schema_version'))}"
@@ -3428,10 +3468,10 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
         anchor_text += (
             f"情景保本 ROI {breakeven_roi:.2f}"
             f"（毛利率 {_format_number(margin_rate, 'ctr')}、退款金额率 {_format_number(refund_rate, 'ctr')} 全店统一假设）——"
-            "ROI 低于此线，商品毛利覆盖不了推广费，属净亏。"
+            "ROI 低于此线时，商品毛利口径推广贡献为负；这不是店铺净利润结论。"
         )
     else:
-        anchor_text += "未提供毛利率/退款金额率假设，本报告不做盈亏判断。"
+        anchor_text += "未提供毛利率/退款金额率假设，本报告不做推广毛利盈亏判断。"
     # 全店汇总：花费为各岛真实消耗直接相加；成交/盈亏为分岛之和，归因窗口未确认互斥，仅供量级参考。
     store_spend = sum(r["spend"] for r in ledger_rows if isinstance(r.get("spend"), (int, float)))
     store_gmv = sum(
@@ -3459,9 +3499,9 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
         f'<div class="idec"><span>全店总花费（各岛真实消耗相加）</span><b>{_format_number(store_spend, "spend")}</b></div>'
         f'<div class="idec"><span>报表归因成交合计</span><b>{_format_number(store_gmv, "transaction_amount")}</b></div>'
         f'<div class="idec"><span>全店 ROI</span><b>{_format_number(store_roi, "roi") if store_roi is not None else "不可计算"}</b>{store_roi_badge}</div>'
-        f'<div class="idec"><span>情景盈亏合计</span><b>{_format_number(store_profit, "promotion_contribution_profit") if store_profit is not None else "不可计算"}</b>{store_profit_lamp}</div>'
+        f'<div class="idec"><span>推广毛利盈亏合计（情景）</span><b>{_format_number(store_profit, "promotion_contribution_profit") if store_profit is not None else "不可计算"}</b>{store_profit_lamp}</div>'
         "</div>"
-        '<p class="muted">口径提醒：花费是各岛真实消耗相加；成交、ROI 与盈亏为分岛之和——归因窗口未确认互斥，成交可能重复计算，仅供量级参考，决策请以分岛数据为准。</p>'
+        '<p class="muted">口径提醒：花费是各岛真实消耗相加；成交、ROI 与推广毛利盈亏为分岛之和——归因窗口未确认互斥，成交可能重复计算，仅供量级参考，决策请以分岛数据为准。</p>'
     )
     three_min_html = (
         '<section class="panel three-min"><div class="section-head"><div>'
@@ -3476,20 +3516,20 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
                 ("spend", "花费"),
                 ("transaction_amount", "报表归因成交"),
                 ("roi", "ROI"),
-                ("promotion_contribution_profit", "情景盈亏"),
-                ("profit_signal", "盈亏"),
+                ("promotion_contribution_profit", "推广毛利盈亏（情景）"),
+                ("profit_signal", "推广毛利状态"),
             ),
             ledger_rows,
         )
         + '<p class="muted">分岛总账：各岛独立核算，不合并排名。</p>'
         + '<p class="one-thing"><b>最该动手的一件事：</b>'
         + _esc(
-            f"核验并处理 {loss_count} 个情景亏损计划"
+            f"核验并处理 {loss_count} 个推广毛利为负计划"
             f"（合计 {loss_profit_total:,.0f} 元、消耗 {loss_spend_total:,.0f} 元）；"
             "确认归因窗口后砍减候选即可升级执行。"
         )
         + "</p>"
-        + '<p class="one-thing"><b>最大的口径提醒：</b>全部成交为报表归因记录，不能证明广告带来新增成交；盈亏为商品毛利口径情景估算，不是净利润。</p>'
+        + '<p class="one-thing"><b>最大的口径提醒：</b>全部成交为报表归因记录，不能证明广告带来新增成交；推广毛利盈亏按商品毛利口径估算，不是净利润。</p>'
         "</section>"
     )
     summary = three_min_html + summary
@@ -3525,7 +3565,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
             )
         else:
             object_label = "全组合 / 跨岛"
-        level = str(row.get("evidence_level") or "未标注")
+        level = _resolve_evidence_level(row)
         tone = level_tone.get(level, "pending")
         diagnosis_cards.append(
             '<article class="diag-card">'
@@ -3870,7 +3910,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
         ("spend", "花费"),
         ("transaction_amount", "总成交金额"),
         ("roi", "ROI"),
-        ("promotion_contribution_profit", "推广贡献盈亏"),
+        ("promotion_contribution_profit", "推广毛利盈亏（情景）"),
     )
     detail_headers_base = (
         ("source_dataset", "来源"),
@@ -3911,7 +3951,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
             f'<div class="idec"><span>花费</span><b>{_format_number(spend_v, "spend")}</b></div>'
             f'<div class="idec"><span>报表归因成交</span><b>{_format_number(gmv_v, "transaction_amount")}</b></div>'
             f'<div class="idec"><span>ROI</span><b>{_format_number(roi_v, "roi")}</b>{roi_badge}</div>'
-            f'<div class="idec"><span>情景盈亏</span><b>{_format_number(profit_v, "promotion_contribution_profit")}</b>{profit_lamp}</div>'
+            f'<div class="idec"><span>推广毛利盈亏（情景）</span><b>{_format_number(profit_v, "promotion_contribution_profit")}</b>{profit_lamp}</div>'
             '</div>'
         )
         slim_parts: list[str] = []
@@ -3965,8 +4005,8 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
         campaign_headers = campaign_headers_core
         if has_campaign_profit:
             campaign_headers = campaign_headers + (
-                ("promotion_contribution_profit", "推广贡献盈亏"),
-                ("profit_signal", "盈亏"),
+                ("promotion_contribution_profit", "推广毛利盈亏（情景）"),
+                ("profit_signal", "推广毛利状态"),
             )
         campaign_headers = campaign_headers + campaign_headers_dates
         campaign_row_class = (
@@ -3989,8 +4029,8 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
             for row in daily_rows:
                 row["profit_signal"] = row.get("promotion_contribution_profit")
             daily_headers = daily_headers_base + (
-                ("promotion_contribution_profit", "当日推广贡献盈亏"),
-                ("profit_signal", "当日盈亏"),
+                ("promotion_contribution_profit", "当日推广毛利盈亏（情景）"),
+                ("profit_signal", "当日推广毛利状态"),
             )
         item_campaign_rows = [
             _flatten_summary(row) for row in island.get("item_campaigns") or []
@@ -4058,7 +4098,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
                 if not_computable_items
                 else ""
             )
-            + "<h3>计划周期汇总（默认按花费降序，亏损行红底）</h3>"
+            + "<h3>计划周期汇总（默认按花费降序，推广毛利为负行红底）</h3>"
             f'<div class="toolbar"><input data-filter-target="{island_id}-campaigns" '
             'placeholder="筛选计划 ID 或名称"></div>'
             + _table_html(
@@ -4070,7 +4110,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
             + "<h3>每日趋势</h3>"
             + _table_html(f"{island_id}-daily", daily_headers, daily_rows)
             + (
-                '<p class="muted">当日盈亏为商品毛利口径情景估算（全店统一费率假设），'
+                '<p class="muted">当日推广毛利盈亏为商品毛利口径情景估算（全店统一费率假设），'
                 "单日波动不构成决策依据；计划调整以周期汇总为准。</p>"
                 if has_daily_profit
                 else ""
@@ -4091,7 +4131,8 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
         )
         island_sections.append(section)
 
-    insights = result.get("insights") or {}
+    raw_insights = result.get("insights")
+    insights = raw_insights if isinstance(raw_insights, Mapping) else {}
     good_patterns = [str(item) for item in insights.get("good_patterns") or []]
     bad_patterns = [str(item) for item in insights.get("bad_patterns") or []]
     next_rules = [
@@ -4187,7 +4228,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
             )
         closing_cards += (
             '<article class="summary-card tone-gray"><h3>⚪ 口径边界</h3>'
-            f"<p>全部成交为报表归因记录，归因窗口未确认；盈亏与保本线为情景估算"
+            f"<p>全部成交为报表归因记录，归因窗口未确认；推广毛利盈亏与保本线为情景估算"
             f"（毛利率 {margin_text}、退款金额率 {refund_text} 全店统一假设），不是净利润。</p></article>"
             '<article class="summary-card tone-blue"><h3>🔵 下次报送</h3>'
             "<p>下次报送同一口径报表时可与本期基线对比变化；确认归因窗口与成交口径后，"
@@ -4219,6 +4260,7 @@ def render_html(result: Mapping[str, Any], platform: str = "天猫") -> str:
         + '<a href="https://github.com/sgskills/aibp" target="_blank" rel="noopener">github.com/sgskills/aibp</a>'
     )
     replacements = {
+        "{{BRAND_KICKER}}": _esc(f"SGSKILLS · {platform} ADS AUDIT"),
         "{{TITLE}}": _esc(title),
         "{{SUBTITLE}}": _esc(subtitle),
         "{{SUMMARY}}": summary,
@@ -4442,7 +4484,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--platform",
         default="天猫",
-        help="平台名（如 天猫/抖音/京东）；用于报告标题、副标题与规范文件名，默认 天猫",
+        help="呈现层平台名（如 天猫/抖音/京东）；只影响统一模板的标题、副标题与文件名，不代表平台业务规则已验证",
     )
     parser.add_argument("--report-type", default="unknown", help="CSV/TSV 报表类型")
     parser.add_argument(

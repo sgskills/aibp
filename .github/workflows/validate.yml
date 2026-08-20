@@ -35,7 +35,10 @@ jobs:
 
       - name: Run Tmall report regressions
         shell: powershell
-        run: python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
+        run: |
+          python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
+          $env:PYTHONUTF8 = "1"
+          python -B .\skills\sg-tmads-report\tests\run_regression.py
 
       - name: Build twice and verify reproducible packages
         shell: powershell
