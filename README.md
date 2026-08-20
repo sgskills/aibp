@@ -8,7 +8,7 @@
 
 **AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前稳定版本为 `3.0.2`，代码位于 `main`，并通过 GitHub Release 提供可校验安装包。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
+当前稳定版本为 `3.0.6`，代码位于 `main`，并通过 GitHub Release 提供可校验安装包。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -49,18 +49,18 @@
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
 
-正式版本与安装包下载页：`https://github.com/sgskills/aibp/releases/tag/v3.0.2`
+正式版本与安装包下载页：`https://github.com/sgskills/aibp/releases/tag/v3.0.6`
 
 ## 构建与安装
 
 ### 直接下载安装包
 
-- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-ceo-vision-3.0.2.zip)
-- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-mece-3.0.2.zip)
-- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-tmads-report-3.0.2.zip)
-- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.0.2/sg-skill-optimizer-3.0.2.zip)
-- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.2/aibp-3.0.2.zip)
-- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.2/SHA256SUMS.txt)
+- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-ceo-vision-3.0.6.zip)
+- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-mece-3.0.6.zip)
+- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-tmads-report-3.0.6.zip)
+- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-skill-optimizer-3.0.6.zip)
+- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.6/aibp-3.0.6.zip)
+- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.6/SHA256SUMS.txt)
 
 解压单包后，把其中的 `sg-*` 文件夹放入 Agent Runtime 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
 
@@ -74,11 +74,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 构建产物：
 
-- `dist/sg-ceo-vision-3.0.2.zip`
-- `dist/sg-mece-3.0.2.zip`
-- `dist/sg-tmads-report-3.0.2.zip`
-- `dist/sg-skill-optimizer-3.0.2.zip`
-- `dist/aibp-3.0.2.zip`
+- `dist/sg-ceo-vision-3.0.6.zip`
+- `dist/sg-mece-3.0.6.zip`
+- `dist/sg-tmads-report-3.0.6.zip`
+- `dist/sg-skill-optimizer-3.0.6.zip`
+- `dist/aibp-3.0.6.zip`
 - `dist/SHA256SUMS.txt`
 
 ## 仓库结构
