@@ -179,8 +179,8 @@ def main():
               "成交、ROI 与盈亏为分岛之和",
               "当日盈亏为商品毛利口径情景估算",
           )))
-    check("诊断标签无未标注且副标题为 3.0.6",
-          "未标注" not in html and "sg-tmads-report 3.0.6" in html)
+    check("诊断标签无未标注且副标题为 3.0.7",
+          "未标注" not in html and "sg-tmads-report 3.0.7" in html)
 
     # 2 副标题三要素
     check("副标题含 诊断时间/诊断人/数据周期",

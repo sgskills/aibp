@@ -8,7 +8,7 @@
 
 **AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前稳定版本为 `3.0.6`，代码位于 `main`，并通过 GitHub Release 提供可校验安装包。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
+当前源码版本为 `3.0.7`，以根目录 `VERSION` 为准；已发布的稳定安装包仍为 `3.0.6`。`3.0.7` 增加 30 天惰性检查更新，可从源码构建，本次不创建 GitHub Release。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -55,6 +55,8 @@
 
 ### 直接下载安装包
 
+以下链接为已发布的 `3.0.6` 安装包，不包含 `3.0.7` 的检查更新功能。获取该功能请使用当前源码构建的安装包。
+
 - [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-ceo-vision-3.0.6.zip)
 - [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-mece-3.0.6.zip)
 - [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-tmads-report-3.0.6.zip)
@@ -74,12 +76,20 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 构建产物：
 
-- `dist/sg-ceo-vision-3.0.6.zip`
-- `dist/sg-mece-3.0.6.zip`
-- `dist/sg-tmads-report-3.0.6.zip`
-- `dist/sg-skill-optimizer-3.0.6.zip`
-- `dist/aibp-3.0.6.zip`
+- `dist/sg-ceo-vision-3.0.7.zip`
+- `dist/sg-mece-3.0.7.zip`
+- `dist/sg-tmads-report-3.0.7.zip`
+- `dist/sg-skill-optimizer-3.0.7.zip`
+- `dist/aibp-3.0.7.zip`
 - `dist/SHA256SUMS.txt`
+
+### 30 天检查更新
+
+实际使用 Skill 时，首次检查一次，之后每 30×24 小时最多尝试一次；同一安装版本的所有 Skill 共用检查记录。只在 GitHub 官方仓库的源码版本高于本地时，在当前结果末尾提醒，不自动下载或更新。
+
+Windows 使用 PowerShell；macOS/Linux 使用 `sh` 和 `curl`。断网、超时、非法响应或缓存不可写时，主任务正常继续；检查失败也会等待下一个 30 天周期。用户要求禁止联网、零写入或当前 Agent 没有执行工具时跳过检查。宿主仍须实际遵循 `SKILL.md` 的检查入口，兼容性不等同于已验证所有 Agent Runtime。
+
+提醒指向源码版本，不表示已经发布同版本安装包。行为、缓存与验证契约见 [检查更新说明](docs/update-check.md)。
 
 ## 仓库结构
 
@@ -98,7 +108,13 @@ aibp/
 └── VERSION
 ```
 
-未来增加到 10–20 个 Skill 时也继续平铺，只更新分轨导航与能力矩阵。
+未来增加到 10–20 个 Skill 时也继续平铺，并更新分轨导航与能力矩阵。新增或调整 Skill、升级仓库版本后，在正常构建前统一准备检查文件：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\sync-update-check.ps1
+```
+
+该命令自动发现 `skills/*/SKILL.md`，无需维护名称清单。提交前运行全部验证，再构建。缺少检查脚本、版本文件、受管入口或生成副本不一致时，验证和构建直接失败，不会代替维护者补齐。
 
 ## 验证
 
@@ -106,9 +122,12 @@ aibp/
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\validator\test_validate.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1
+python -B -m unittest discover -s .\tests\update-check -p "test_*.py"
 ```
 
 optimizer 保留 21 个 `unittest` 与 6 个可执行 Golden cases；tmads 的字段、隐私、scope 与原子写入回归位于 `tests/sg-tmads-report/`。
+
+全部提交前检查以 [AGENTS.md](AGENTS.md) 为准。检查更新 CI 分别在 Windows、macOS 和 Linux 执行；通过结果以对应提交的实际运行记录为准。
 
 ## 迁移与回退
 

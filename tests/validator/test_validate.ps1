@@ -19,6 +19,11 @@ if ($exitCode -ne 0) {
 $joined = $output -join "`n"
 foreach ($marker in @(
     'FIFTH_SKILL_GREEN PASS',
+    'FIFTH_SKILL_BUILD_GREEN PASS',
+    'EXPECTED RED: missing update-check files',
+    'EXPECTED RED: update-check build gate',
+    'dist sentinel unchanged',
+    'UPDATE_CHECK_GATE_EVIDENCE:',
     'EXPECTED RED: legacy commerce track',
     'EXPECTED RED: missing SKILL.md',
     'EXPECTED RED: nested Skill directory',

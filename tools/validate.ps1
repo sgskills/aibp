@@ -47,6 +47,133 @@ function Write-Utf8 {
     )
 }
 
+function Normalize-LineEndings {
+    param([string]$Content)
+
+    return $Content.Replace("`r`n", "`n")
+}
+
+function Get-UpdateContract {
+    param(
+        [string]$Root,
+        [System.Collections.Generic.List[object]]$Issues
+    )
+
+    $templates = @{}
+    foreach ($fileName in @('check-update.ps1', 'check-update.sh', 'skill-entry.md')) {
+        $relative = "tools\update-check\$fileName"
+        $path = Join-Path $Root $relative
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+            Add-Issue -Issues $Issues -Code 'UPDATE_TEMPLATE_MISSING' -Path $relative -Message 'The canonical update-check template is required.'
+            continue
+        }
+        $content = Normalize-LineEndings -Content (Read-Utf8 -Path $path)
+        if ([string]::IsNullOrWhiteSpace($content)) {
+            Add-Issue -Issues $Issues -Code 'UPDATE_TEMPLATE_INVALID' -Path $relative -Message 'The canonical update-check template must not be empty.'
+            continue
+        }
+        $templates[$fileName] = $content
+        if ($fileName -ne 'skill-entry.md') {
+            $templates["$fileName.bytes"] = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes($path))
+        }
+    }
+
+    $start = '<!-- AIBP-UPDATE-CHECK:START -->'
+    $end = '<!-- AIBP-UPDATE-CHECK:END -->'
+    $entryPattern = [regex]::Escape($start) + '[\s\S]*?' + [regex]::Escape($end)
+    if ($templates.ContainsKey('skill-entry.md')) {
+        $entry = $templates['skill-entry.md'].Trim()
+        if (
+            [regex]::Matches($entry, [regex]::Escape($start)).Count -ne 1 -or
+            [regex]::Matches($entry, [regex]::Escape($end)).Count -ne 1 -or
+            $entry -cnotmatch ('\A' + $entryPattern + '\z') -or
+            -not $entry.Contains('scripts/check-update.ps1') -or
+            -not $entry.Contains('scripts/check-update.sh')
+        ) {
+            Add-Issue -Issues $Issues -Code 'UPDATE_TEMPLATE_INVALID' -Path 'tools\update-check\skill-entry.md' -Message 'The entry template must be one complete managed block wired to both runtime scripts.'
+            $templates.Remove('skill-entry.md')
+        }
+        else {
+            $templates['skill-entry.md'] = $entry
+        }
+    }
+
+    return [PSCustomObject]@{
+        Templates = $templates
+        Start = $start
+        End = $end
+        EntryPattern = $entryPattern
+    }
+}
+
+function Test-SkillUpdateContract {
+    param(
+        [System.Collections.Generic.List[object]]$Issues,
+        [string]$SkillPath,
+        [string]$RelativeSkill,
+        [string]$Version,
+        [object]$Contract
+    )
+
+    foreach ($fileName in @('check-update.ps1', 'check-update.sh', 'update-version.txt')) {
+        $relative = "$RelativeSkill\scripts\$fileName"
+        $path = Join-Path $SkillPath "scripts\$fileName"
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+            Add-Issue -Issues $Issues -Code 'UPDATE_FILE_MISSING' -Path $relative -Message 'Every discovered Skill requires its own update-check runtime files; run the explicit sync tool before validating.'
+            continue
+        }
+        if ($fileName -eq 'update-version.txt') {
+            $expectedBytes = [System.Text.Encoding]::UTF8.GetBytes($Version + "`n")
+            $actualBytes = [System.IO.File]::ReadAllBytes($path)
+            if ([System.Convert]::ToBase64String($actualBytes) -cne [System.Convert]::ToBase64String($expectedBytes)) {
+                Add-Issue -Issues $Issues -Code 'UPDATE_VERSION_MISMATCH' -Path $relative -Message 'Packaged update version must equal VERSION followed by one newline.'
+            }
+        }
+        elseif ($Contract.Templates.ContainsKey("$fileName.bytes") -and [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes($path)) -cne $Contract.Templates["$fileName.bytes"]) {
+            Add-Issue -Issues $Issues -Code 'UPDATE_TEMPLATE_DRIFT' -Path $relative -Message 'Packaged runtime differs from the canonical template; validation never repairs it automatically.'
+        }
+    }
+
+    $skillContent = Normalize-LineEndings -Content (Read-Utf8 -Path (Join-Path $SkillPath 'SKILL.md'))
+    $starts = [regex]::Matches($skillContent, [regex]::Escape($Contract.Start)).Count
+    $ends = [regex]::Matches($skillContent, [regex]::Escape($Contract.End)).Count
+    if ($starts -eq 0 -and $ends -eq 0) {
+        Add-Issue -Issues $Issues -Code 'UPDATE_ENTRY_MISSING' -Path "$RelativeSkill\SKILL.md" -Message 'The managed update-check entry block is required.'
+        return
+    }
+    if ($starts -ne 1 -or $ends -ne 1) {
+        Add-Issue -Issues $Issues -Code 'UPDATE_ENTRY_INVALID' -Path "$RelativeSkill\SKILL.md" -Message 'The entry must have exactly one start marker and one end marker.'
+        return
+    }
+    $entryMatch = [regex]::Match($skillContent, $Contract.EntryPattern)
+    if (-not $entryMatch.Success) {
+        Add-Issue -Issues $Issues -Code 'UPDATE_ENTRY_INVALID' -Path "$RelativeSkill\SKILL.md" -Message 'The managed entry markers are out of order.'
+    }
+    elseif ($Contract.Templates.ContainsKey('skill-entry.md') -and $entryMatch.Value -cne $Contract.Templates['skill-entry.md']) {
+        Add-Issue -Issues $Issues -Code 'UPDATE_ENTRY_DRIFT' -Path "$RelativeSkill\SKILL.md" -Message 'The complete entry block must equal the canonical entry template.'
+    }
+    elseif ($entryMatch.Success) {
+        $fenceCharacter = ''
+        $fenceLength = 0
+        foreach ($line in ($skillContent.Substring(0, $entryMatch.Index) -split "`n")) {
+            if ($fenceCharacter) {
+                $closingPattern = '^[ \t]{0,3}' + [regex]::Escape($fenceCharacter) + '{' + $fenceLength + ',}[ \t]*$'
+                if ($line -match $closingPattern) { $fenceCharacter = '' }
+            }
+            else {
+                $fenceMatch = [regex]::Match($line, '^[ \t]{0,3}(?<fence>`{3,}|~{3,})')
+                if ($fenceMatch.Success) {
+                    $fenceCharacter = $fenceMatch.Groups['fence'].Value.Substring(0, 1)
+                    $fenceLength = $fenceMatch.Groups['fence'].Value.Length
+                }
+            }
+        }
+        if ($fenceCharacter) {
+            Add-Issue -Issues $Issues -Code 'UPDATE_ENTRY_IN_FENCE' -Path "$RelativeSkill\SKILL.md" -Message 'The executable managed entry must not be hidden inside a fenced Markdown example.'
+        }
+    }
+}
+
 function Get-Frontmatter {
     param([string]$Path)
 
@@ -198,6 +325,7 @@ function Invoke-RepoValidation {
         '.gitignore',
         'tools\build.ps1',
         'tools\validate.ps1',
+        'tools\sync-update-check.ps1',
         '.github\workflows\validate.yml'
     )
     foreach ($relativePath in $requiredRootFiles) {
@@ -214,6 +342,7 @@ function Invoke-RepoValidation {
             Add-Issue -Issues $issues -Code 'VERSION_INVALID' -Path 'VERSION' -Message 'VERSION must contain semantic version text.'
         }
     }
+    $updateContract = Get-UpdateContract -Root $rootPath -Issues $issues
 
     foreach ($readmeName in @('README.md', 'README.en.md')) {
         $readmePath = Join-Path $rootPath $readmeName
@@ -277,6 +406,7 @@ function Invoke-RepoValidation {
             Add-Issue -Issues $issues -Code 'SKILL_FILE_MISSING' -Path $relativeSkill -Message 'Direct Skill directory requires SKILL.md.'
             continue
         }
+        Test-SkillUpdateContract -Issues $issues -SkillPath $skillDir.FullName -RelativeSkill $relativeSkill -Version $version -Contract $updateContract
 
         foreach ($item in Get-ChildItem -LiteralPath $skillDir.FullName -Force) {
             if (@('SKILL.md', 'SKILL.patch.md', 'agents', 'references', 'scripts', 'assets', 'tests') -notcontains $item.Name) {
@@ -447,6 +577,85 @@ function Assert-ContainsCode {
     }
 }
 
+function Invoke-GateCommand {
+    param(
+        [string]$Script,
+        [string]$FixtureRoot,
+        [string]$EvidencePath
+    )
+
+    $previousPreference = $ErrorActionPreference
+    try {
+        # A failing native command is the expected evidence for the red fixtures.
+        $ErrorActionPreference = 'Continue'
+        $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $Script -RepoRoot $FixtureRoot 2>&1)
+        $exitCode = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+    $lines = @($output | ForEach-Object { [string]$_ })
+    Write-Utf8 -Path $EvidencePath -Content ((@("exit_code=$exitCode") + $lines) -join "`n")
+    return [PSCustomObject]@{ ExitCode = $exitCode; Output = $lines }
+}
+
+function Assert-ExtensionPackages {
+    param(
+        [string]$FixtureRoot,
+        [string]$ProbeName,
+        [string]$Version
+    )
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $skillDirs = @(
+        Get-ChildItem -LiteralPath (Join-Path $FixtureRoot 'skills') -Directory |
+            Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf }
+    )
+    $distPath = Join-Path $FixtureRoot 'dist'
+    $zipFiles = @(Get-ChildItem -LiteralPath $distPath -File -Filter '*.zip')
+    if ($zipFiles.Count -ne ($skillDirs.Count + 1)) {
+        throw 'Extension build did not create one ZIP per discovered Skill plus one bundle.'
+    }
+    $checksums = @([System.IO.File]::ReadAllLines((Join-Path $distPath 'SHA256SUMS.txt')) | Where-Object { $_.Trim() })
+    if ($checksums.Count -ne $zipFiles.Count) {
+        throw 'Extension build checksum count does not match its ZIP count.'
+    }
+    foreach ($zipFile in $zipFiles) {
+        $expected = '{0}  {1}' -f (Get-FileHash -LiteralPath $zipFile.FullName -Algorithm SHA256).Hash, $zipFile.Name
+        if ($checksums -notcontains $expected) {
+            throw "Extension build checksum is missing or incorrect: $($zipFile.Name)"
+        }
+    }
+    $requiredEntries = @('SKILL.md', 'scripts/check-update.ps1', 'scripts/check-update.sh', 'scripts/update-version.txt')
+    foreach ($zipName in @("$ProbeName-$Version.zip", "aibp-$Version.zip")) {
+        $archive = [System.IO.Compression.ZipFile]::OpenRead((Join-Path $distPath $zipName))
+        try {
+            foreach ($relative in $requiredEntries) {
+                $entry = $archive.GetEntry("$ProbeName/$relative")
+                if ($null -eq $entry) {
+                    throw "Extension package is missing $ProbeName/$relative in $zipName."
+                }
+                $reader = New-Object System.IO.StreamReader($entry.Open(), [System.Text.Encoding]::UTF8)
+                try {
+                    $actual = Normalize-LineEndings -Content $reader.ReadToEnd()
+                }
+                finally {
+                    $reader.Dispose()
+                }
+                $sourcePath = Join-Path (Join-Path $FixtureRoot "skills\$ProbeName") $relative.Replace('/', '\')
+                $expected = Normalize-LineEndings -Content (Read-Utf8 -Path $sourcePath)
+                if ($actual -cne $expected) {
+                    throw "Extension package entry differs from its validated source: $ProbeName/$relative"
+                }
+            }
+        }
+        finally {
+            $archive.Dispose()
+        }
+    }
+    Write-Output "FIFTH_SKILL_BUILD_GREEN PASS: $($skillDirs.Count) Skills, $($zipFiles.Count) ZIPs, $($checksums.Count) verified SHA256 lines; standalone and bundle entry/runtime files match."
+}
+
 function Invoke-ValidatorSelfTest {
     param([string]$SourceRoot)
 
@@ -455,9 +664,23 @@ function Invoke-ValidatorSelfTest {
         throw "Self-test requires a valid repository. Got: $((@($sourceIssues.Code | Sort-Object -Unique)) -join ', ')"
     }
 
-    $fixtureRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('aibp-validator-' + [guid]::NewGuid().ToString('N'))
+    $sourcePath = (Resolve-Path -LiteralPath $SourceRoot).Path
+    $version = (Read-Utf8 -Path (Join-Path $sourcePath 'VERSION')).Trim()
+    $testRoot = Join-Path $sourcePath ".work\$version\gate-tests"
+    $runRoot = Join-Path $testRoot ('validator-' + [guid]::NewGuid().ToString('N'))
+    $fixtureRoot = Join-Path $runRoot 'repo'
+    $fixtureTemp = Join-Path $runRoot 'tmp'
+    $evidenceRoot = Join-Path $runRoot 'evidence'
+    $previousTemp = $env:TEMP
+    $previousTmp = $env:TMP
+    $previousTmpDir = $env:TMPDIR
     try {
         [void][System.IO.Directory]::CreateDirectory($fixtureRoot)
+        [void][System.IO.Directory]::CreateDirectory($fixtureTemp)
+        [void][System.IO.Directory]::CreateDirectory($evidenceRoot)
+        $env:TEMP = $fixtureTemp
+        $env:TMP = $fixtureTemp
+        $env:TMPDIR = $fixtureTemp
         foreach ($fileName in @('README.md', 'README.en.md', 'AGENTS.md', 'LICENSE', 'VERSION', 'CHANGELOG.md', '.gitignore')) {
             Copy-Item -LiteralPath (Join-Path $SourceRoot $fileName) -Destination $fixtureRoot
         }
@@ -498,11 +721,56 @@ interface:
             Write-Utf8 -Path $readmePath -Content $readmeText
         }
 
+        $extensionRed = @(Invoke-RepoValidation -Root $fixtureRoot)
+        Assert-ContainsCode -Issues $extensionRed -ExpectedCode 'UPDATE_FILE_MISSING' -Label 'Unconfigured extension update files'
+        Assert-ContainsCode -Issues $extensionRed -ExpectedCode 'UPDATE_ENTRY_MISSING' -Label 'Unconfigured extension entry'
+        $fixtureValidator = Join-Path $fixtureRoot 'tools\validate.ps1'
+        $fixtureBuild = Join-Path $fixtureRoot 'tools\build.ps1'
+        $redValidation = Invoke-GateCommand -Script $fixtureValidator -FixtureRoot $fixtureRoot -EvidencePath (Join-Path $evidenceRoot 'validator-red.txt')
+        if ($redValidation.ExitCode -eq 0 -or ($redValidation.Output -join "`n") -notmatch '\[UPDATE_FILE_MISSING\]') {
+            throw 'Unconfigured extension must make the real validator process exit nonzero with UPDATE_FILE_MISSING.'
+        }
+        Write-Output "EXPECTED RED: missing update-check files; validator exit=$($redValidation.ExitCode)"
+
+        $fixtureDist = Join-Path $fixtureRoot 'dist'
+        [void][System.IO.Directory]::CreateDirectory($fixtureDist)
+        $sentinelPath = Join-Path $fixtureDist 'preserve-on-validation-failure.txt'
+        $sentinelContent = 'An invalid source tree must not delete the existing dist.'
+        Write-Utf8 -Path $sentinelPath -Content $sentinelContent
+        $redBuild = Invoke-GateCommand -Script $fixtureBuild -FixtureRoot $fixtureRoot -EvidencePath (Join-Path $evidenceRoot 'build-red.txt')
+        if ($redBuild.ExitCode -eq 0 -or ($redBuild.Output -join "`n") -notmatch '\[UPDATE_FILE_MISSING\]') {
+            throw 'Unconfigured extension must stop the real build at repository validation.'
+        }
+        if (-not (Test-Path -LiteralPath $sentinelPath -PathType Leaf) -or (Read-Utf8 -Path $sentinelPath) -cne $sentinelContent) {
+            throw 'Failed validation changed or deleted the existing dist sentinel.'
+        }
+        if (@(Get-ChildItem -LiteralPath $fixtureDist -Force).Count -ne 1) {
+            throw 'Failed validation wrote unexpected build artifacts.'
+        }
+        if (Test-Path -LiteralPath (Join-Path $probeSkill 'scripts\check-update.ps1')) {
+            throw 'Validation or build silently repaired the missing update-check files.'
+        }
+        Write-Output "EXPECTED RED: update-check build gate; build exit=$($redBuild.ExitCode); dist sentinel unchanged"
+
+        $syncResult = Invoke-GateCommand -Script (Join-Path $fixtureRoot 'tools\sync-update-check.ps1') -FixtureRoot $fixtureRoot -EvidencePath (Join-Path $evidenceRoot 'sync-green.txt')
+        if ($syncResult.ExitCode -ne 0) {
+            throw "Explicit sync failed in the extension fixture: $($syncResult.Output -join ' ')"
+        }
         $extensionGreen = @(Invoke-RepoValidation -Root $fixtureRoot)
         if ($extensionGreen.Count -gt 0) {
             throw "Fifth-Skill extension fixture failed: $((@($extensionGreen | ForEach-Object { $_.Code + ':' + $_.Path })) -join ', ')"
         }
         Write-Output 'FIFTH_SKILL_GREEN PASS'
+        $greenValidation = Invoke-GateCommand -Script $fixtureValidator -FixtureRoot $fixtureRoot -EvidencePath (Join-Path $evidenceRoot 'validator-green.txt')
+        if ($greenValidation.ExitCode -ne 0) {
+            throw "Configured extension failed the real validator: $($greenValidation.Output -join ' ')"
+        }
+        $greenBuild = Invoke-GateCommand -Script $fixtureBuild -FixtureRoot $fixtureRoot -EvidencePath (Join-Path $evidenceRoot 'build-green.txt')
+        if ($greenBuild.ExitCode -ne 0) {
+            throw "Configured extension failed the real build: $($greenBuild.Output -join ' ')"
+        }
+        Assert-ExtensionPackages -FixtureRoot $fixtureRoot -ProbeName $probeName -Version $version
+        Write-Output "UPDATE_CHECK_GATE_EVIDENCE: $evidenceRoot"
 
         $readmePath = Join-Path $fixtureRoot 'README.md'
         $currentReadme = Read-Utf8 -Path $readmePath
@@ -543,13 +811,18 @@ interface:
         Write-Output 'SELF-TEST PASS'
     }
     finally {
-        if (Test-Path -LiteralPath $fixtureRoot) {
-            $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
-            $resolvedFixture = [System.IO.Path]::GetFullPath($fixtureRoot)
-            if (-not $resolvedFixture.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-                throw 'Refusing to remove a self-test fixture outside the system temp path.'
+        $env:TEMP = $previousTemp
+        $env:TMP = $previousTmp
+        $env:TMPDIR = $previousTmpDir
+        $allowedPrefix = [System.IO.Path]::GetFullPath($runRoot).TrimEnd('\') + '\'
+        foreach ($cleanupPath in @($fixtureRoot, $fixtureTemp)) {
+            if (Test-Path -LiteralPath $cleanupPath) {
+                $resolvedCleanup = (Resolve-Path -LiteralPath $cleanupPath).Path
+                if (-not $resolvedCleanup.StartsWith($allowedPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+                    throw 'Refusing to remove a gate fixture outside its repository-local run directory.'
+                }
+                Remove-Item -LiteralPath $resolvedCleanup -Recurse -Force
             }
-            Remove-Item -LiteralPath $fixtureRoot -Recurse -Force
         }
     }
 }

@@ -8,7 +8,7 @@
 
 **AIBP means AI Business Partner.** This repository turns business materials, operating problems, advertising reports, and Skill/Agent engineering tasks into evidence-backed, bounded, verifiable outcomes for operators, business teams, and Skill authors.
 
-The current stable version is `3.0.6`. Its code is on `main`, with verifiable installation packages distributed through a GitHub Release. The `sg-aibp` umbrella router remains planned; the current release provides four independent Skills and does not advertise a router that does not yet exist.
+The current source version is `3.0.7`, as recorded in the root `VERSION`; the published stable installation packages remain `3.0.6`. Version `3.0.7` adds a 30-day lazy update check and can be built from source. This source update does not create a GitHub Release. The `sg-aibp` umbrella router remains planned; the repository provides four independent Skills and does not advertise a router that does not yet exist.
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -55,6 +55,8 @@ Stable release and package downloads: `https://github.com/sgskills/aibp/releases
 
 ### Download installation packages
 
+These links point to the published `3.0.6` packages, which do not include the new update check. Build the current source to obtain that capability.
+
 - [CEO Vision](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-ceo-vision-3.0.6.zip)
 - [Structured Ecommerce Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-mece-3.0.6.zip)
 - [Tmall Advertising Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-tmads-report-3.0.6.zip)
@@ -74,12 +76,20 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 Build artifacts:
 
-- `dist/sg-ceo-vision-3.0.6.zip`
-- `dist/sg-mece-3.0.6.zip`
-- `dist/sg-tmads-report-3.0.6.zip`
-- `dist/sg-skill-optimizer-3.0.6.zip`
-- `dist/aibp-3.0.6.zip`
+- `dist/sg-ceo-vision-3.0.7.zip`
+- `dist/sg-mece-3.0.7.zip`
+- `dist/sg-tmads-report-3.0.7.zip`
+- `dist/sg-skill-optimizer-3.0.7.zip`
+- `dist/aibp-3.0.7.zip`
 - `dist/SHA256SUMS.txt`
+
+### 30-day update check
+
+A Skill checks on its first actual invocation, then attempts at most once every 30×24 hours. Skills installed at the same version share the check record. Only a newer source version in the official GitHub repository produces a notice at the end of the current response. Nothing is downloaded or updated automatically.
+
+The check uses PowerShell on Windows and `sh` with `curl` on macOS/Linux. Offline operation, timeouts, invalid responses, and unwritable caches do not block the main task; a failed check also waits until the next 30-day period. Skip the check when the user forbids networking or file writes, or the Agent cannot execute commands. The host must still follow the check entry in `SKILL.md`; script compatibility does not establish compatibility with every Agent runtime.
+
+A notice refers to a source version and does not promise matching published installation packages. See [the update-check contract](docs/update-check.md) for behavior, cache locations, and validation.
 
 ## Repository layout
 
@@ -98,7 +108,13 @@ aibp/
 └── VERSION
 ```
 
-The physical layout remains flat even when the portfolio grows to 10–20 Skills.
+The physical layout remains flat even when the portfolio grows to 10–20 Skills. After adding or changing a Skill, or changing the repository version, prepare the update files before the normal validation and build steps:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\sync-update-check.ps1
+```
+
+This command discovers `skills/*/SKILL.md` automatically, without a slug list. Missing scripts, version files, managed entries, or template drift cause validation and builds to fail; neither command silently repairs them.
 
 ## Validation
 
@@ -106,9 +122,12 @@ The physical layout remains flat even when the portfolio grows to 10–20 Skills
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\validator\test_validate.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1
+python -B -m unittest discover -s .\tests\update-check -p "test_*.py"
 ```
 
 The optimizer retains 21 `unittest` methods and six executable Golden cases. Tmall report regression tests cover field validation, privacy allowlisting, scope, and atomic writes.
+
+See [AGENTS.md](AGENTS.md) for all required pre-commit checks. Update-check CI runs on Windows, macOS, and Linux; only the actual run for a commit establishes its result.
 
 ## Migration and rollback
 

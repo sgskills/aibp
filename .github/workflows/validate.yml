@@ -8,9 +8,19 @@ on:
 jobs:
   validate:
     runs-on: windows-latest
+    env:
+      PYTHONUTF8: "1"
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+
+      - name: Prepare isolated test output
+        shell: powershell
+        run: |
+          $testScratch = Join-Path $env:GITHUB_WORKSPACE '.work/3.0.7/tmp'
+          New-Item -ItemType Directory -Force -Path $testScratch | Out-Null
+          "TEMP=$testScratch" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TMP=$testScratch" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Prove validator catches invalid fixtures
         shell: powershell
@@ -29,17 +39,57 @@ jobs:
         shell: powershell
         run: |
           python -B -m unittest discover -s .\skills\sg-skill-optimizer\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B .\skills\sg-skill-optimizer\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B .\skills\sg-skill-optimizer\scripts\health_check.py .\skills\sg-skill-optimizer
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B .\skills\sg-skill-optimizer\scripts\audit_description.py .\skills
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Run Tmall report regressions
         shell: powershell
         run: |
           python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
-          $env:PYTHONUTF8 = "1"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B .\skills\sg-tmads-report\tests\run_regression.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Check update behavior and Skill entry contracts on Windows
+        shell: powershell
+        run: |
+          python -B -m unittest discover -s .\tests\update-check -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Build twice and verify reproducible packages
         shell: powershell
         run: powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\build\test_build.ps1
+
+  update-check-unix:
+    name: Update check (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Prepare isolated test output
+        shell: bash
+        run: |
+          test_scratch="$GITHUB_WORKSPACE/.work/3.0.7/tmp"
+          mkdir -p -- "$test_scratch"
+          printf 'TMPDIR=%s\n' "$test_scratch" >> "$GITHUB_ENV"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check update behavior with native sh and curl
+        shell: bash
+        run: python -B -m unittest discover -s ./tests/update-check -p "test_update_check.py"

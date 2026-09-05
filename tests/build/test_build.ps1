@@ -1,8 +1,11 @@
 [CmdletBinding()]
-param()
+param([string]$RepoRoot)
 
 $ErrorActionPreference = 'Stop'
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+    $RepoRoot = Join-Path $PSScriptRoot '..\..'
+}
+$repoRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
 $buildPath = Join-Path $repoRoot 'tools\build.ps1'
 $buildEpoch = [System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 $buildEpoch -= ($buildEpoch % 2)
@@ -23,7 +26,7 @@ if ($probeScriptsDirectory.Count -eq 0) {
 $probeCacheDirectory = Join-Path $probeScriptsDirectory[0] '__pycache__'
 $probeCacheDirectoryExisted = Test-Path -LiteralPath $probeCacheDirectory -PathType Container
 [void][System.IO.Directory]::CreateDirectory($probeCacheDirectory)
-$probeCacheFile = Join-Path $probeCacheDirectory 'package-residue-probe.pyc'
+$probeCacheFile = Join-Path $probeCacheDirectory ('package-residue-probe-' + [guid]::NewGuid().ToString('N') + '.pyc')
 [System.IO.File]::WriteAllBytes($probeCacheFile, [byte[]](0x50, 0x59, 0x43))
 
 try {
@@ -104,6 +107,108 @@ function Get-ExpectedSkillEntries {
     return @($entries | Sort-Object -Unique)
 }
 
+function Assert-StandaloneUpdateRuntime {
+    param(
+        [string]$ZipPath,
+        [System.IO.DirectoryInfo]$SkillDir
+    )
+
+    $gateRoot = Join-Path $repoRoot ".work\$version\gate-tests"
+    $probeRoot = Join-Path $gateRoot ('package-' + [guid]::NewGuid().ToString('N'))
+    $scriptsRoot = Join-Path $probeRoot 'standalone\scripts'
+    [void][System.IO.Directory]::CreateDirectory($scriptsRoot)
+    try {
+        $archive = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
+        try {
+            foreach ($fileName in @('check-update.ps1', 'check-update.sh', 'update-version.txt')) {
+                $entry = $archive.GetEntry("$($SkillDir.Name)/scripts/$fileName")
+                if ($null -eq $entry) { throw "Standalone package is missing $fileName." }
+                $stream = $entry.Open()
+                $destination = [System.IO.File]::Create((Join-Path $scriptsRoot $fileName))
+                try { $stream.CopyTo($destination) }
+                finally {
+                    $destination.Dispose()
+                    $stream.Dispose()
+                }
+            }
+        }
+        finally { $archive.Dispose() }
+
+        $remoteVersion = '2147483647.2147483647.2147483647'
+        $responsePath = Join-Path $probeRoot 'response.txt'
+        [System.IO.File]::WriteAllText($responsePath, $remoteVersion + "`n", (New-Object System.Text.UTF8Encoding($false)))
+        Push-Location -LiteralPath $probeRoot
+        try {
+            $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $scriptsRoot 'check-update.ps1') -CacheRoot (Join-Path $probeRoot 'cache') -NowSeconds 1800000000 -ResponseFile $responsePath 2>&1)
+            $exitCode = $LASTEXITCODE
+        }
+        finally { Pop-Location }
+        if ($exitCode -ne 0) {
+            throw "Standalone packaged updater failed for $($SkillDir.Name): $($output -join ' ')"
+        }
+        if ($version -eq $remoteVersion) {
+            if ($output.Count -ne 0) { throw 'An equal version must not emit an update reminder.' }
+        }
+        elseif ($output.Count -ne 1 -or
+            [string]$output[0] -notmatch [regex]::Escape("v$remoteVersion") -or
+            [string]$output[0] -notmatch [regex]::Escape("v$version") -or
+            [string]$output[0] -notmatch [regex]::Escape('https://github.com/sgskills/aibp')) {
+            throw "Standalone packaged updater did not emit exactly one expected source-version reminder: $($output -join ' ')"
+        }
+        Write-Output "STANDALONE_UPDATE_CHECK PASS: $($SkillDir.Name); only packaged scripts and local response/cache were available."
+    }
+    finally {
+        if (Test-Path -LiteralPath $probeRoot) {
+            $allowedPrefix = [System.IO.Path]::GetFullPath($gateRoot).TrimEnd('\') + '\'
+            $resolvedProbe = (Resolve-Path -LiteralPath $probeRoot).Path
+            if (-not $resolvedProbe.StartsWith($allowedPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+                throw 'Refusing to remove a package fixture outside repository-local gate-tests.'
+            }
+            Remove-Item -LiteralPath $resolvedProbe -Recurse -Force
+        }
+    }
+}
+
+function Assert-PackagedUpdateContract {
+    param(
+        [string]$ZipPath,
+        [System.IO.DirectoryInfo]$SkillDir
+    )
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
+    try {
+        foreach ($relative in @('SKILL.md', 'scripts/check-update.ps1', 'scripts/check-update.sh', 'scripts/update-version.txt')) {
+            $entryName = "$($SkillDir.Name)/$relative"
+            $entry = $archive.GetEntry($entryName)
+            if ($null -eq $entry) {
+                throw "Package update-check contract is incomplete: $entryName"
+            }
+            $entryStream = $entry.Open()
+            $content = New-Object System.IO.MemoryStream
+            try {
+                $entryStream.CopyTo($content)
+                if ($relative -eq 'scripts/check-update.sh' -and $content.ToArray() -contains [byte]13) {
+                    throw "Packaged POSIX shell script contains CR bytes: $entryName"
+                }
+                $sourcePath = Join-Path $SkillDir.FullName $relative.Replace('/', '\')
+                $expected = [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes($sourcePath))
+                $actual = [System.Convert]::ToBase64String($content.ToArray())
+                if ($actual -cne $expected) {
+                    throw "Package update-check entry differs from the validated source: $entryName"
+                }
+            }
+            finally {
+                $content.Dispose()
+                $entryStream.Dispose()
+            }
+        }
+    }
+    finally {
+        $archive.Dispose()
+    }
+}
+
 $distPath = Join-Path $repoRoot 'dist'
 $bundlePath = Join-Path $distPath "aibp-$version.zip"
 $checksumPath = Join-Path $distPath 'SHA256SUMS.txt'
@@ -130,6 +235,9 @@ foreach ($skillDir in $skillDirs) {
         $extra = @($singleEntries | Where-Object { $expectedSingleEntries -notcontains $_ })
         throw "Package content mismatch for $($skillDir.Name). Missing: $($missing -join ', '); Extra: $($extra -join ', ')"
     }
+    Assert-PackagedUpdateContract -ZipPath $singleZip -SkillDir $skillDir
+    Assert-PackagedUpdateContract -ZipPath $bundlePath -SkillDir $skillDir
+    Assert-StandaloneUpdateRuntime -ZipPath $singleZip -SkillDir $skillDir
     foreach ($entry in $singleEntries) {
         [void]$allEntries.Add($entry)
     }
