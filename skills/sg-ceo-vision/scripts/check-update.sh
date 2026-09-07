@@ -30,6 +30,10 @@ read_version() {
     [ -f "$1" ] || return 1
     version_size=$(wc -c < "$1") || return 1
     [ "$version_size" -le 64 ] || return 1
+    # BSD awk can truncate NUL before regex/length checks. Validate actual bytes
+    # first; od is a standard macOS/Linux utility. Missing/failed od fails closed.
+    version_bytes=$(od -An -v -tu1 -N 65 "$1" 2>/dev/null) || return 1
+    printf '%s\n' "$version_bytes" | awk -v expected="$version_size" '{for(i=1;i<=NF;i++){n++; if($i !~ /^[0-9]+$/ || ($i!=46 && $i!=13 && $i!=10 && ($i<48 || $i>57)))bad=1}} END {exit (bad || n==0 || n>64 || n!=expected)}' || return 1
     # Check raw length before shell substitution can erase newlines or NUL.
     # BINMODE is honored by MSYS awk; on Unix it is an ordinary unused variable.
     version_value=$(awk -v size="$version_size" 'BEGIN {BINMODE=3} NR>1 {bad=1} NR==1 {s=$0; if(sub(/\r$/, "",s)){if(size!=length(s)+2)bad=1} else if(size!=length(s) && size!=length(s)+1)bad=1; if(s !~ /^[0-9.]+$/)bad=1} END {if(bad || NR!=1)exit 1; printf "%s",s}' "$1") || return 1

@@ -27,6 +27,10 @@
     {"id": "unicode-digits", "local": "3.0.7", "response": "４.０.０", "notice": false},
     {"id": "too-many-components", "local": "3.0.7", "response": "4.0.0.0", "notice": false},
     {"id": "null-byte", "local": "3.0.7", "response": "4.0.0\u0000", "notice": false},
+    {"id": "null-after-newline", "local": "3.0.7", "response": "4.0.0\n\u0000", "notice": false},
+    {"id": "null-interior", "local": "3.0.7", "response": "4.0\u0000.0", "notice": false},
+    {"id": "null-before-newline", "local": "3.0.7", "response": "4.0.0\u0000\n", "notice": false},
+    {"id": "null-before-crlf", "local": "3.0.7", "response": "4.0.0\u0000\r\n", "notice": false},
     {"id": "oversized", "local": "3.0.7", "response": "4.0.0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "notice": false}
   ]
 }
