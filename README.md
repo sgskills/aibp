@@ -8,7 +8,7 @@
 
 **AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前源码版本为 `3.0.7`，以根目录 `VERSION` 为准；已发布的稳定安装包仍为 `3.0.6`。`3.0.7` 增加 30 天惰性检查更新，可从源码构建，本次不创建 GitHub Release。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
+当前源码与稳定安装包版本均为 `3.0.7`，以根目录 `VERSION` 和正式 Release 为准。`3.0.7` 增加 30 天惰性检查更新：只提醒，不自动更新。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -49,20 +49,20 @@
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
 
-正式版本与安装包下载页：`https://github.com/sgskills/aibp/releases/tag/v3.0.6`
+正式版本与安装包下载页：[最新稳定版](https://github.com/sgskills/aibp/releases/latest)。
 
 ## 构建与安装
 
 ### 直接下载安装包
 
-以下链接为已发布的 `3.0.6` 安装包，不包含 `3.0.7` 的检查更新功能。获取该功能请使用当前源码构建的安装包。
+以下链接直接下载 `3.0.7` 稳定安装包，已包含 30 天惰性检查更新功能。旧版本保留在 Release 历史中，供需要时回退。
 
-- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-ceo-vision-3.0.6.zip)
-- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-mece-3.0.6.zip)
-- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-tmads-report-3.0.6.zip)
-- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.0.6/sg-skill-optimizer-3.0.6.zip)
-- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.6/aibp-3.0.6.zip)
-- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.6/SHA256SUMS.txt)
+- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-ceo-vision-3.0.7.zip)
+- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-mece-3.0.7.zip)
+- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-tmads-report-3.0.7.zip)
+- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-skill-optimizer-3.0.7.zip)
+- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.7/aibp-3.0.7.zip)
+- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.7/SHA256SUMS.txt)
 
 解压单包后，把其中的 `sg-*` 文件夹放入 Agent Runtime 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
 

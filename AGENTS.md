@@ -52,5 +52,5 @@ Check every native command's exit code; a later successful command must never ma
 
 ## Current status
 
-- `3.0.7` is the current source version. The published stable Release and installation packages remain `3.0.6`; this task updates source and local build artifacts without creating a tag or Release. `VERSION` remains the source of truth.
+- `3.0.7` is the current source and stable Release version. The official download links point to its four standalone packages, bundle and SHA256 manifest. Earlier releases remain available for rollback. `VERSION` remains the source of truth; future publication still requires user authorization.
 - `sg-aibp` is planned and must not be linked or advertised as an existing router until implemented.
