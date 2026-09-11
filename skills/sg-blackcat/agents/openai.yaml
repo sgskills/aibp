@@ -1,3 +1,5 @@
+# Official source: https://github.com/sgskills/aibp/tree/main/skills/sg-blackcat
+
 interface:
   display_name: "黑猫"
   short_description: "纵向追来路、横向看位置，把陌生主题变成可继续深挖的认知地图"

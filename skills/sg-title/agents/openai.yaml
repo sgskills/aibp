@@ -1,3 +1,5 @@
+# Official source: https://github.com/sgskills/aibp/tree/main/skills/sg-title
+
 interface:
   display_name: "电商标题优化师"
   short_description: "为天猫京东拼多多抖店生成并优化真实合规的国内商品标题"

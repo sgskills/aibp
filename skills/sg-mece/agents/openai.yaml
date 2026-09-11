@@ -1,3 +1,5 @@
+# Official source: https://github.com/sgskills/aibp/tree/main/skills/sg-mece
+
 interface:
   display_name: "电商经营结构化拆解"
   short_description: "把边界不清、跨多个模块的电商经营问题拆成可验证行动"
