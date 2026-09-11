@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-007-simple-fact",
+  "category": "simple-fact",
+  "prompt": "法国首都是什么？只回答城市名。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": false,
+    "wants_report": false,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "ROUTE-NOT-APPLICABLE"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-027-specialist-handoff",
+  "category": "known-specialist-handoff",
+  "prompt": "请直接计算这家店每个 SKU 的贡献利润，成本、退款和广告字段已经齐全，对应利润 Skill 可用。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": false,
+    "wants_report": false,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "ROUTE-NOT-APPLICABLE",
+      "ROUTE-SPECIALIST-HANDOFF"
+    ]
+  }
+}

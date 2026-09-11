@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "generic-ocr",
+  "title": "通用 OCR 反触发",
+  "kind": "antitrigger",
+  "tags": ["generic_ocr", "text_transcription"],
+  "request": "把这张标签截图里的全部文字逐字转录出来。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": ["document_like"]}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_generic_ocr_boundary"], "must_not_claim": ["transcribe_full_document", "claim_ocr_complete"]}
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-039-deep-subculture",
+  "category": "deep_subculture_map",
+  "prompt": "带我系统进入赛博朋克：从历史、核心母题、代表作品、相邻流派、圈内语言和当代争议讲起，让我能和爱好者自然交流。",
+  "scenario": {
+    "request_kind": "deep_exploration",
+    "object_kind": "subculture",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "dynamic_usage",
+      "insider_culture",
+      "cross_insight",
+      "first_principles"
+    ]
+  },
+  "expected": {
+    "route": "deep_map",
+    "contracts": [
+      "[CITATION-INTEGRITY]",
+      "[CROSS-INSIGHT]",
+      "[DEEP-MAP-OUTPUT]",
+      "[DOMAIN-LOCK]",
+      "[DYNAMIC-AS-OF]",
+      "[EVIDENCE-LABELS]",
+      "[FIRST-PRINCIPLES]",
+      "[FULLTEXT-EVIDENCE]",
+      "[HORIZONTAL-AXIS]",
+      "[INSIDER-GUIDE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-DEEP-MAP]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[VERTICAL-AXIS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

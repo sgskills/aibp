@@ -50,6 +50,12 @@ python -m unittest discover -s tests -v
 
 ## 新增回归
 
+### 更新检查能力场景（与脚本 Golden Set 分开）
+
+`tests/update-check-capability.json` 是 7 个模型工作流场景：AIBP 缺契约、私有离线、其他仓库来源未知、自动更新越界、新 Skill 假绿灯、无执行却声称通过、完整证据健康对照。
+
+复验时先隐藏 `expected`，仅向执行者提供请求、材料及本 Skill，再保存真实输出，对照适用性、规则代码、授权边界和接入计划。它不是 `run_eval.py` 的脚本 fixture，不得将文件存在或静态词语命中算作行为通过；未作场景复验记 MANUAL/未运行。运行时的 30 天判断与跨平台功能仍以目标本身真实回归为准。
+
 发现漏报或误报时：
 
 1. 先新增能复现问题的 fixture 与断言；

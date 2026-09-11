@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-003-answer-changing-ambiguity",
+  "category": "answer_changing_ambiguity",
+  "prompt": "解释一下 recall。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "answer_changing",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "concept_card_clarify",
+    "contracts": [
+      "[AMBIGUITY-CANDIDATES]",
+      "[DOMAIN-LOCK]",
+      "[ROUTE-CLARIFY-ONCE]"
+    ]
+  }
+}

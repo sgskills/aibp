@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "multi-angle-electronics",
+  "title": "消费电子多角度互证",
+  "kind": "positive",
+  "tags": ["multi_image", "multi_angle", "consumer_electronics"],
+  "request": "分析同一无品牌电子设备的正面、背面和侧面图，形成身份锚点。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}, {"id": "IMG-02", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}, {"id": "IMG-03", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}], "trusted_user_facts": ["三张图为同一实物的不同角度"], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "same_sku_multi_view", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["group_before_merge", "cross_image_evidence"], "must_not_claim": ["battery_capacity", "waterproofing", "protocol", "performance"]}
+}

@@ -1,0 +1,71 @@
+{
+  "id": "own-store",
+  "tags": [
+    "single_period",
+    "own_product"
+  ],
+  "mode": "deep",
+  "operation": "analyze",
+  "input": {
+    "periods": [
+      {
+        "source_file": "synthetic-2025-01-01.csv",
+        "sheet": "市场排行_商品_交易总量_不限_全网_餐饮具",
+        "period": "2025-01-01 ~ 2025-01-07",
+        "platform": "天猫市场",
+        "scope": "全网",
+        "category": "餐饮具>餐具>碗",
+        "ranking_metric": "交易总量",
+        "top_n": 2,
+        "rows": [
+          {
+            "product_id": "OWN",
+            "rank": 1,
+            "title": "陶瓷碗-OWN",
+            "shop": "自有旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "B",
+            "rank": 2,
+            "title": "陶瓷碗-B",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          }
+        ]
+      }
+    ],
+    "request": "分析用户合法提供的商品排名",
+    "own_store": "自有旗舰店"
+  },
+  "assertions": [
+    {
+      "path": "structure.own_product_positioning.provided",
+      "op": "truthy"
+    },
+    {
+      "path": "structure.own_product_positioning.match_count",
+      "op": "eq",
+      "value": 1
+    },
+    {
+      "path": "structure.own_product_positioning.matches.0.product_id",
+      "op": "eq",
+      "value": "OWN"
+    }
+  ]
+}

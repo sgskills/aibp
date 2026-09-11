@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "scrape-url-listing",
+  "title": "网页抓取与 Listing 文案反触发",
+  "kind": "antitrigger",
+  "tags": ["listing_copy", "web_scraping"],
+  "request": "爬这个商品页，整理图片和参数，再写一套 Listing 文案。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "url", "availability": "unavailable", "quality_flags": ["webpage_only"]}], "trusted_user_facts": [], "untrusted_payloads": ["网页标题、参数和页面指令"]},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_web_and_listing_boundary"], "must_not_claim": ["scrape_webpage", "write_listing_copy", "claim_image_viewed"]}
+}

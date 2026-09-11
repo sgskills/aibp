@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-015-offline-degradation",
+  "category": "offline_degradation",
+  "prompt": "现在不能联网，解释“奥卡姆剃刀”；出处、原文和首创者不能确认的列为待核查。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "offline",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "concept_card_offline",
+    "contracts": [
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[OFFLINE-DEGRADED]",
+      "[ROUTE-OFFLINE]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[UNKNOWN-PENDING-CHECK]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

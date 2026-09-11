@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-005-acronym-domain",
+  "category": "acronym_domain",
+  "prompt": "项目会上说 PM 要确认 PRD，这里的 PM 是什么？也提醒我 PM 还有哪些常见义。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "acronym",
+    "concept_count": 1,
+    "ambiguity": "manageable",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ACRONYM-DOMAIN]",
+      "[ADAPTIVE-OUTPUT]",
+      "[AMBIGUITY-CANDIDATES]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EXAMPLE-CONTRAST]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]"
+    ]
+  }
+}

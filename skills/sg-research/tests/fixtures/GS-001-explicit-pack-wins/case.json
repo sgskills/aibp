@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-001-explicit-pack-wins",
+  "category": "explicit-task-pack",
+  "prompt": "请为‘东南亚生成式 AI 客服市场进入机会’写一份可直接复制给外部研究 Agent 的研究任务书。不要现在检索或给结论。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": true,
+    "wants_report": false,
+    "wants_task_pack": true,
+    "explicit_task_pack_only": true
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "research_task_pack",
+    "contracts": [
+      "ROUTE-TASK-PACK",
+      "TASK-PACK-SECTIONS",
+      "ACCEPTANCE-CRITERIA"
+    ]
+  }
+}

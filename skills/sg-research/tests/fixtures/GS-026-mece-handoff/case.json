@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-026-mece-handoff",
+  "category": "ambiguous-ecommerce-handoff",
+  "prompt": "店铺流量、转化、库存和推广一起异常，我还不知道先查哪一块。AIBP 中 sg-mece 可用。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": false,
+    "wants_report": false,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "ROUTE-NOT-APPLICABLE",
+      "ROUTE-SPECIALIST-HANDOFF"
+    ]
+  }
+}

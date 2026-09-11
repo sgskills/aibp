@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-014-writing-material",
+  "category": "writing_material",
+  "prompt": "我写议论文要用“路径依赖”，给准确释义、论证角度、一个类比、原创句式和误用提醒，不要写全文。",
+  "scenario": {
+    "request_kind": "writing_material",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "writing_material",
+      "original_example"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]",
+      "[WRITING-MATERIAL]",
+      "[WRITING-NO-GHOSTWRITE]"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-035-pair-concept-with-fact",
+  "category": "paired_concept_with_fact",
+  "prompt": "讲清“认知失调”，并在概念卡中核验它的提出背景，但重点是让我会区分和使用。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "sensitive_claim",
+      "needs_distinction"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[NEIGHBOR-DISTINCTION]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

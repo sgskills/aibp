@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-002-manageable-ambiguity",
+  "category": "manageable_ambiguity",
+  "prompt": "“接口”这个词有哪些常见意思？结合我在软件项目里的语境先讲 API 那一义。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "manageable",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[AMBIGUITY-CANDIDATES]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EXAMPLE-CONTRAST]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]"
+    ]
+  }
+}

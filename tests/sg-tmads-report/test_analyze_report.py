@@ -211,7 +211,7 @@ class Release306ContractTests(unittest.TestCase):
                 self.assertEqual(8, len(re.findall(r"<select\b", html)))
                 self.assertIn(f"SGSKILLS · {platform} ADS AUDIT", html)
                 self.assertIn(f"平台：{platform}", html)
-                self.assertIn("sg-tmads-report 3.0.7", html)
+                self.assertIn("sg-tmads-report 3.1.0", html)
                 if platform != "天猫":
                     self.assertNotIn("TMALL ADS AUDIT", html)
 

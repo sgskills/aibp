@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-028-forecast",
+  "category": "forecast_defer",
+  "prompt": "预测生成式 AI 教育市场未来三年的规模、监管变化和主要玩家格局。",
+  "scenario": {
+    "request_kind": "forecast_report",
+    "object_kind": "complex_market",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "financial",
+    "flags": [
+      "dynamic_usage",
+      "causal_claim"
+    ]
+  },
+  "expected": {
+    "route": "defer_sg_research",
+    "contracts": [
+      "[ROUTE-SG-RESEARCH]"
+    ]
+  }
+}

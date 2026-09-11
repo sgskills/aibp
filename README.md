@@ -6,9 +6,9 @@
 [![Validate and build](https://github.com/sgskills/aibp/actions/workflows/validate.yml/badge.svg)](https://github.com/sgskills/aibp/actions/workflows/validate.yml)
 [![License](https://img.shields.io/badge/license-Source%20Available-orange.svg)](LICENSE)
 
-**AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
+**AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、复杂研究、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前源码与稳定安装包版本均为 `3.0.7`，以根目录 `VERSION` 和正式 Release 为准。`3.0.7` 增加 30 天惰性检查更新：只提醒，不自动更新。`sg-aibp` 总路由仍在规划中；当前只提供四个独立 Skill，不提供尚未实现的总路由调用入口。
+当前源码候选版本为 `3.1.0`，稳定安装包以正式 Release 为准。`3.1.0` 提供十项专业功能 Skill，并正式加入可安装的 `sg-aibp` 总路由入口；仓库因此包含十项专业能力和一个路由 Skill。全部 Skill 都使用 30 天惰性检查更新：只提醒源码新版，不自动下载或更新。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -18,18 +18,31 @@
 
 | 分轨 | 面向谁 | 典型场景 | 得到什么 |
 | --- | --- | --- | --- |
-| `core` | 经营者与决策者 | 跨行业选择方向、配置资源、规划未来 12 个月 | 有证据的战略选择、条件性路径和停止条件 |
+| `core` | 经营者、决策者与研究人员 | 跨行业选择方向、配置资源，或核验复杂问题 | 有证据的战略选择，或来源可审计的研究报告/任务包 |
 | `ecommerce` | 电商经营与投放团队 | 拆清跨模块经营问题，或审计天猫推广报表 | 可验证的问题树、数据审计、诊断和行动优先级 |
 | `tooling` | Skill/Agent 作者与维护者 | 明确要诊断、测试、优化或打包 Skill/Agent | 证据化体检、待确认计划和真实回归结果 |
 
 普通广告、商品、内容或经营“优化”不属于 `tooling`；只有目标本身是 Skill/Agent 时才使用 `sg-skill-optimizer`。
 
+## AIBP 总路由
+
+不知道该选哪项能力、目标横跨多个 Skill，或需要判断先后顺序时，使用 `$sg-aibp`。总路由只选择首选 Skill、说明依据和开始所需的最小输入，不替代专业 Skill 完成业务分析。
+
+示例：`使用 $sg-aibp 判断我当前应该调用哪个 AIBP Skill，并告诉我开始所需的最小输入。`
+
 ## 按场景选择
 
 | 真实场景 | 推荐 Skill | 结果 |
 | --- | --- | --- |
+| “我不知道这个任务该用哪项 AIBP 能力。” | `sg-aibp` | 首选 Skill、选择理由、最小输入和必要顺序 |
 | “几个业务方向只能选一个，未来一年资源怎么配？” | `sg-ceo-vision` | CEO视角的方向选择、资源取舍与年度路径 |
+| “请查清这个复杂问题，比较多方来源、反证和冲突后给结论。” | `sg-research` | 带就近引用、不确定性和来源清单的研究报告；离线时给可执行任务包 |
+| “带我系统进入一个陌生技术圈，讲清来路和圈内语言。” | `sg-blackcat` | 可继续深挖的认知地图、关键坐标与圈内语境 |
 | “店铺流量、转化和库存都异常，但不知道先查哪里。” | `sg-mece` | 电商经营结构化拆解与第一优先级验证 |
+| “分析这些商品评价，找需求、场景、人群和隐藏机会。” | `sg-review` | 五模块评价分析、证据边界和可验证行动 |
+| “从产品图提取稳定外观特征，为后续生图锁定身份。” | `sg-shiwu` | 产品视觉指纹、身份锚点和防漂移约束 |
+| “分析连续四周的天猫商品榜单变化。” | `sg-toplist` | 可追溯榜单变化、机会假设与验证动作 |
+| “根据商品事实优化天猫商品标题。” | `sg-title` | 真实、合规、可复核的推荐标题 |
 | “这份天猫推广 CSV 表头混乱，ROI 和盈亏能不能算？” | `sg-tmads-report` | 先审表、再诊断的可追溯报告 |
 | “这个 Skill 触发不稳，想先体检再改并跑回归。” | `sg-skill-optimizer` | 证据、确认计划、修改记录与回归状态 |
 
@@ -37,17 +50,31 @@
 
 | 中文名称 | slug | 分轨 | 一句话结果 | 仓库精确路径 |
 | --- | --- | --- | --- | --- |
+| AIBP 总路由 | `sg-aibp` | `core`（入口） | 在十项专业能力之间选择首选 Skill 和必要顺序 | `skills/sg-aibp` |
 | CEO视角 | `sg-ceo-vision` | `core` | 把商业资料转化为方向、资源与 12 个月路径 | `skills/sg-ceo-vision` |
+| 深度研究 | `sg-research` | `core` | 把复杂问题转化为证据可审计的报告或可执行研究任务包 | `skills/sg-research` |
+| 黑猫 | `sg-blackcat` | `core` | 把陌生主题转化为可继续深挖的认知地图 | `skills/sg-blackcat` |
 | 电商经营结构化拆解 | `sg-mece` | `ecommerce` | 把模糊跨模块问题拆成可验证原因与行动 | `skills/sg-mece` |
+| 电商评价分析 | `sg-review` | `ecommerce` | 把电商评价转成五模块报告、机会和行动 | `skills/sg-review` |
+| 识物｜产品特征提取专家 | `sg-shiwu` | `ecommerce` | 把产品图转成视觉指纹、身份锚点和防漂移约束 | `skills/sg-shiwu` |
+| 竞品排名分析师 | `sg-toplist` | `ecommerce` | 把天猫商品榜单转成可追溯变化与机会假设 | `skills/sg-toplist` |
+| 电商标题优化师 | `sg-title` | `ecommerce` | 为国内货架电商生成或优化真实合规标题 | `skills/sg-title` |
 | 天猫推广诊断 | `sg-tmads-report` | `ecommerce` | 把天猫推广报表转化为审计、诊断与优先级 | `skills/sg-tmads-report` |
 | SG Skill 优化师 | `sg-skill-optimizer` | `tooling` | 对既有 Skill 做证据驱动优化与回归验证 | `skills/sg-skill-optimizer` |
 
-四个 Skill 的在线详情路径：
+十项专业能力及总路由的在线详情路径：
 
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-aibp`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-blackcat`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-ceo-vision`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-mece`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-research`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-review`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-shiwu`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-title`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-toplist`
 
 正式版本与安装包下载页：[最新稳定版](https://github.com/sgskills/aibp/releases/latest)。
 
@@ -55,14 +82,21 @@
 
 ### 直接下载安装包
 
-以下链接直接下载 `3.0.7` 稳定安装包，已包含 30 天惰性检查更新功能。旧版本保留在 Release 历史中，供需要时回退。
+`v3.1.0` 正式发布后，以下固定链接下载对应安装包；发布前请使用源码构建，已发布稳定版以 [Releases](https://github.com/sgskills/aibp/releases) 为准。所有 `3.1.0` 候选包均包含 30 天惰性检查更新功能，旧版本继续保留供回退。
 
-- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-ceo-vision-3.0.7.zip)
-- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-mece-3.0.7.zip)
-- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-tmads-report-3.0.7.zip)
-- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-skill-optimizer-3.0.7.zip)
-- [AIBP 四项完整套装](https://github.com/sgskills/aibp/releases/download/v3.0.7/aibp-3.0.7.zip)
-- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.0.7/SHA256SUMS.txt)
+- [AIBP 总路由](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-aibp-3.1.0.zip)
+- [黑猫](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-blackcat-3.1.0.zip)
+- [CEO视角](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-ceo-vision-3.1.0.zip)
+- [深度研究](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-research-3.1.0.zip)
+- [电商评价分析](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-review-3.1.0.zip)
+- [识物｜产品特征提取专家](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-shiwu-3.1.0.zip)
+- [电商经营结构化拆解](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-mece-3.1.0.zip)
+- [竞品排名分析师](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-toplist-3.1.0.zip)
+- [电商标题优化师](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-title-3.1.0.zip)
+- [天猫推广诊断](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-tmads-report-3.1.0.zip)
+- [SG Skill 优化师](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-skill-optimizer-3.1.0.zip)
+- [AIBP 十项专业能力 + 总路由完整套装](https://github.com/sgskills/aibp/releases/download/v3.1.0/aibp-3.1.0.zip)
+- [SHA256 校验清单](https://github.com/sgskills/aibp/releases/download/v3.1.0/SHA256SUMS.txt)
 
 解压单包后，把其中的 `sg-*` 文件夹放入 Agent Runtime 已配置的 Skills 目录。仓库与安装包采用平台中立的 Agent Skill 结构；Codex、WorkBuddy 或其他 Runtime 仍需分别实机验证，不能据此宣称完美适配或生产兼容。
 
@@ -76,11 +110,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 构建产物：
 
-- `dist/sg-ceo-vision-3.0.7.zip`
-- `dist/sg-mece-3.0.7.zip`
-- `dist/sg-tmads-report-3.0.7.zip`
-- `dist/sg-skill-optimizer-3.0.7.zip`
-- `dist/aibp-3.0.7.zip`
+- `dist/sg-aibp-3.1.0.zip`
+- `dist/sg-blackcat-3.1.0.zip`
+- `dist/sg-ceo-vision-3.1.0.zip`
+- `dist/sg-mece-3.1.0.zip`
+- `dist/sg-research-3.1.0.zip`
+- `dist/sg-review-3.1.0.zip`
+- `dist/sg-shiwu-3.1.0.zip`
+- `dist/sg-skill-optimizer-3.1.0.zip`
+- `dist/sg-title-3.1.0.zip`
+- `dist/sg-tmads-report-3.1.0.zip`
+- `dist/sg-toplist-3.1.0.zip`
+- `dist/aibp-3.1.0.zip`
 - `dist/SHA256SUMS.txt`
 
 ### 30 天检查更新
@@ -97,10 +138,17 @@ Windows 使用 PowerShell；macOS/Linux 使用 `sh` 和 `curl`。断网、超时
 aibp/
 ├── skills/
 │   ├── README.md
+│   ├── sg-aibp/
+│   ├── sg-blackcat/
 │   ├── sg-ceo-vision/
 │   ├── sg-mece/
+│   ├── sg-research/
+│   ├── sg-review/
+│   ├── sg-shiwu/
 │   ├── sg-skill-optimizer/
-│   └── sg-tmads-report/
+│   ├── sg-title/
+│   ├── sg-tmads-report/
+│   └── sg-toplist/
 ├── docs/superpowers/
 ├── tests/
 ├── tools/
@@ -108,7 +156,7 @@ aibp/
 └── VERSION
 ```
 
-未来增加到 10–20 个 Skill 时也继续平铺，并更新分轨导航与能力矩阵。新增或调整 Skill、升级仓库版本后，在正常构建前统一准备检查文件：
+未来继续增加 Skill 时也保持平铺，并更新总路由、分轨导航与能力矩阵。新增或调整 Skill、升级仓库版本后，在正常构建前统一准备检查文件：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\sync-update-check.ps1
@@ -134,7 +182,7 @@ optimizer 保留 21 个 `unittest` 与 6 个可执行 Golden cases；tmads 的�
 - `v1.4.0` tag 与完整 Git 历史保留。
 - dirty v2.0 迁移状态的本地 checkpoint 为 `cfcad564de627172e23c0e2d26b7d4e80d620510`。
 - `sgs-mece` 自 v2.0 起迁移为 `sg-mece`，不提供旧名兼容壳。
-- 迁移时使用的两个独立源目录仍在仓库外保留；本仓库只维护迁入后的副本。
+- 独立开发来源继续保留在仓库外；本仓库是唯一发布真源，来源变更通过清单与哈希审计后选择性迁入，不做自动双向覆盖。
 
 ## 使用许可
 
@@ -142,5 +190,9 @@ optimizer 保留 21 个 `unittest` 与 6 个可执行 Golden cases；tmads 的�
 
 ---
 作者： [诗光聊AI电商](微信公众号/视频号/抖音号) · [Github](https://github.com/sgskills) · [DOUYIN](https://v.douyin.com/O8hIsRzfjqQ/)
+
+敬请关注作者公众号「诗光聊AI电商」
+
+作者中文Skill集合网址：https://sgskills.com
 
 Built by  [@xstevenzhang](https://x.com/xstevenzhang)

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "photo-render-conflict",
+  "title": "实拍与渲染冲突",
+  "kind": "conflict",
+  "tags": ["photo_render_conflict", "source_separation"],
+  "request": "同款的实拍图和渲染图边角不一样，请提取可复用身份。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": ["photo"]}, {"id": "IMG-02", "source_kind": "uploaded", "availability": "readable", "quality_flags": ["render"]}], "trusted_user_facts": ["用户声称两图为同款"], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "undetermined", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["surface_conflict", "label_photo_and_render"], "must_not_claim": ["prefer_render", "prefer_photo", "average_conflicting_shapes"]}
+}

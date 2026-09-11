@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "mixed-sku",
+  "title": "不同 SKU 混入",
+  "kind": "positive",
+  "tags": ["mixed_sku", "group_before_merge"],
+  "request": "这些图里可能混了不同产品，请先判断再提取特征。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}, {"id": "IMG-02", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "separate_products", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["group_before_merge", "separate_skus"], "must_not_claim": ["merge_distinct_products", "average_conflicting_shapes"]}
+}

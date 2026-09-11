@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-026-due-diligence",
+  "category": "due_diligence_defer",
+  "prompt": "对一家 AI 搜索公司做尽调：团队、融资、产品、竞争、法律风险和投资结论都要有来源。",
+  "scenario": {
+    "request_kind": "due_diligence",
+    "object_kind": "complex_company",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "financial",
+    "flags": []
+  },
+  "expected": {
+    "route": "defer_sg_research",
+    "contracts": [
+      "[ROUTE-SG-RESEARCH]"
+    ]
+  }
+}

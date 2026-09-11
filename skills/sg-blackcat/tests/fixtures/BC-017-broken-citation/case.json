@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-017-broken-citation",
+  "category": "broken_citation",
+  "prompt": "根据一份正文引用编号无法在文末解析的材料讲清“注意力经济”；不要直接沿用断链。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "broken_citation",
+    "risk": "ordinary",
+    "flags": [
+      "correction"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[CITATION-INTEGRITY]",
+      "[CORRECTION-PROTOCOL]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EXAMPLE-CONTRAST]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]"
+    ]
+  }
+}

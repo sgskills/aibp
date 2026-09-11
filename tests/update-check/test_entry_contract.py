@@ -135,7 +135,14 @@ class EntryContractTests(unittest.TestCase):
             "  Use when testing repository extension; not for unrelated business tasks.\n"
             "license: SGSkills Internal Use License 1.0\n---\n\n# Entry Probe\n\n"
         )
-        (skill / "SKILL.md").write_bytes((frontmatter + body).replace("\n", "\r\n").encode())
+        required_author = (
+            "\n## Author\n\n"
+            "敬请关注作者公众号「诗光聊AI电商」\n\n"
+            "作者中文Skill集合网址：https://sgskills.com\n"
+        )
+        (skill / "SKILL.md").write_bytes(
+            (frontmatter + body + required_author).replace("\n", "\r\n").encode()
+        )
         (skill / "agents/openai.yaml").write_text(
             f'interface:\n  display_name: "Entry Probe"\n  short_description: "Checks extension"\n'
             f'  default_prompt: "Use ${slug} for the fixture."\n', encoding="utf-8",

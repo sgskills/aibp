@@ -27,7 +27,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 
 LOGGER = logging.getLogger("sg-tmads-report")
-SKILL_VERSION = "3.0.7"
+SKILL_VERSION = "3.1.0"
 SCHEMA_VERSION = "2.1"
 UNKNOWN_VALUES = {"", "unknown", "未知", "未确认", "n/a", "na", "none", "null"}
 TOTAL_LABELS = {"合计", "总计", "汇总", "全部"}

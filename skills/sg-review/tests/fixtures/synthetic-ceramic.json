@@ -1,0 +1,15 @@
+{
+  "fixture_type": "synthetic",
+  "reviews": [
+    {"review_id":"C001","review_text":"合成评价：釉面光滑，颜色均匀","date":"2026-04-01","rating":5,"sku":"四人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C002","review_text":"合成评价：碗口圆润，日常吃饭使用方便","date":"2026-04-02","rating":5,"sku":"四人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C003","review_text":"合成评价：收到时有一只碗碎了","date":"2026-04-03","rating":1,"sku":"四人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C004","review_text":"合成评价：包装分层固定，送礼合适","date":"2026-04-04","rating":5,"sku":"六人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C005","review_text":"合成评价：盘子边缘发现小缺口","date":"2026-04-05","rating":2,"sku":"六人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C006","review_text":"合成评价：放进洗碗机后清洗正常","date":"2026-04-06","rating":4,"sku":"六人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C007","review_text":"合成评价：汤碗容量够，家里聚餐使用","date":"2026-04-07","rating":4,"sku":"八人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C008","review_text":"合成评价：两只碟子的颜色有差异","date":"2026-04-08","rating":3,"sku":"八人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C009","review_text":"合成评价：客服补发了破损的碗","date":"2026-04-09","rating":4,"sku":"四人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false},
+    {"review_id":"C010","review_text":"合成评价：碗底防滑，叠放稳当","follow_up":"合成追评：使用两周没有划痕","date":"2026-04-10","rating":5,"sku":"四人套装","product":"合成样本-陶瓷餐具","platform":"合成平台","competitor":false}
+  ]
+}

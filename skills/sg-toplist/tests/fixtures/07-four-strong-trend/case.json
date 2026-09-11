@@ -1,0 +1,307 @@
+{
+  "id": "four-strong-trend",
+  "tags": [
+    "multi_period"
+  ],
+  "mode": "auto",
+  "operation": "analyze",
+  "input": {
+    "periods": [
+      {
+        "source_file": "synthetic-2025-01-01.csv",
+        "sheet": "市场排行_商品_交易总量_不限_全网_餐饮具",
+        "period": "2025-01-01 ~ 2025-01-07",
+        "platform": "天猫市场",
+        "scope": "全网",
+        "category": "餐饮具>餐具>碗",
+        "ranking_metric": "交易总量",
+        "top_n": 4,
+        "rows": [
+          {
+            "product_id": "B",
+            "rank": 1,
+            "title": "陶瓷碗-B",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "C",
+            "rank": 2,
+            "title": "陶瓷碗-C",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "D",
+            "rank": 3,
+            "title": "陶瓷碗-D",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "A",
+            "rank": 4,
+            "title": "陶瓷碗-A",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "10 ~ 20",
+            "visitors": "100 ~ 200",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          }
+        ]
+      },
+      {
+        "source_file": "synthetic-2025-01-08.csv",
+        "sheet": "市场排行_商品_交易总量_不限_全网_餐饮具",
+        "period": "2025-01-08 ~ 2025-01-14",
+        "platform": "天猫市场",
+        "scope": "全网",
+        "category": "餐饮具>餐具>碗",
+        "ranking_metric": "交易总量",
+        "top_n": 4,
+        "rows": [
+          {
+            "product_id": "B",
+            "rank": 1,
+            "title": "陶瓷碗-B",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "C",
+            "rank": 2,
+            "title": "陶瓷碗-C",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "A",
+            "rank": 3,
+            "title": "陶瓷碗-A",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "30 ~ 40",
+            "visitors": "300 ~ 400",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "D",
+            "rank": 4,
+            "title": "陶瓷碗-D",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          }
+        ]
+      },
+      {
+        "source_file": "synthetic-2025-01-15.csv",
+        "sheet": "市场排行_商品_交易总量_不限_全网_餐饮具",
+        "period": "2025-01-15 ~ 2025-01-21",
+        "platform": "天猫市场",
+        "scope": "全网",
+        "category": "餐饮具>餐具>碗",
+        "ranking_metric": "交易总量",
+        "top_n": 4,
+        "rows": [
+          {
+            "product_id": "B",
+            "rank": 1,
+            "title": "陶瓷碗-B",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "A",
+            "rank": 2,
+            "title": "陶瓷碗-A",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "50 ~ 60",
+            "visitors": "500 ~ 600",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "C",
+            "rank": 3,
+            "title": "陶瓷碗-C",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "D",
+            "rank": 4,
+            "title": "陶瓷碗-D",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          }
+        ]
+      },
+      {
+        "source_file": "synthetic-2025-01-22.csv",
+        "sheet": "市场排行_商品_交易总量_不限_全网_餐饮具",
+        "period": "2025-01-22 ~ 2025-01-28",
+        "platform": "天猫市场",
+        "scope": "全网",
+        "category": "餐饮具>餐具>碗",
+        "ranking_metric": "交易总量",
+        "top_n": 4,
+        "rows": [
+          {
+            "product_id": "A",
+            "rank": 1,
+            "title": "陶瓷碗-A",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "70 ~ 80",
+            "visitors": "700 ~ 800",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "B",
+            "rank": 2,
+            "title": "陶瓷碗-B",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "C",
+            "rank": 3,
+            "title": "陶瓷碗-C",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "D",
+            "rank": 4,
+            "title": "陶瓷碗-D",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          }
+        ]
+      }
+    ],
+    "request": "分析用户合法提供的商品排名"
+  },
+  "assertions": [
+    {
+      "path": "mode",
+      "op": "eq",
+      "value": "deep"
+    },
+    {
+      "path": "temporality.level",
+      "op": "eq",
+      "value": "strong_trend"
+    },
+    {
+      "path": "temporality.strong_trend_candidates.0.supporting_observed_metrics",
+      "op": "len",
+      "value": 2
+    },
+    {
+      "path": "trajectories.summary.matched_count",
+      "op": "eq",
+      "value": 12
+    }
+  ]
+}

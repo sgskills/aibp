@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-006-etymology-rumor",
+  "category": "etymology_rumor",
+  "prompt": "deadline 真的是监狱里越线就会被枪杀的那条线吗？请查清词源，不要复述都市传说。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_phrase",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

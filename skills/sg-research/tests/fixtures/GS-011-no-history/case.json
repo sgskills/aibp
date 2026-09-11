@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-011-no-history",
+  "category": "no-history-data",
+  "prompt": "一家刚成立、没有任何历史经营数据的线下宠物诊所，想研究当地客户选择诊所的决定因素。请基于公开资料写报告，不做预测。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "ready",
+  "expected": {
+    "route": "research_execution",
+    "contracts": [
+      "ROUTE-EXECUTION",
+      "NO-HISTORY-ADAPT",
+      "LXS-OPTIONAL",
+      "REPORT-SECTIONS"
+    ]
+  }
+}

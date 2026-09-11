@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-024-single-fact",
+  "category": "single_fact_non_trigger",
+  "prompt": "只核验“爱因斯坦是否说过复利是世界第八大奇迹”，给真伪和来源。",
+  "scenario": {
+    "request_kind": "single_fact_check",
+    "object_kind": "proposition",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "[ROUTE-NOT-APPLICABLE]"
+    ]
+  }
+}

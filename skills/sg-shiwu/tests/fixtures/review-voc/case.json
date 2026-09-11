@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "review-voc",
+  "title": "评价与 VOC 反触发",
+  "kind": "antitrigger",
+  "tags": ["adjacent_sg_review", "review_voc"],
+  "request": "分析这些评论文本，找出消费者痛点和 VOC。",
+  "input_manifest": {"images": [], "trusted_user_facts": ["输入为评论文本而非产品图"], "untrusted_payloads": []},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_voc_boundary"], "must_not_claim": ["treat_reviews_as_visual_evidence", "output_visual_anchor"]}
+}

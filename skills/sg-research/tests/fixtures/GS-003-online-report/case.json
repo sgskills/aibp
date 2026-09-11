@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-003-online-report",
+  "category": "online-report",
+  "prompt": "请比较欧盟与美国对通用 AI 模型透明度义务的现行差异，截止 2026-08-09，写一份供产品合规负责人决策的研究报告。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "ready",
+  "expected": {
+    "route": "research_execution",
+    "contracts": [
+      "TOOL-PREFLIGHT",
+      "ROUTE-EXECUTION",
+      "EVIDENCE-LEDGER",
+      "REPORT-SECTIONS",
+      "NEARBY-CITATIONS",
+      "STOP-RULE"
+    ]
+  }
+}

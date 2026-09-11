@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-016-source-conflict",
+  "category": "source-conflict",
+  "prompt": "请研究 A 市 2025 年青年失业率；现有来源给出的数字明显不一致，请查清差异原因并写报告。",
+  "tool_state": "ONLINE_CONFLICT",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "ready",
+  "expected": {
+    "route": "research_execution",
+    "contracts": [
+      "ROUTE-EXECUTION",
+      "CONFLICT-LINEAGE",
+      "CONFIDENCE-HML",
+      "REPORT-SECTIONS"
+    ]
+  }
+}

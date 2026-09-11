@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "no-image",
+  "title": "只有文字描述无图片",
+  "kind": "degraded",
+  "tags": ["no_image", "description_only"],
+  "request": "这是一个高端黑色杯子，请给我有图像证据的产品视觉指纹。",
+  "input_manifest": {"images": [], "trusted_user_facts": ["用户文字描述：高端黑色杯子"], "untrusted_payloads": []},
+  "expected": {"route": "request_upload", "handoff_target": null, "grouping": "undetermined", "required_sections": ["无法分析的原因", "未做出的结论", "最小上传清单"], "must_assert": ["minimum_reshoot", "separate_user_statement_from_image_observation"], "must_not_claim": ["image_evidence_exists", "high_confidence_visual_anchor"]}
+}

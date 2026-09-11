@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-038-complex-policy-object",
+  "category": "complex_policy_deep_map",
+  "prompt": "请解释一项跨境政策从出台、修订到企业影响的完整过程，并比较各方争议与未来变化。",
+  "scenario": {
+    "request_kind": "deep_exploration",
+    "object_kind": "complex_policy",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "deep_map",
+    "contracts": [
+      "[CITATION-INTEGRITY]",
+      "[CROSS-INSIGHT]",
+      "[DEEP-MAP-OUTPUT]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[FIRST-PRINCIPLES]",
+      "[FULLTEXT-EVIDENCE]",
+      "[HORIZONTAL-AXIS]",
+      "[INSIDER-GUIDE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-DEEP-MAP]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[VERTICAL-AXIS]"
+    ]
+  }
+}

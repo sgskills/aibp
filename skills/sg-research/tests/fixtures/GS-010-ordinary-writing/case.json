@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-010-ordinary-writing",
+  "category": "ordinary-writing",
+  "prompt": "把这句话润色得更礼貌：你明天把合同发我。",
+  "tool_state": "OFFLINE",
+  "intent": {
+    "research": false,
+    "wants_report": false,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "ROUTE-NOT-APPLICABLE"
+    ]
+  }
+}

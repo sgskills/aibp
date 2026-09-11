@@ -1,7 +1,7 @@
 """Real runtime subprocess regressions; only the clock and transport are injected.
 
 Runs Windows PowerShell 5.1 on Windows, POSIX sh/curl on Linux and macOS.
-Every process gets isolated cache/home/temp paths below .work/3.0.7/runtime-tests.
+Every process gets isolated cache/home/temp paths below .work/3.1.0/runtime-tests.
 """
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CASES = json.loads((Path(__file__).with_name("cases.json")).read_text(encoding="utf-8"))
 NOW = CASES["now_seconds"]
 INTERVAL = CASES["interval_seconds"]
-WORK = ROOT / ".work" / "3.0.7" / "runtime-tests"
+WORK = ROOT / ".work" / "3.1.0" / "runtime-tests"
 
 
 class RuntimeTests(unittest.TestCase):
@@ -48,14 +48,14 @@ class RuntimeTests(unittest.TestCase):
         self.package.mkdir(parents=True)
         self.cache = self.base / "cache 空格"
         self.cache.mkdir()
-        self.version = "3.0.7"
+        self.version = "3.1.0"
         self.version_file = self.package / "update-version.txt"
         self.version_file.write_text(self.version + "\n", encoding="ascii")
         self.extension = "ps1" if self.windows else "sh"
         self.script = self.package / ("check-update." + self.extension)
         shutil.copyfile(ROOT / "tools" / "update-check" / self.script.name, self.script)
         self.response = self.base / "response.txt"
-        self.response.write_text("3.0.8\n", encoding="ascii")
+        self.response.write_text("3.1.1\n", encoding="ascii")
         self.env = os.environ.copy()
         for key in ("HOME", "LOCALAPPDATA", "XDG_CACHE_HOME", "TEMP", "TMP", "TMPDIR"):
             location = self.base / key
@@ -69,7 +69,7 @@ class RuntimeTests(unittest.TestCase):
     def package_hashes(self):
         return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in self.package.iterdir() if p.is_file()}
 
-    def notice(self, remote="3.0.8", local=None):
+    def notice(self, remote="3.1.1", local=None):
         return f"AIBP 源码有新版本 v{remote}（当前 v{local or self.version}）：https://github.com/sgskills/aibp\n"
 
     def runtime_path(self, path):
@@ -121,7 +121,9 @@ class RuntimeTests(unittest.TestCase):
         path.write_text(str(value), encoding="ascii")
 
     @contextlib.contextmanager
-    def server(self, mode="ok", body=b"3.0.8\n"):
+    def server(self, mode="ok", body=None):
+        if body is None:
+            body = self.response.read_bytes()
         hits = []
         stop = threading.Event()
 
@@ -283,10 +285,10 @@ class RuntimeTests(unittest.TestCase):
 
     def test_different_install_versions_are_isolated(self):
         self.assertEqual(self.run_check().stdout, self.notice())
-        self.version_file.write_text("3.0.6\n", encoding="ascii")
-        self.assertEqual(self.run_check().stdout, self.notice(local="3.0.6"))
-        self.assertTrue(self.attempt_path("3.0.6").exists())
+        self.version_file.write_text("3.0.7\n", encoding="ascii")
+        self.assertEqual(self.run_check().stdout, self.notice(local="3.0.7"))
         self.assertTrue(self.attempt_path("3.0.7").exists())
+        self.assertTrue(self.attempt_path("3.1.0").exists())
 
     def test_concurrent_invocations_make_one_request(self):
         with self.server() as (url, hits):

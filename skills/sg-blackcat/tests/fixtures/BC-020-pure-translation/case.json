@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-020-pure-translation",
+  "category": "pure_translation_non_trigger",
+  "prompt": "把 confirmation bias 翻译成中文，只给译文。",
+  "scenario": {
+    "request_kind": "pure_translation",
+    "object_kind": "bounded_phrase",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "[ROUTE-NOT-APPLICABLE]"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "product-development-selection",
+  "title": "产品开发选品卖点反触发",
+  "kind": "antitrigger",
+  "tags": ["adjacent_sg_product", "product_selection", "selling_points"],
+  "request": "看这些商品图，帮我决定做不做、选哪个款，并提炼核心卖点。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_product_decision_boundary"], "must_not_claim": ["make_product_selection", "invent_selling_points"]}
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-041-standard-person",
+  "category": "standard_person_map",
+  "prompt": "帮我建立宫崎骏的认知地图：创作转折、核心母题、在动画史上的位置以及主要争议都要讲清。",
+  "scenario": {
+    "request_kind": "topic_exploration",
+    "object_kind": "complex_person",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "controversial",
+      "cross_insight"
+    ]
+  },
+  "expected": {
+    "route": "topic_map",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[CROSS-INSIGHT]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[FULLTEXT-EVIDENCE]",
+      "[HORIZONTAL-AXIS]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-TOPIC-MAP]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[TOPIC-MAP-OUTPUT]",
+      "[UNCERTAINTY-TYPES]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[VERTICAL-AXIS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

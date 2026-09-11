@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "market-category-insight",
+  "title": "渠道市场品类洞察反触发",
+  "kind": "antitrigger",
+  "tags": ["adjacent_sg_insight", "market_insight"],
+  "request": "根据渠道数据和竞品链接判断品类趋势与市场机会。",
+  "input_manifest": {"images": [], "trusted_user_facts": ["输入为渠道数据和竞品链接"], "untrusted_payloads": []},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_market_boundary"], "must_not_claim": ["scrape_webpage", "perform_market_research"]}
+}

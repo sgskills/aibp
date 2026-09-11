@@ -1,0 +1,4 @@
+interface:
+  display_name: "识物｜产品特征提取专家"
+  short_description: "把产品图片转化为可追溯的视觉指纹、身份锚点与防漂移约束"
+  default_prompt: "使用 $sg-shiwu 分析这些产品图，提取有证据的视觉指纹、中文身份锚点和防漂移约束。"

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "direct-image-generation",
+  "title": "直接生成图片反触发",
+  "kind": "antitrigger",
+  "tags": ["direct_image_generation", "imagegen_boundary"],
+  "request": "直接用这些产品图给我生成一张电商主图，不要分析。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_no_image_generation"], "must_not_claim": ["generate_or_edit_image", "visual_fingerprint_as_generated_output"]}
+}

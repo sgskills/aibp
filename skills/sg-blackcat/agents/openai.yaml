@@ -1,0 +1,4 @@
+interface:
+  display_name: "黑猫"
+  short_description: "纵向追来路、横向看位置，把陌生主题变成可继续深挖的认知地图"
+  default_prompt: "请用 $sg-blackcat 带我进入这个主题，讲清它的来路、位置、圈内语言和关键洞察。"

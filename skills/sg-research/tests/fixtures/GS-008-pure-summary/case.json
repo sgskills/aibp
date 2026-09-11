@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-008-pure-summary",
+  "category": "pure-summary",
+  "prompt": "把这段话总结成三点：项目延期两周，主要原因是供应商交付延迟；预算不变；下周重新排期。",
+  "tool_state": "OFFLINE",
+  "intent": {
+    "research": false,
+    "wants_report": false,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "ROUTE-NOT-APPLICABLE"
+    ]
+  }
+}

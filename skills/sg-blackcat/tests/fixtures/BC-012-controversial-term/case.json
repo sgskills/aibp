@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-012-controversial-term",
+  "category": "controversial_term",
+  "prompt": "“数字游民”有没有统一定义？请分开主流解释和有争议的用法。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "disputed_current",
+    "risk": "ordinary",
+    "flags": [
+      "controversial",
+      "dynamic_usage"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[CONFLICT-LINEAGE]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[DYNAMIC-AS-OF]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[UNCERTAINTY-TYPES]",
+      "[VERIFY-SENSITIVE-CLAIMS]"
+    ]
+  }
+}
