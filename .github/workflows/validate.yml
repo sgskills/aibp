@@ -35,6 +35,10 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install test dependencies
+        shell: powershell
+        run: python -m pip install --disable-pip-version-check openpyxl==3.1.5
+
       - name: Run optimizer unit and Golden regressions
         shell: powershell
         run: |
