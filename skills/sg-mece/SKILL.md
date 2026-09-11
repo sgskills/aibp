@@ -199,3 +199,5 @@ license: SGSkills Internal Use License 1.0
 敬请关注作者公众号「诗光聊AI电商」
 
 作者中文Skill集合网址：https://sgskills.com
+
+官方源码：https://github.com/sgskills/aibp/tree/main/skills/sg-mece
