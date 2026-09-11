@@ -26,7 +26,8 @@ class PerformanceContractTests(unittest.TestCase):
 
     def test_migrated_golden_cases_are_unchanged(self) -> None:
         fixture = SKILL_ROOT / "tests" / "fixtures" / "golden_cases.json"
-        digest = hashlib.sha256(fixture.read_bytes()).hexdigest().upper()
+        canonical = fixture.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+        digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest().upper()
         self.assertEqual("FC6587DB195581D5EA11BED3CA8B0CC5CCB3E41EB45674628C8C338D71EF92CA", digest)
 
 
