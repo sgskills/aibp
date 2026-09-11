@@ -8,7 +8,7 @@
 
 **AIBP = AI Business Partner**。这是一个面向经营者、业务团队与 Skill/Agent 作者的 AI 商业伙伴能力仓库：把商业资料、复杂研究、经营问题、推广报表和 Skill 工程任务转化为有证据、有边界、可验证的结果。
 
-当前源码候选版本为 `3.1.0`，稳定安装包以正式 Release 为准。`3.1.0` 提供十项专业功能 Skill，并正式加入可安装的 `sg-aibp` 总路由入口；仓库因此包含十项专业能力和一个路由 Skill。全部 Skill 都使用 30 天惰性检查更新：只提醒源码新版，不自动下载或更新。
+当前稳定版为 `3.1.0`，正式安装包已发布至 [GitHub Release](https://github.com/sgskills/aibp/releases/tag/v3.1.0)。`3.1.0` 提供十项专业功能 Skill，并正式加入可安装的 `sg-aibp` 总路由入口；仓库因此包含十项专业能力和一个路由 Skill。全部 Skill 都使用 30 天惰性检查更新：只提醒源码新版，不自动下载或更新。
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -82,7 +82,7 @@
 
 ### 直接下载安装包
 
-`v3.1.0` 正式发布后，以下固定链接下载对应安装包；发布前请使用源码构建，已发布稳定版以 [Releases](https://github.com/sgskills/aibp/releases) 为准。所有 `3.1.0` 候选包均包含 30 天惰性检查更新功能，旧版本继续保留供回退。
+`v3.1.0` 已正式发布，以下固定链接可直接下载对应安装包；其他已发布版本见 [Releases](https://github.com/sgskills/aibp/releases)。所有 `3.1.0` 正式安装包均包含 30 天惰性检查更新功能，旧版本继续保留供回退。
 
 - [AIBP 总路由](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-aibp-3.1.0.zip)
 - [黑猫](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-blackcat-3.1.0.zip)

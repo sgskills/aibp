@@ -8,7 +8,7 @@
 
 **AIBP means AI Business Partner.** This repository turns business materials, complex research questions, operating problems, advertising reports, and Skill/Agent engineering tasks into evidence-backed, bounded, verifiable outcomes for operators, business teams, researchers, and Skill authors.
 
-The current source candidate is `3.1.0`; stable installation packages are determined by the official Release. Version `3.1.0` provides ten specialist Skills plus the installable `sg-aibp` umbrella router. Every Skill includes a reminder-only 30-day lazy update check; it never downloads or installs an update.
+The current stable version is `3.1.0`, with official installation packages published in the [GitHub Release](https://github.com/sgskills/aibp/releases/tag/v3.1.0). Version `3.1.0` provides ten specialist Skills plus the installable `sg-aibp` umbrella router. Every Skill includes a reminder-only 30-day lazy update check; it never downloads or installs an update.
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -82,7 +82,7 @@ Stable release and package downloads: [Latest stable release](https://github.com
 
 ### Download installation packages
 
-After `v3.1.0` is formally released, these fixed links download its packages. Before release, build from source; consult [Releases](https://github.com/sgskills/aibp/releases) for the currently published stable version. Every `3.1.0` candidate package includes the reminder-only 30-day update check, and earlier releases remain available for rollback.
+`v3.1.0` is formally released, and these fixed links download its packages directly. See [Releases](https://github.com/sgskills/aibp/releases) for other published versions. Every official `3.1.0` package includes the reminder-only 30-day update check, and earlier releases remain available for rollback.
 
 - [CEO Vision](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-ceo-vision-3.1.0.zip)
 - [AIBP umbrella router](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-aibp-3.1.0.zip)

@@ -16,7 +16,7 @@
 | `ecommerce` | 天猫推广诊断 | 推广报表审计、诊断与行动优先级 | [`sg-tmads-report`](sg-tmads-report/) |
 | `tooling` | SG Skill 优化师 | 既有 Skill 的证据化优化与回归 | [`sg-skill-optimizer`](sg-skill-optimizer/) |
 
-当前源码候选版本为 `3.1.0`；已发布稳定安装包以 [AIBP Latest Release](https://github.com/sgskills/aibp/releases/latest) 为准。仓库包含十项专业功能 Skill 和一个总路由入口，全部包含 30 天惰性检查更新功能。仓库与安装包采用平台中立的 Agent Skill 结构；具体 Runtime 兼容性仍以实机验证为准。
+当前稳定版为 `3.1.0`；正式安装包已发布至 [AIBP v3.1.0 Release](https://github.com/sgskills/aibp/releases/tag/v3.1.0)。仓库包含十项专业功能 Skill 和一个总路由入口，全部包含 30 天惰性检查更新功能。仓库与安装包采用平台中立的 Agent Skill 结构；具体 Runtime 兼容性仍以实机验证为准。
 
 现有及新增 Skill 统一使用[检查更新契约](../docs/update-check.md)：实际调用时惰性检查，仅提醒源码新版，不自动更新。维护者把新 Skill 放入 `skills/<slug>` 后，运行 `tools/sync-update-check.ps1` 自动生成入口和运行文件，再正常验证与构建；遗漏配置或模板漂移会直接失败。
 
