@@ -1,5 +1,3 @@
-# Official source: https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report
-
 interface:
   display_name: "天猫推广诊断"
   short_description: "先审表再追问，诊断天猫推广投产、推广毛利盈亏与计划机会"

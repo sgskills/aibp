@@ -298,6 +298,8 @@ python scripts/run_eval.py
 
 作者中文Skill集合网址：https://sgskills.com
 
+官方源码：https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer
+
 Built by  [@xstevenzhang](https://x.com/xstevenzhang)
 
 ---

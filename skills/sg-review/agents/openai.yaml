@@ -1,5 +1,3 @@
-# Official source: https://github.com/sgskills/aibp/tree/main/skills/sg-review
-
 interface:
   display_name: "电商评价分析"
   short_description: "把电商评价转成五模块报告、隐藏商业机会与可验证行动清单"

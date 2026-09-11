@@ -1,5 +1,3 @@
-# Official source: https://github.com/sgskills/aibp/tree/main/skills/sg-research
-
 interface:
   display_name: "深度研究"
   short_description: "执行证据可审计的深度研究，或生成可独立复制执行的完整研究任务包"
