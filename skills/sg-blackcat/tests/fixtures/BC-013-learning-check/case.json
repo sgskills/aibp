@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-013-learning-check",
+  "category": "learning_self_test",
+  "prompt": "先讲清“证伪性”，再出3道题，分别考复述、辨别和迁移，答案放最后。",
+  "scenario": {
+    "request_kind": "learning_check",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "learning"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EXAMPLE-CONTRAST]",
+      "[LEARNING-CHECK]",
+      "[LEARNING-TRANSFER]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]"
+    ]
+  }
+}

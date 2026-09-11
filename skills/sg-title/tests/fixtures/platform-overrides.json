@@ -1,0 +1,26 @@
+{
+  "platforms": {
+    "fixture-marketplace": {
+      "display_name": "测试平台（仅测试）",
+      "version": "fixture-1.0",
+      "scope": "仅确定性测试，不代表真实平台规则",
+      "status": "test_only",
+      "sources": [{"title": "Frozen test contract", "status": "test_only"}],
+      "length": {"metric": "codepoints", "min": 4, "max": 12, "enforcement": "hard"},
+      "space_policy": {"value": "forbid", "enforcement": "hard"},
+      "symbol_policy": {"forbidden": ["★", "🔥"], "enforcement": "hard"},
+      "max_term_repetitions": {"value": 1, "enforcement": "hard"}
+    },
+    "fixture-profile": {
+      "display_name": "偏好隔离测试平台（仅测试）",
+      "version": "fixture-profile-1.0",
+      "scope": "仅确定性测试，不代表真实平台规则",
+      "status": "test_only",
+      "sources": [{"title": "Frozen profile isolation contract", "status": "test_only"}],
+      "length": {"metric": "codepoints", "min": 2, "max": 30, "enforcement": "hard"},
+      "space_policy": {"value": "allow", "enforcement": "unknown"},
+      "symbol_policy": {"forbidden": [], "enforcement": "unknown"},
+      "max_term_repetitions": {"value": 1, "enforcement": "advisory"}
+    }
+  }
+}

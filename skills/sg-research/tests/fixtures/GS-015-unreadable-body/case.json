@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-015-unreadable-body",
+  "category": "unreadable-fulltext",
+  "prompt": "请核验某行业协会声称‘2025 年市场规模增长 42%’的数据并写报告，但当前只能看到搜索摘要，正文均不可读。",
+  "tool_state": "SEARCH_ONLY",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "research_task_pack",
+    "contracts": [
+      "TOOL-PREFLIGHT",
+      "ROUTE-TASK-PACK",
+      "FULLTEXT-EVIDENCE",
+      "OFFLINE-DISCLOSURE",
+      "TASK-PACK-SECTIONS"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIBP 总路由"
+  short_description: "在十项 AIBP 专业能力之间选择首选 Skill 和必要执行顺序"
+  default_prompt: "使用 $sg-aibp 判断我当前应该调用哪个 AIBP Skill，并告诉我开始所需的最小输入。"

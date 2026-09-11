@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-027-decision-report",
+  "category": "decision_report_defer",
+  "prompt": "比较精益与敏捷，并替公司选一套实施方式，给资源配置与决策报告。",
+  "scenario": {
+    "request_kind": "decision_analysis",
+    "object_kind": "complex_company",
+    "concept_count": 2,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "needs_distinction"
+    ]
+  },
+  "expected": {
+    "route": "defer_sg_research",
+    "contracts": [
+      "[ROUTE-SG-RESEARCH]"
+    ]
+  }
+}

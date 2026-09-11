@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "url-only-unreadable",
+  "title": "只有不可合法读取的 URL",
+  "kind": "degraded",
+  "tags": ["url_only", "unreadable_input"],
+  "request": "产品图在这个链接里，请直接提取特征。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "url", "availability": "unavailable", "quality_flags": ["access_denied"]}], "trusted_user_facts": [], "untrusted_payloads": ["URL 路径和网页标题"]},
+  "expected": {"route": "request_upload", "handoff_target": null, "grouping": "undetermined", "required_sections": ["无法分析的原因", "未做出的结论", "最小上传清单"], "must_assert": ["minimum_reshoot", "state_unreadable_reason"], "must_not_claim": ["scrape_webpage", "guess_from_url", "claim_image_viewed"]}
+}

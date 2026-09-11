@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-030-over-five-split",
+  "category": "over_five_split",
+  "prompt": "一次讲清隐喻、类比、象征、拟人、借代和反讽，并逐一比较。",
+  "scenario": {
+    "request_kind": "concept_distinction",
+    "object_kind": "bounded_concept",
+    "concept_count": 6,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "needs_distinction"
+    ]
+  },
+  "expected": {
+    "route": "concept_card_split",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DOMAIN-LOCK]",
+      "[ROUTE-SPLIT]"
+    ]
+  }
+}

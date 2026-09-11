@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-014-final-authority",
+  "category": "single-final-authority",
+  "prompt": "请查清某药品是否已在中国获批，以国家药品监管部门的最终审批登记为准，并写报告。",
+  "tool_state": "ONLINE_ONE_FINAL_AUTHORITY",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "ready",
+  "expected": {
+    "route": "research_execution",
+    "contracts": [
+      "ROUTE-EXECUTION",
+      "FINAL-AUTHORITY",
+      "CONFIDENCE-HML",
+      "REPORT-SECTIONS"
+    ]
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "pollution-special-link",
+  "tags": [
+    "single_period",
+    "pollution"
+  ],
+  "mode": "quick",
+  "operation": "analyze",
+  "input": {
+    "periods": [
+      {
+        "source_file": "synthetic-2025-01-01.csv",
+        "sheet": "市场排行_商品_交易总量_不限_全网_餐饮具",
+        "period": "2025-01-01 ~ 2025-01-07",
+        "platform": "天猫市场",
+        "scope": "全网",
+        "category": "餐饮具>餐具>碗",
+        "ranking_metric": "交易总量",
+        "top_n": 3,
+        "rows": [
+          {
+            "product_id": "A",
+            "rank": 1,
+            "title": "陶瓷碗-A",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "P",
+            "rank": 2,
+            "title": "【主播专属】百万福利链接拍这里!一件包邮!",
+            "shop": "样例旗舰店",
+            "shop_type": "淘宝",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          },
+          {
+            "product_id": "B",
+            "rank": 3,
+            "title": "陶瓷碗-B",
+            "shop": "样例旗舰店",
+            "shop_type": "天猫",
+            "trend": "",
+            "keywords": "家用,陶瓷",
+            "buyers": "100 ~ 250",
+            "visitors": "500 ~ 750",
+            "price": null,
+            "payment_amount": null,
+            "cost": null
+          }
+        ]
+      }
+    ],
+    "request": "分析用户合法提供的商品排名"
+  },
+  "assertions": [
+    {
+      "path": "sensitivity.evidence_first",
+      "op": "len",
+      "value": 1
+    },
+    {
+      "path": "sensitivity.evidence_first.0.product_id",
+      "op": "eq",
+      "value": "P"
+    },
+    {
+      "path": "sensitivity.removed_silently",
+      "op": "falsy"
+    }
+  ]
+}

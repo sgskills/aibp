@@ -1,0 +1,13 @@
+[
+  {"id":"router-ceo","request":"几个业务方向只能选一个，未来一年资源怎么配置？","expected":"sg-ceo-vision"},
+  {"id":"router-research","request":"查清这个复杂问题并比较独立来源、反证和冲突。","expected":"sg-research"},
+  {"id":"router-blackcat","request":"带我系统进入一个陌生技术圈，讲清来路和圈内语言。","expected":"sg-blackcat"},
+  {"id":"router-mece","request":"店铺流量、转化和库存都异常，不知道先查哪里。","expected":"sg-mece"},
+  {"id":"router-review","request":"分析我导出的商品评价，找需求、场景、人群和机会。","expected":"sg-review"},
+  {"id":"router-shiwu","request":"从这几张产品图提取稳定外观特征和身份锚点。","expected":"sg-shiwu"},
+  {"id":"router-toplist","request":"分析四周天猫商品排名表的跨期变化和机会假设。","expected":"sg-toplist"},
+  {"id":"router-title","request":"按商品事实优化天猫商品标题。","expected":"sg-title"},
+  {"id":"router-tmads","request":"审计这份天猫推广报表，判断 ROI 和推广毛利情景。","expected":"sg-tmads-report"},
+  {"id":"router-optimizer","request":"这个 Skill 触发不稳，先诊断再改并跑回归。","expected":"sg-skill-optimizer"},
+  {"id":"router-out-of-scope","request":"把这段中文翻译成英文。","expected":"OUT_OF_SCOPE"}
+]

@@ -1,0 +1,4 @@
+interface:
+  display_name: "竞品排名分析师"
+  short_description: "审计商品榜单并提炼可追溯的跨期信号、机会假设与验证动作"
+  default_prompt: "使用 $sg-toplist 审计我提供的商品排名表，并按可比口径输出变化信号、机会假设及验证动作。"

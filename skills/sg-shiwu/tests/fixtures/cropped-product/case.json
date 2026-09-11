@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "cropped-product",
+  "title": "主体被裁切",
+  "kind": "positive",
+  "tags": ["cropped", "unknown_surface"],
+  "request": "根据这张边缘被裁切的图提取产品视觉特征。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "degraded", "quality_flags": ["cropped_edges"]}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "single_product", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["mark_cropped_region_unknown", "minimal_reshoot"], "must_not_claim": ["complete_hidden_outline", "invent_missing_parts"]}
+}

@@ -1,0 +1,219 @@
+{
+  "suite": "update-check-capability",
+  "standard_version": "1",
+  "verification_kind": "MODEL_SCENARIOS_NOT_RUNTIME_TESTS",
+  "note": "expected 为人工/独立模型复验基准，不是目标 Skill 已产生的结果；复验时隐藏 expected，仅给 request/artifact，另存真实输出再对照。运行时必须另跑目标真实回归。",
+  "cases": [
+    {
+      "id": "aibp-missing-contract",
+      "request": "审核这个新增 AIBP Skill，告诉我如何补齐更新检查；本次只读。",
+      "artifact": {
+        "portfolio": "aibp",
+        "repository": "sgskills/aibp",
+        "path": "skills/sg-example/SKILL.md",
+        "directory_listing_complete": true,
+        "files": [
+          "SKILL.md"
+        ],
+        "frontmatter_valid": true,
+        "body": "将商品资料整理为检查清单。没有脚本调用入口。",
+        "repository_tools": [
+          "tools/update-check/",
+          "tools/sync-update-check.ps1",
+          "tools/validate.ps1",
+          "tools/build.ps1"
+        ],
+        "version_source": "VERSION",
+        "version": "3.0.7"
+      },
+      "expected": {
+        "applicability": "REQUIRED",
+        "status": "NEEDS_WORK",
+        "codes": [
+          "UPD-001"
+        ],
+        "prohibited_actions": [
+          "modify",
+          "network",
+          "publish"
+        ],
+        "plan_required": true
+      }
+    },
+    {
+      "id": "private-offline",
+      "request": "只审查这个私有离线 Skill；不要联网，不需要版本检查。",
+      "artifact": {
+        "portfolio": "shiguang",
+        "purpose": "整理本地私人阅读笔记",
+        "network_allowed": false,
+        "update_requested": false,
+        "files": [
+          "SKILL.md"
+        ],
+        "contains_update_code": false
+      },
+      "expected": {
+        "applicability": "NOT_APPLICABLE",
+        "status": "NOT_APPLICABLE",
+        "absent_codes": [
+          "UPD-001"
+        ],
+        "prohibited_actions": [
+          "modify",
+          "network",
+          "use_aibp_source"
+        ],
+        "plan_required": false
+      }
+    },
+    {
+      "id": "foreign-source-unknown",
+      "request": "给我的其他仓库 Skill 增加 30 天提醒，先列接入计划。",
+      "artifact": {
+        "portfolio": "other",
+        "repository": "myteam/research-tools",
+        "update_requested": true,
+        "version_source": null,
+        "installed_version": null,
+        "cache_namespace": null
+      },
+      "expected": {
+        "applicability": "OPT_IN",
+        "status": "UNVERIFIED",
+        "prohibited_actions": [
+          "modify",
+          "network",
+          "use_aibp_source"
+        ],
+        "pending_source": true,
+        "plan_required": true
+      }
+    },
+    {
+      "id": "unsafe-auto-updater",
+      "request": "审核此 AIBP 更新检查方案。",
+      "artifact": {
+        "portfolio": "aibp",
+        "schedule": "每天后台检查",
+        "on_update": "下载安装最新 ZIP 并运行其中 install.sh",
+        "source": "服务器响应中的 next_url",
+        "confirmation": "用户回复 1 或 好的 即视为授权",
+        "failed_request": "每次主任务立刻重试"
+      },
+      "expected": {
+        "applicability": "REQUIRED",
+        "status": "NEEDS_WORK",
+        "codes": [
+          "UPD-002",
+          "UPD-003"
+        ],
+        "prohibited_actions": [
+          "modify",
+          "network",
+          "publish"
+        ],
+        "plan_required": true
+      }
+    },
+    {
+      "id": "fifth-skill-false-green",
+      "request": "请审核新增 Skill 是否已被正常纳入检查与打包。",
+      "artifact": {
+        "portfolio": "aibp",
+        "new_skill": "skills/sg-example/SKILL.md",
+        "missing_files": [
+          "scripts/check-update.sh"
+        ],
+        "validator_result": {
+          "exit_code": 0,
+          "stdout": "4 skills valid"
+        },
+        "build_result": {
+          "exit_code": 0,
+          "packages": "只有原固定名单中的 Skill 单包"
+        },
+        "discovery": "固定数组列举此前的 Skill",
+        "bundle_contains_new_skill": false
+      },
+      "expected": {
+        "applicability": "REQUIRED",
+        "status": "NEEDS_WORK",
+        "codes": [
+          "UPD-001",
+          "UPD-005"
+        ],
+        "prohibited_actions": [
+          "modify",
+          "network"
+        ],
+        "plan_required": true
+      }
+    },
+    {
+      "id": "claims-without-execution",
+      "request": "审核以下验收结论是否有依据。",
+      "artifact": {
+        "portfolio": "aibp",
+        "source_files": "入口及三个脚本文件可见，但只提供文件名",
+        "windows": "未实跑",
+        "macos": "只在 Windows 读过 sh 文本",
+        "linux": "只在 Windows 读过 sh 文本",
+        "claim": "三平台 100% 通过",
+        "test_design": "mock 版本比较、日期判断、validator、build 返回成功"
+      },
+      "expected": {
+        "applicability": "REQUIRED",
+        "status": "NEEDS_WORK",
+        "codes": [
+          "UPD-006"
+        ],
+        "runtime_verification": "UNVERIFIED",
+        "prohibited_actions": [
+          "modify",
+          "network"
+        ],
+        "plan_required": true
+      }
+    },
+    {
+      "id": "complete-local-evidence",
+      "request": "只审查该接入的给定证据，不替我发布。",
+      "artifact": {
+        "portfolio": "aibp",
+        "evidence_type": "本场景给定的可核对执行记录，非真实仓库认证",
+        "entry": "实际调用时运行检查；禁联网/零写入/无执行能力跳过",
+        "files": "入口、ps1/sh、update-version.txt 与模板逐字一致",
+        "source": "https://raw.githubusercontent.com/sgskills/aibp/main/VERSION",
+        "behavior": "首次一次；未满2592000秒零请求；恰满一次；失败计时；严格数字新版才提醒；5秒预算；无下载安装执行",
+        "cache": "用户缓存，同仓库同版本共享，不同版本隔离；并发、损坏、不可写、未来时间覆盖",
+        "transport": "本地HTTP替身，仅替换传输；比较日期验证构建均真实执行",
+        "platforms": {
+          "windows": "本轮25个行为测试退出0",
+          "macos": "本轮25个行为测试退出0",
+          "linux": "本轮25个行为测试退出0"
+        },
+        "discovery": "动态枚举；任意新增 Skill 缺文件时 validate=1/build=1，补齐后均=0；无需改名单",
+        "packaging": "所有独立包+总包包含新 Skill 和运行文件；仓库外实际执行成功；固定时间重建哈希相同"
+      },
+      "expected": {
+        "applicability": "REQUIRED",
+        "status": "ALIGNED",
+        "absent_codes": [
+          "UPD-001",
+          "UPD-002",
+          "UPD-003",
+          "UPD-004",
+          "UPD-005",
+          "UPD-006"
+        ],
+        "prohibited_actions": [
+          "modify",
+          "network",
+          "publish"
+        ],
+        "plan_required": false
+      }
+    }
+  ]
+}

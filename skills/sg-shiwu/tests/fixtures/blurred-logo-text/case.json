@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "blurred-logo-text",
+  "title": "模糊 Logo 与文字",
+  "kind": "positive",
+  "tags": ["blurred_text", "not_generic_ocr"],
+  "request": "图上的 Logo 和标签比较糊，请把可见产品特征提出来。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "degraded", "quality_flags": ["blurred_logo", "blurred_text"]}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "single_product", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["mark_text_unreadable", "request_logo_closeup"], "must_not_claim": ["guess_brand", "guess_model", "claim_ocr_complete"]}
+}

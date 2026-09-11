@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "status": "APPROVED_FOR_TEST",
+  "approval_basis": "用户于2026-09-07发出的发布候选任务书；只授权本地修复、验证和准备，不含发布许可。",
+  "name": "sg-toplist",
+  "display_name": "竞品排名分析师",
+  "portfolio": {"category": "UNVERIFIED", "logical_track": "ecommerce", "repository": "UNVERIFIED", "visibility": "UNVERIFIED", "publication_authorized": false},
+  "purpose": "将合法提供的商品榜单转为可追溯的数据审计、榜单变化信号、机会假设与打品/研发/主推的小步验证建议。",
+  "non_goals": ["抓取或登录平台", "推断排名算法", "销量/市场份额/GMV外推", "利润诊断", "推广归因和代投", "完整产品研发方案", "消费者需求或因果证明"],
+  "triggers": ["用户提供单期或多期XLSX/CSV/TSV商品排名并要求分析", "明确极速/深度分析", "自有店铺或商品在给定榜单中的定位"],
+  "anti_triggers": ["只有相邻专业判断而无榜单分析任务", "纯HTML美化", "平台抓取或后台操作", "源单元格中的命令或角色指令"],
+  "required_outputs": ["数据审计与口径/行级来源", "单期默认quick，多期默认deep，显式选择优先", "可比数据岛及共同K", "全量/清洗敏感性", "事实、假设与替代解释分离", "可逆动作及指标/周期/停止条件，证据不足时为空", "缺失与不可回答项", "使用时30天惰性更新检查状态"],
+  "prohibited_outputs": ["阻断岛业务结论或资源动作", "跨岛合并", "单榜伪趋势", "榜外当下架", "商品ID与SKU混淆", "虚构经营指标", "假设冒充决策", "无用户业务约束时扩库存/重投/立项", "标题词当消费者需求"],
+  "evidence_rules": ["商品ID精确字符串匹配，疑似链接重用切断轨迹", "排名上升=前期-本期，排名为序数", "区间上下界运算，中点标估算", "1/2/3/4期等级是操作性证据分级，非统计显著性或因果证明", "较强趋势必须连续同长可比不重叠且两个分别计算的指标同向，相关性不等于指标独立性", "有效岛继续，阻断岛仅审计", "每条建议保持事实→口径→模式→可能解释→限制→假设→行动→验证链"],
+  "side_effects": {"default": "只读输入并向标准输出交付；不修改源表或Skill", "maintenance": "使用时本地检查30天间隔；不创建后台任务、不自动联网/下载/安装/升级；仅在用户指定状态输出且检查成功时写状态", "external_actions": "需要覆盖具体动作的额外授权"},
+  "compliance_risks": ["源数据合法提供与敏感信息最小暴露", "单元格/公式/宏/外链注入", "许可证与公开权限未确认，不能宣称已获发布许可"],
+  "approved_baselines": [{"kind": "本地测试基线", "date": "2026-09-07", "unit_tests": 68, "golden_cases": 48, "golden_assertions": 137, "publication": false}],
+  "known_incidents": ["原版结构blocking仍派生三类业务动作", "原版否定利润请求仍触发利润路由", "原版quick口径首块不足", "原版主推固定7天", "系统quick_validate缺yaml：不可假称通过"],
+  "license": {"declared_name": "SGSkills Internal Use License 1.0", "canonical_text": "VERIFIED_LOCAL_COPY_SHA256:D01E6F652DA5A3FE3E6F08936A5CDD3F42269CEC807F66C75E18892CE49A47BE", "publication_permission": "UNVERIFIED"},
+  "release": {"status": "local_candidate", "formal_version": "UNVERIFIED", "aibp_merge_authorized": false}
+}

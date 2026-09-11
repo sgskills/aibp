@@ -17,7 +17,7 @@ jobs:
       - name: Prepare isolated test output
         shell: powershell
         run: |
-          $testScratch = Join-Path $env:GITHUB_WORKSPACE '.work/3.0.7/tmp'
+          $testScratch = Join-Path $env:GITHUB_WORKSPACE '.work/3.1.0/tmp'
           New-Item -ItemType Directory -Force -Path $testScratch | Out-Null
           "TEMP=$testScratch" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "TMP=$testScratch" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -55,6 +55,40 @@ jobs:
           python -B .\skills\sg-tmads-report\tests\run_regression.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: Run sg-research contract and routing regressions
+        shell: powershell
+        run: |
+          python -B -m unittest discover -s .\skills\sg-research\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B .\skills\sg-research\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Run AIBP router and specialist regressions
+        shell: powershell
+        run: |
+          python -B -m unittest discover -s .\tests\sg-aibp -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m unittest discover -s .\skills\sg-blackcat\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B .\skills\sg-blackcat\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m unittest discover -s .\skills\sg-review\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B .\skills\sg-review\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m unittest discover -s .\skills\sg-shiwu\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B .\skills\sg-shiwu\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m unittest discover -s .\skills\sg-title\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B .\skills\sg-title\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m unittest discover -s .\skills\sg-toplist\tests -p "test_*.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B .\skills\sg-toplist\scripts\run_eval.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Check update behavior and Skill entry contracts on Windows
         shell: powershell
         run: |
@@ -81,7 +115,7 @@ jobs:
       - name: Prepare isolated test output
         shell: bash
         run: |
-          test_scratch="$GITHUB_WORKSPACE/.work/3.0.7/tmp"
+          test_scratch="$GITHUB_WORKSPACE/.work/3.1.0/tmp"
           mkdir -p -- "$test_scratch"
           printf 'TMPDIR=%s\n' "$test_scratch" >> "$GITHUB_ENV"
 

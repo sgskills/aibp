@@ -1,5 +1,17 @@
 # 更新日志
 
+## v3.1.0 — 2026-09-11（发布候选）
+
+### 十项专业能力与 AIBP 总路由
+
+- 在既有 `sg-ceo-vision`、`sg-mece`、`sg-tmads-report`、`sg-skill-optimizer` 基础上，迁入 `sg-research`、`sg-review`、`sg-shiwu`、`sg-blackcat`、`sg-toplist`、`sg-title`，形成十项专业功能 Skill；`sg-research` 的独立开发来源与已迁入候选逐文件哈希一致，未重复计数。
+- 正式实现 `sg-aibp` 总路由入口：根据主要交付、必要上下文和让位边界选择一个首选 Skill，必要时给出有依赖的后续顺序；路由不替代专业执行，也不计作第十一项业务能力。
+- 六个新增专业 Skill 保留各自可执行 Golden/回归材料；对 `sg-review` 补齐 AIBP 许可证和发布真源口径并移除公开副本中的机器专属路径，对 `sg-toplist` 将独立项目发布资产适配为 AIBP 运行时/仓库测试结构。
+- 全部专业 Skill 增加到 `$sg-aibp` 的安全导航出口；普通业务优化不会被误导到 `sg-skill-optimizer`。根 README、英文 README、能力矩阵、场景表、精确详情路径和 `skills/README.md` 同步为“十项专业能力 + 总路由”。
+- 每个 Skill 和作者介绍页增加公众号「诗光聊AI电商」与 `https://sgskills.com`；保留已有作者、GitHub、抖音和 `Built by` 署名。
+- 更新检查生成器动态为全部 11 个可安装目录接入统一 30 天惰性检查：首次调用尝试、失败也冷却、仅严格新版提醒、不下载不安装；修复候选版本升级后本地 HTTP fixture 仍返回旧版本导致的两条失效断言。
+- validator、build、单项测试、总路由合同、更新检查行为矩阵、独立包/总包和 SHA256 进入同一发布门。`3.1.0` 为本地发布候选；提交、推送、tag 和 Release 分别服从用户授权。
+
 ## v3.0.7 — 2026-09-07
 
 ### 30 天惰性检查更新

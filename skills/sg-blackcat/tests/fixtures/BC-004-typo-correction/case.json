@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-004-typo-correction",
+  "category": "typo_correction",
+  "prompt": "讲讲“幸存者偏叉”，为什么只看成功案例会误判？",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "spelling_candidate"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EXAMPLE-CONTRAST]",
+      "[ROUTE-CONCEPT]",
+      "[SPELLING-TRANSPARENCY]",
+      "[THIRTY-SECOND]"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-029-research-task-pack",
+  "category": "research_task_pack_defer",
+  "prompt": "为“网络效应是否仍是平台护城河”写研究任务书，要比较五个平台并设计证据清单。",
+  "scenario": {
+    "request_kind": "research_task_pack",
+    "object_kind": "complex_industry",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "defer_sg_research",
+    "contracts": [
+      "[ROUTE-SG-RESEARCH]"
+    ]
+  }
+}

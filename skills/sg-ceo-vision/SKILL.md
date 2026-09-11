@@ -122,3 +122,13 @@ license: SGSkills Internal Use License 1.0
 用户要求标准或年度报告时，读取 `references/report-content-schema.md`，以 `assets/ceo-vision-report-template.html` 为视觉基线生成单文件、离线可打开的 HTML。不得使用外部字体、CDN 或账号；页脚右下角固定保留 `DESIGNED BY SHIGUANG`。
 
 关键结论必须标记为事实、推断或待验证；视觉样式不得掩盖证据不足或风险。
+
+## AIBP 导航
+
+如果目标跨多个能力，或仍不确定应使用哪个 Skill，调用 `$sg-aibp` 先做路由；本节不改变本 Skill 的战略与资源取舍边界。
+
+## 作者与版权
+
+敬请关注作者公众号「诗光聊AI电商」
+
+作者中文Skill集合网址：https://sgskills.com

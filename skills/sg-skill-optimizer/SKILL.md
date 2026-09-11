@@ -48,6 +48,12 @@ license: SGSkills Internal Use License 1.0
 3. 收口可以提供下一步导航，但只能基于当前 Skill 已声明的能力；不得假定安装其他 Skill、虚构路由或替用户选择无关工具。
 4. 诊断报告新增“叙事与路由”检查：首句定位、开场契约、反触发与收口导航分别给出证据或 `N/A`。
 
+## 更新检查接入能力
+
+诊断、优化或准备打包其他 Skill 时，必须读取 [update-check-standard.md](references/update-check-standard.md)，主动判断适用性并写入报告。AIBP 标准 Skill 缺少 30 天惰性检查时，必须给出入口、跨平台运行文件、缓存与失败降级、动态验证和独立打包的具体接入计划；在已确认范围内完成接入与红到绿验证，不能只建议用户以后自行补充。
+
+非 AIBP 或私有 Skill 先确认自己的版本真源与缓存范围，不套用 AIBP 地址；未授权联网的纯离线 Skill 记 N/A。此能力不运行被审 Skill，不替代确认门，也不授权安装、提交或发布。新增规则先作人工复核；通用静态分不是更新检查已实现或已验证的证明。
+
 ## INPUT / OUTPUT 契约
 
 ### INPUT
@@ -70,6 +76,7 @@ license: SGSkills Internal Use License 1.0
 3. 关键证据和 Top 5 修复；
 4. 系统化待确认执行计划；
 5. 已运行、未运行和 `N/A` 项。
+6. 更新检查专项：适用性、来源、现有证据、缺口、接入计划和验证状态（含三平台、动态纳入与包内容）。
 
 只有用户要求展开时才输出 `full` 检查明细。快速沟通可以用 `concise`：结论、红线、Top 3、下一步。三个档位都不能省略红线、置信度和确认状态。
 
@@ -132,6 +139,7 @@ python scripts/health_check.py <skill目录> --format json
 - Golden Set 是否有 fixture、runner、断言、退出码和最近实跑结果；目标 runner 是否可信并获得执行授权；
 - 自评分是否被自身 checklist、methodology 或文件名“喂高”；
 - 输出是否比通用基线更准确，而不是只更长。
+- 依据 `references/update-check-standard.md` 复核目标的更新检查；只读时仅查证并给可执行接入清单，不运行目标检查器。
 
 ### 第 4.5 步：规则适用性复核
 
@@ -176,6 +184,7 @@ python scripts/health_check.py <skill目录> --format json
 5. 对触发类改动按需运行 `audit_description.py`；
 6. 把漏报、误报和失败案例回填到可执行 fixture；
 7. 更新目标的版本记录和 `SKILL.patch.md`。
+8. 对本轮授权的更新检查接入，使用既有真源模板与生成器，保存缺契约红灯、补齐绿灯、独立包内容和真实回归证据；范围外缺口列待处理，不擅自扩写。
 
 回归失败 → 不交付；先恢复到改前状态，再报告失败证据。
 
@@ -267,6 +276,7 @@ python scripts/run_eval.py
 | `scripts/run_eval.py` | 可执行 Golden Set | 修改前后回归 |
 | `tests/fixtures/` | 真实好坏样例 | 新增漏报、误报时 |
 | `references/checklist.md` | 人工复核清单 | 静态检查之后 |
+| `references/update-check-standard.md` | 30 天惰性检查的适用性、接入步骤和证据矩阵 | 每次诊断、优化或打包其他 Skill 时 |
 | `references/golden_set.md` | fixture 规范与断言说明 | 搭建或扩充评测 |
 | `references/examples.md` | 优化前后范例 | 需要 Few-shot 时 |
 | `references/skill_narrative_standard.md` | 一句话定位、开场契约与安全收口规范 | 新建或改造任一 Skill 时 |
@@ -275,10 +285,18 @@ python scripts/run_eval.py
 | `assets/diagnosis_report_template.md` | 标准诊断报告 | 生成 standard/full 报告 |
 | `assets/patch_template.md` | 版本沉淀模板 | 修改完成后 |
 
+## AIBP 导航
+
+只有目标本身是 Skill/Agent 时才使用本 Skill。普通广告、商品、内容或经营优化应先调用 `$sg-aibp` 路由到对应业务能力；本节不扩大本 Skill 的工具治理边界。
+
 ## 作者与版权
 
 ---
 作者： [诗光聊AI电商](微信公众号/视频号/抖音号) · [Github](https://github.com/sgskills) · [DOUYIN](https://v.douyin.com/O8hIsRzfjqQ/)
+
+敬请关注作者公众号「诗光聊AI电商」
+
+作者中文Skill集合网址：https://sgskills.com
 
 Built by  [@xstevenzhang](https://x.com/xstevenzhang)
 

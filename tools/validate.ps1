@@ -355,11 +355,16 @@ function Invoke-RepoValidation {
             'Source Available',
             'Not Open Source',
             'sg-aibp',
-            '\u89c4\u5212|planned'
+            '\u603b\u8def\u7531|umbrella router',
+            '\u8bd7\u5149\u804aAI\u7535\u5546',
+            'sgskills\.com'
         )) {
             Require-Pattern -Issues $issues -Path $readmePath -Code 'README_CONTENT' -Pattern $requiredPattern -Message "README is missing required AIBP content: $requiredPattern"
         }
         $readmeContent = Read-Utf8 -Path $readmePath
+        if ($readmeContent -match '\u5c1a\u5728\u89c4\u5212|remains planned|does not yet exist') {
+            Add-Issue -Issues $issues -Code 'ROUTER_STALE' -Path $readmeName -Message 'README still describes the implemented sg-aibp router as planned or nonexistent.'
+        }
         if ($readmeContent -match '`commerce`|skills/commerce') {
             Add-Issue -Issues $issues -Code 'LEGACY_TRACK' -Path $readmeName -Message 'README still uses the retired commerce track label.'
         }
@@ -455,6 +460,12 @@ function Invoke-RepoValidation {
         if ($frontmatter.Fields.Contains('description')) {
             Test-DescriptionNarrative -Issues $issues -RelativePath "$relativeSkill\SKILL.md" -Description ([string]$frontmatter.Fields['description'])
         }
+        foreach ($authorPattern in @(
+            '\u656c\u8bf7\u5173\u6ce8\u4f5c\u8005\u516c\u4f17\u53f7\u300c\u8bd7\u5149\u804aAI\u7535\u5546\u300d',
+            '\u4f5c\u8005\u4e2d\u6587Skill\u96c6\u5408\u7f51\u5740\uff1ahttps://sgskills\.com'
+        )) {
+            Require-Pattern -Issues $issues -Path $skillFile -Code 'AUTHOR_CONTENT' -Pattern $authorPattern -Message "Skill is missing required author content: $authorPattern"
+        }
 
         $referencedPaths = @(
             [regex]::Matches(
@@ -492,12 +503,9 @@ function Invoke-RepoValidation {
                 Add-Issue -Issues $issues -Code 'RUNNER_FIXTURES_MISSING' -Path "$relativeSkill\tests\fixtures" -Message 'A packaged eval runner requires packaged fixtures.'
             }
             else {
-                $goldenCases = @(
-                    Get-ChildItem -LiteralPath $fixtureRoot -Directory |
-                        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'case.json') -PathType Leaf }
-                )
-                if ($goldenCases.Count -eq 0) {
-                    Add-Issue -Issues $issues -Code 'RUNNER_FIXTURES_EMPTY' -Path "$relativeSkill\tests\fixtures" -Message 'Eval runner fixtures contain no case.json files.'
+                $fixtureFiles = @(Get-ChildItem -LiteralPath $fixtureRoot -Recurse -File)
+                if ($fixtureFiles.Count -eq 0) {
+                    Add-Issue -Issues $issues -Code 'RUNNER_FIXTURES_EMPTY' -Path "$relativeSkill\tests\fixtures" -Message 'Eval runner fixtures contain no files.'
                 }
             }
         }
@@ -694,7 +702,7 @@ function Invoke-ValidatorSelfTest {
         $probeTests = Join-Path $fixtureRoot "tests\$probeName"
         [void][System.IO.Directory]::CreateDirectory($probeAgents)
         [void][System.IO.Directory]::CreateDirectory($probeTests)
-        Write-Utf8 -Path (Join-Path $probeSkill 'SKILL.md') -Content @'
+        $probeSkillContent = @'
 ---
 name: sg-extension-probe
 description: |
@@ -706,7 +714,21 @@ license: SGSkills Internal Use License 1.0
 # Extension Probe
 
 Return a reversible local result. Do not perform external actions.
+
+## Author
+
+__AUTHOR_LINE_1__
+
+__AUTHOR_LINE_2__
 '@
+        $probeSkillContent = $probeSkillContent.Replace(
+            '__AUTHOR_LINE_1__',
+            [regex]::Unescape('\u656c\u8bf7\u5173\u6ce8\u4f5c\u8005\u516c\u4f17\u53f7\u300c\u8bd7\u5149\u804aAI\u7535\u5546\u300d')
+        ).Replace(
+            '__AUTHOR_LINE_2__',
+            [regex]::Unescape('\u4f5c\u8005\u4e2d\u6587Skill\u96c6\u5408\u7f51\u5740\uff1ahttps://sgskills.com')
+        )
+        Write-Utf8 -Path (Join-Path $probeSkill 'SKILL.md') -Content $probeSkillContent
         Write-Utf8 -Path (Join-Path $probeAgents 'openai.yaml') -Content @'
 interface:
   display_name: "Extension Probe"

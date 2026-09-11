@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-021-polish",
+  "category": "polish_non_trigger",
+  "prompt": "把“幸存者偏差会让人忽略失败样本”润色得更有文采，不要解释概念。",
+  "scenario": {
+    "request_kind": "polish",
+    "object_kind": "proposition",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "[ROUTE-NOT-APPLICABLE]"
+    ]
+  }
+}

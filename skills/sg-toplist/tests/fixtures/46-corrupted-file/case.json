@@ -1,0 +1,21 @@
+{
+  "id": "corrupted-file",
+  "tags": [
+    "corrupted_file"
+  ],
+  "mode": "auto",
+  "operation": "corrupted_file",
+  "input": {},
+  "assertions": [
+    {
+      "path": "status",
+      "op": "eq",
+      "value": "rejected"
+    },
+    {
+      "path": "issues.*.code",
+      "op": "contains",
+      "value": "DAMAGED_FILE"
+    }
+  ]
+}

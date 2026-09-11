@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-036-pair-single-fact",
+  "category": "paired_single_fact",
+  "prompt": "只查“认知失调”一词最早由谁在何时提出，不要解释概念。",
+  "scenario": {
+    "request_kind": "single_fact_check",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "[ROUTE-NOT-APPLICABLE]"
+    ]
+  }
+}

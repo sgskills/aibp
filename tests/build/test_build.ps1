@@ -247,7 +247,7 @@ foreach ($skillDir in $skillDirs) {
 
     $runnerPath = Join-Path $skillDir.FullName 'scripts\run_eval.py'
     if (Test-Path -LiteralPath $runnerPath -PathType Leaf) {
-        $fixtureEntries = @($singleEntries | Where-Object { $_ -match '/tests/fixtures/.+/case\.json$' })
+        $fixtureEntries = @($singleEntries | Where-Object { $_ -match '/tests/fixtures/.+' })
         if ($fixtureEntries.Count -eq 0) {
             throw "Eval runner package lacks Golden fixtures: $($skillDir.Name)"
         }

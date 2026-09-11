@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-034-pair-decision-comparison",
+  "category": "paired_decision_comparison",
+  "prompt": "比较精益与敏捷后，替一家百人公司做组织改造选择、排期和风险决策。",
+  "scenario": {
+    "request_kind": "decision_analysis",
+    "object_kind": "complex_company",
+    "concept_count": 2,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "needs_distinction"
+    ]
+  },
+  "expected": {
+    "route": "defer_sg_research",
+    "contracts": [
+      "[ROUTE-SG-RESEARCH]"
+    ]
+  }
+}

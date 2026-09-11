@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-013-same-lineage",
+  "category": "syndicated-same-lineage",
+  "prompt": "请独立核验‘星河制造 2025 年碳排放降低 30%’这一合成说法，并写研究报告。",
+  "tool_state": "ONLINE_SAME_LINEAGE",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "evidence_insufficient",
+  "expected": {
+    "route": "research_degraded_bundle",
+    "contracts": [
+      "ROUTE-PARTIAL",
+      "SOURCE-INDEPENDENCE",
+      "PARTIAL-DELIVERY",
+      "TASK-PACK-SECTIONS"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-007-word-vs-concept-history",
+  "category": "word_vs_concept_history",
+  "prompt": "把“内卷”的词史和概念史分开讲，别把后来走红当成概念诞生。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "network_term",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "sensitive_claim",
+      "community_usage"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

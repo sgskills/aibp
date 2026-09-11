@@ -1,0 +1,4 @@
+interface:
+  display_name: "电商标题优化师"
+  short_description: "为天猫京东拼多多抖店生成并优化真实合规的国内商品标题"
+  default_prompt: "使用 $sg-title 根据商品事实与当前平台规则生成或优化国内货架电商商品标题。"

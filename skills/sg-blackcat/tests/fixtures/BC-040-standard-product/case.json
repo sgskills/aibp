@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-040-standard-product",
+  "category": "standard_product_map",
+  "prompt": "从零讲懂机械键盘：它怎么发展到今天、核心结构是什么、和薄膜键盘有什么关键区别，现在有哪些主要分支？",
+  "scenario": {
+    "request_kind": "topic_exploration",
+    "object_kind": "product",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "current_landscape",
+      "needs_distinction"
+    ]
+  },
+  "expected": {
+    "route": "topic_map",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[CROSS-INSIGHT]",
+      "[DOMAIN-LOCK]",
+      "[DYNAMIC-AS-OF]",
+      "[EVIDENCE-LABELS]",
+      "[FULLTEXT-EVIDENCE]",
+      "[HORIZONTAL-AXIS]",
+      "[NEARBY-CITATIONS]",
+      "[NEIGHBOR-DISTINCTION]",
+      "[ROUTE-TOPIC-MAP]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[TOPIC-MAP-OUTPUT]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[VERTICAL-AXIS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

@@ -9,14 +9,14 @@
 
 ## 语言约定
 
-- 日常沟通和面向维护者的新文档默认使用简体中文，后续维护 `3.0.8` 等版本时继续遵循。
+- 日常沟通和面向维护者的新文档默认使用简体中文，后续版本继续遵循。
 - 命令、代码标识、文件路径、协议字段和测试数据保持其原有形式，不为中文化而改变程序行为。
 - 专门提供英文对照的 `README.en.md`、许可证原文和既有作者署名块保持原样。
 - 提及下一版本不代表已经升级；只有实际实施经授权的版本变更时，才同步更新版本元数据与相关文档。
 
 ## 必须执行的检查
 
-提交前，必须在仓库根目录执行以下命令。本地临时输出保存在 `.work/3.0.7/` 内；执行前，先将测试进程的临时目录配置到该目录。使用本机可用的 Python 3 运行时，但不得将机器专属路径写入仓库。
+提交前，必须在仓库根目录执行以下命令。本地临时输出保存在 `.work/3.1.0/` 内；执行前，先将测试进程的临时目录配置到该目录。使用本机可用的 Python 3 运行时，但不得将机器专属路径写入仓库。
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\validate.ps1
@@ -26,6 +26,19 @@ python -B -m unittest discover -s .\skills\sg-skill-optimizer\tests -p "test_*.p
 python -B .\skills\sg-skill-optimizer\scripts\run_eval.py
 python -B .\skills\sg-skill-optimizer\scripts\health_check.py .\skills\sg-skill-optimizer
 python -B .\skills\sg-skill-optimizer\scripts\audit_description.py .\skills
+python -B -m unittest discover -s .\tests\sg-aibp -p "test_*.py"
+python -B -m unittest discover -s .\skills\sg-blackcat\tests -p "test_*.py"
+python -B .\skills\sg-blackcat\scripts\run_eval.py
+python -B -m unittest discover -s .\skills\sg-research\tests -p "test_*.py"
+python -B .\skills\sg-research\scripts\run_eval.py
+python -B -m unittest discover -s .\skills\sg-review\tests -p "test_*.py"
+python -B .\skills\sg-review\scripts\run_eval.py
+python -B -m unittest discover -s .\skills\sg-shiwu\tests -p "test_*.py"
+python -B .\skills\sg-shiwu\scripts\run_eval.py
+python -B -m unittest discover -s .\skills\sg-title\tests -p "test_*.py"
+python -B .\skills\sg-title\scripts\run_eval.py
+python -B -m unittest discover -s .\skills\sg-toplist\tests -p "test_*.py"
+python -B .\skills\sg-toplist\scripts\run_eval.py
 python -B -m unittest discover -s .\tests\sg-tmads-report -p "test_*.py"
 python -B .\skills\sg-tmads-report\tests\run_regression.py
 python -B -m unittest discover -s .\tests\update-check -p "test_*.py"
@@ -59,5 +72,6 @@ python -B -m unittest discover -s .\tests\update-check -p "test_*.py"
 
 ## 当前状态
 
-- `3.0.7` 是当前源码版本和稳定发布版本。官方下载链接指向该版本的四个独立包、总包及 SHA256 校验清单。历史发布版本继续保留，供回滚使用。版本仍以 `VERSION` 为准；后续发布仍须获得用户授权。
-- `sg-aibp` 尚在规划中，实现之前不得提供其链接，或将其宣传为已经存在的路由入口。
+- `3.1.0` 是当前源码发布候选：提供十项专业功能 Skill 和一个可安装的 `sg-aibp` 总路由入口。构建应产生 11 个独立 Skill ZIP、一个总包和 SHA256 清单；稳定发布版仍以 GitHub Release 为准。
+- `sg-aibp` 只负责在十项专业能力之间选择首选 Skill 和必要顺序，不替代专业 Skill，也不计作第十一项业务能力。
+- 独立开发来源保留在仓库外；本仓库是唯一发布真源。迁入使用清单和哈希审计，不做自动双向覆盖。提交、推送、tag 与 Release 仍分别服从用户授权。

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-021-multilingual",
+  "category": "multilingual-search",
+  "prompt": "请研究日本半导体设备出口限制的最新变化，使用中文、日文和英文检索，最终写中文报告。",
+  "tool_state": "ONLINE_MULTILINGUAL",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "ready",
+  "expected": {
+    "route": "research_execution",
+    "contracts": [
+      "ROUTE-EXECUTION",
+      "MULTILINGUAL-SEARCH",
+      "SOURCE-INDEPENDENCE",
+      "REPORT-SECTIONS"
+    ]
+  }
+}

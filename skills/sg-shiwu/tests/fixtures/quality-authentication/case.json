@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "quality-authentication",
+  "title": "质检鉴伪反触发",
+  "kind": "antitrigger",
+  "tags": ["quality_authentication", "performance_boundary"],
+  "request": "只凭这些图判断商品真假、质检是否合格以及功能是否正常。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "handoff", "handoff_target": null, "grouping": "not_applicable", "required_sections": [], "must_assert": ["handoff_only", "state_authentication_boundary"], "must_not_claim": ["authenticity", "quality_pass", "performance"]}
+}

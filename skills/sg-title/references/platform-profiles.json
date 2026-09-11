@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.1",
+  "updated_at": "2026-08-10",
+  "platforms": {
+    "tmall": {
+      "display_name": "天猫",
+      "version": "2026-08-10.1",
+      "scope": "国内天猫商品长标题；类目差异未核实",
+      "freshness": {"verified_at": "2026-08-10", "review_after": "2026-09-09", "interval_days": 30},
+      "status": "requires_live_confirmation",
+      "operating_defaults": {
+        "length": {
+          "metric": "legacy_weighted_bytes",
+          "min": 59,
+          "max": 60,
+          "enforcement": "hard",
+          "source": "owner_operating_default",
+          "confirmed_at": "2026-09-09",
+          "scope": "本 Skill 的天猫标题交付"
+        }
+      },
+      "sources": [
+        {
+          "title": "标题优化助手-系统提示词.txt",
+          "uri": "local-reference:E:/+AI+电商实战/19-天猫标题优化大师/标题优化助手-系统提示词.txt",
+          "accessed_at": "2026-08-10",
+          "status": "unverified_legacy",
+          "claim": "59-60旧字节且默认无空格"
+        }
+      ],
+      "length": {"metric": "legacy_weighted_bytes", "min": 59, "max": 60, "enforcement": "advisory"},
+      "space_policy": {"value": "forbid", "enforcement": "advisory"},
+      "symbol_policy": {"forbidden": [], "enforcement": "unknown"},
+      "max_term_repetitions": {"value": 1, "enforcement": "advisory"}
+    },
+    "jd": {
+      "display_name": "京东",
+      "version": "2026-08-10.1",
+      "scope": "京东国内商品长标题；短标题为独立字段",
+      "freshness": {"verified_at": "2026-08-10", "review_after": "2026-09-09", "interval_days": 30},
+      "status": "requires_live_confirmation",
+      "sources": [
+        {
+          "title": "京东开放平台信息发布规范",
+          "uri": "https://helpcenter.jd.com/Vender/viewQuestion-852-2742.html",
+          "accessed_at": "2026-08-10",
+          "status": "official_page_dynamic",
+          "claim": "存在信息发布规范；本轮未取得统一数字口径"
+        },
+        {
+          "title": "商品长标题",
+          "uri": "https://mtt.m.jd.com/video/1730956017",
+          "accessed_at": "2026-08-10",
+          "status": "official_training_page",
+          "claim": "京东区分商品长标题与短标题"
+        }
+      ],
+      "length": {"metric": "codepoints", "min": null, "max": null, "enforcement": "unknown"},
+      "space_policy": {"value": "allow", "enforcement": "unknown"},
+      "symbol_policy": {"forbidden": [], "enforcement": "unknown"},
+      "max_term_repetitions": {"value": 1, "enforcement": "advisory"}
+    },
+    "pinduoduo": {
+      "display_name": "拼多多",
+      "version": "2026-08-10.1",
+      "scope": "拼多多国内商品标题；类目差异未核实",
+      "freshness": {"verified_at": "2026-08-10", "review_after": "2026-09-09", "interval_days": 30},
+      "status": "requires_live_confirmation",
+      "sources": [],
+      "length": {"metric": "codepoints", "min": null, "max": null, "enforcement": "unknown"},
+      "space_policy": {"value": "allow", "enforcement": "unknown"},
+      "symbol_policy": {"forbidden": [], "enforcement": "unknown"},
+      "max_term_repetitions": {"value": 1, "enforcement": "advisory"}
+    },
+    "douyin": {
+      "display_name": "抖店",
+      "version": "2026-08-10.1",
+      "scope": "抖店国内商品标题；不含短视频/直播锚点标题",
+      "freshness": {"verified_at": "2026-08-10", "review_after": "2026-09-09", "interval_days": 30},
+      "status": "requires_live_confirmation",
+      "sources": [
+        {
+          "title": "商品信息发布规则指南—好的商品标题怎么取？",
+          "uri": "https://school.jinritemai.com/doudian/web/articlev0/aHTvHhziyRkQ",
+          "accessed_at": "2026-08-10",
+          "status": "official_guide_dynamic",
+          "claim": "存在商品标题发布指南；页面未提供可抓取统一数字上限"
+        },
+        {
+          "title": "开启自动托管服务说明",
+          "uri": "https://school.jinritemai.com/doudian/wap/article/aJiPsyVLuwWG",
+          "published_at": "2026-04-22",
+          "accessed_at": "2026-08-10",
+          "status": "official_guidance",
+          "claim": "标题字数<=28是自动托管条件之一，不是发布上限；规则可能动态调整"
+        }
+      ],
+      "length": {"metric": "codepoints", "min": null, "max": null, "enforcement": "unknown"},
+      "space_policy": {"value": "allow", "enforcement": "unknown"},
+      "symbol_policy": {"forbidden": [], "enforcement": "unknown"},
+      "max_term_repetitions": {"value": 1, "enforcement": "advisory"}
+    }
+  }
+}

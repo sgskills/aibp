@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-019-unsupported-forecast",
+  "category": "forecast-without-method",
+  "prompt": "请预测某新型固态电池技术 2027 年的全球渗透率，给出精确概率和各因素权重；当前公开材料没有可复核的方法和数据。",
+  "tool_state": "ONLINE_NO_FORECAST_METHOD",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "evidence_insufficient",
+  "expected": {
+    "route": "research_degraded_bundle",
+    "contracts": [
+      "ROUTE-PARTIAL",
+      "FORECAST-GATE",
+      "PARTIAL-DELIVERY",
+      "TASK-PACK-SECTIONS"
+    ]
+  }
+}

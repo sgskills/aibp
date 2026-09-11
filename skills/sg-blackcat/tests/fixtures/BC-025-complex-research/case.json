@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-025-complex-research",
+  "category": "complex_research_defer",
+  "prompt": "研究一位传播学者的生平、思想演变、学术争议和当代影响，做多来源可审计报告。",
+  "scenario": {
+    "request_kind": "deep_research",
+    "object_kind": "complex_person",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "defer_sg_research",
+    "contracts": [
+      "[ROUTE-SG-RESEARCH]"
+    ]
+  }
+}

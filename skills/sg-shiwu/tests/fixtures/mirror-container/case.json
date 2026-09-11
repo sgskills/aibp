@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "mirror-container",
+  "title": "镜面容器环境倒影",
+  "kind": "positive",
+  "tags": ["mirror", "high_reflection", "shooting_artifact"],
+  "request": "分析高反光镜面容器，分开本体外观与环境倒影。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": ["strong_reflection"]}, {"id": "IMG-02", "source_kind": "uploaded", "availability": "readable", "quality_flags": ["strong_reflection"]}], "trusted_user_facts": [], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "same_sku_multi_view", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["reflection_as_shooting_artifact"], "must_not_claim": ["freeze_reflection_pattern", "exact_metal_material"]}
+}

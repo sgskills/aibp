@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-024-normal-stop",
+  "category": "normal-stop",
+  "prompt": "请研究远程医疗能否降低慢病管理的总成本；关键问题达到证据门槛后就停止，不要无限检索，并写报告。",
+  "tool_state": "ONLINE_STABLE_TWO_ROUNDS",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "ready",
+  "expected": {
+    "route": "research_execution",
+    "contracts": [
+      "ROUTE-EXECUTION",
+      "STOP-RULE",
+      "REPORT-SECTIONS"
+    ]
+  }
+}

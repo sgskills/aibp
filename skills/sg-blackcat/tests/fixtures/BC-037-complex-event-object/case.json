@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-037-complex-event-object",
+  "category": "complex_event_deep_map",
+  "prompt": "请解释某次大型平台宕机：完整时间线、技术原因、责任争议和后续整改都要讲清。",
+  "scenario": {
+    "request_kind": "deep_exploration",
+    "object_kind": "complex_event",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "deep_map",
+    "contracts": [
+      "[CITATION-INTEGRITY]",
+      "[CROSS-INSIGHT]",
+      "[DEEP-MAP-OUTPUT]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[FIRST-PRINCIPLES]",
+      "[FULLTEXT-EVIDENCE]",
+      "[HORIZONTAL-AXIS]",
+      "[INSIDER-GUIDE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-DEEP-MAP]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[VERTICAL-AXIS]"
+    ]
+  }
+}

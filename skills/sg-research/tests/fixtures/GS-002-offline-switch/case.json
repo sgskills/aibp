@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-002-offline-switch",
+  "category": "offline-fallback",
+  "prompt": "请查清 2026 年欧盟通用 AI 模型透明度义务的最新变化，给产品合规负责人一份报告。",
+  "tool_state": "OFFLINE",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "research_task_pack",
+    "contracts": [
+      "TOOL-PREFLIGHT",
+      "ROUTE-TASK-PACK",
+      "OFFLINE-DISCLOSURE",
+      "TASK-PACK-SECTIONS"
+    ]
+  }
+}

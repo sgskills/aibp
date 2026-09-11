@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-011-new-term-current",
+  "category": "new_term_current_usage",
+  "prompt": "截至现在，网络上说的“破防了”通常是什么意思？它和单纯难过一样吗？",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "network_term",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "dynamic_usage",
+      "community_usage",
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[DYNAMIC-AS-OF]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[VERIFY-SENSITIVE-CLAIMS]"
+    ]
+  }
+}

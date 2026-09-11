@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-010-translation-loss",
+  "category": "translation_loss",
+  "prompt": "serendipity 为什么不能简单等于“缘分”？不同中文译法各损失了什么？",
+  "scenario": {
+    "request_kind": "translation_loss",
+    "object_kind": "bounded_phrase",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "translation_loss",
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[TRANSLATION-LOSS]",
+      "[VERIFY-SENSITIVE-CLAIMS]"
+    ]
+  }
+}

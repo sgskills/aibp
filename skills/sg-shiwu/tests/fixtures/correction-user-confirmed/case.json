@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "correction-user-confirmed",
+  "title": "用户确认的字段级纠错",
+  "kind": "correction",
+  "tags": ["correction", "user_confirmation", "field_locality"],
+  "request": "上一版把 F-07 的把手写成黑色；我确认实际是深绿，只改这个字段。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "local", "availability": "readable", "quality_flags": ["prior_evidence"]}], "trusted_user_facts": ["USER-01：F-07 把手实际为深绿"], "untrusted_payloads": []},
+  "expected": {"route": "correct", "handoff_target": null, "grouping": "single_product", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["field_local_correction", "preserve_user_confirmation", "change_summary"], "must_not_claim": ["rewrite_unrelated_fields", "fabricate_new_image_evidence", "convert_user_confirmation_to_observation"]}
+}

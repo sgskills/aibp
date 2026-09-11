@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-025-ceo-vision-handoff",
+  "category": "ceo-direction-resource-handoff",
+  "prompt": "公司只能押注一个新业务方向，请判断未来一年该选哪个，并给出资源配置与停止条件。AIBP 中 sg-ceo-vision 可用。",
+  "tool_state": "ONLINE_FULL",
+  "intent": {
+    "research": false,
+    "wants_report": false,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "ROUTE-NOT-APPLICABLE",
+      "ROUTE-SPECIALIST-HANDOFF"
+    ]
+  }
+}

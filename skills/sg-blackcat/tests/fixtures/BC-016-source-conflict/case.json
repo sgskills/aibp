@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-016-source-conflict",
+  "category": "source_conflict",
+  "prompt": "两份资料对 gaslighting 的来源年代说法冲突。讲清概念，并说明该怎么处理冲突。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "source_conflict",
+    "risk": "ordinary",
+    "flags": [
+      "history",
+      "controversial",
+      "sensitive_claim"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[CONFLICT-LINEAGE]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[FULLTEXT-EVIDENCE]",
+      "[NEARBY-CITATIONS]",
+      "[ROUTE-CONCEPT]",
+      "[SOURCE-HIERARCHY]",
+      "[THIRTY-SECOND]",
+      "[UNCERTAINTY-TYPES]",
+      "[VERIFY-SENSITIVE-CLAIMS]",
+      "[WORD-CONCEPT-HISTORY]"
+    ]
+  }
+}

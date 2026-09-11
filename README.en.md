@@ -6,9 +6,9 @@
 [![Validate and build](https://github.com/sgskills/aibp/actions/workflows/validate.yml/badge.svg)](https://github.com/sgskills/aibp/actions/workflows/validate.yml)
 [![License](https://img.shields.io/badge/license-Source%20Available-orange.svg)](LICENSE)
 
-**AIBP means AI Business Partner.** This repository turns business materials, operating problems, advertising reports, and Skill/Agent engineering tasks into evidence-backed, bounded, verifiable outcomes for operators, business teams, and Skill authors.
+**AIBP means AI Business Partner.** This repository turns business materials, complex research questions, operating problems, advertising reports, and Skill/Agent engineering tasks into evidence-backed, bounded, verifiable outcomes for operators, business teams, researchers, and Skill authors.
 
-The current source and stable installation package version is `3.0.7`, as recorded in the root `VERSION` and the official Release. Version `3.0.7` adds a reminder-only 30-day lazy update check; it never automatically updates a Skill. The `sg-aibp` umbrella router remains planned; the repository provides four independent Skills and does not advertise a router that does not yet exist.
+The current source candidate is `3.1.0`; stable installation packages are determined by the official Release. Version `3.1.0` provides ten specialist Skills plus the installable `sg-aibp` umbrella router. Every Skill includes a reminder-only 30-day lazy update check; it never downloads or installs an update.
 
 > **License: SGSkills Internal Use License 1.0 · Source Available — Not Open Source**
 
@@ -18,18 +18,31 @@ Tracks are labels used by the README, contracts, and future routing. Every Skill
 
 | Track | Audience | Typical scenario | Outcome |
 | --- | --- | --- | --- |
-| `core` | Operators and decision-makers | Choose a direction, allocate resources, and plan the next 12 months across industries | Evidence-backed strategic choices, conditional paths, and stop conditions |
+| `core` | Operators, decision-makers, and researchers | Choose a direction, allocate resources, or verify a complex question across industries | Evidence-backed strategic choices or source-auditable research reports/task packs |
 | `ecommerce` | Ecommerce operations and advertising teams | Structure a cross-functional operating problem or audit a Tmall advertising report | Testable issue trees, data audits, diagnoses, and action priorities |
 | `tooling` | Skill/Agent authors and maintainers | Explicitly diagnose, test, optimize, or package a Skill/Agent | Evidence-based assessment, confirmed plan, and real regression results |
 
 Ordinary optimization of ads, products, content, or operations is not a `tooling` request. `sg-skill-optimizer` applies only when the target itself is a Skill or Agent.
 
+## AIBP umbrella router
+
+Use `$sg-aibp` when the user does not know which capability to choose, the request spans multiple Skills, or sequencing matters. The router selects one primary Skill, explains why, and asks only for the minimum missing input; it does not replace specialist work.
+
+Example: `Use $sg-aibp to decide which AIBP Skill fits my task and tell me the minimum input needed to begin.`
+
 ## Choose by scenario
 
 | Real scenario | Skill | Outcome |
 | --- | --- | --- |
+| “I do not know which AIBP capability fits this task.” | `sg-aibp` | A primary Skill, rationale, minimum input, and any necessary sequence |
 | “We can fund only one direction. How should we allocate the next year?” | `sg-ceo-vision` | CEO-level direction, resource trade-offs, and a conditional annual path |
+| “Investigate this complex question and compare independent sources, counterevidence, and conflicts.” | `sg-research` | A research report with nearby citations and uncertainty, or an executable task pack when offline |
+| “Help me enter an unfamiliar technology field and understand its history and insider language.” | `sg-blackcat` | A navigable knowledge map, key coordinates, and field context |
 | “Traffic, conversion, and inventory all changed; where do we investigate first?” | `sg-mece` | Structured ecommerce diagnosis and the first evidence-backed test |
+| “Analyze these product reviews for needs, scenarios, audiences, and hidden opportunities.” | `sg-review` | A five-module review analysis with evidence boundaries and testable actions |
+| “Extract stable product identity features from these images.” | `sg-shiwu` | A visual fingerprint, identity anchor, and anti-drift constraints |
+| “Analyze four weeks of Tmall product rankings.” | `sg-toplist` | Traceable ranking changes, opportunity hypotheses, and validation actions |
+| “Optimize this Tmall product title from verified product facts.” | `sg-title` | A truthful, compliant, reviewable product title |
 | “This Tmall advertising CSV is messy. Can ROI and contribution profit be trusted?” | `sg-tmads-report` | Audit-first, traceable advertising diagnosis |
 | “This Skill triggers unreliably. Assess it, propose changes, and run regression.” | `sg-skill-optimizer` | Evidence, confirmation checkpoint, change log, and regression state |
 
@@ -37,17 +50,31 @@ Ordinary optimization of ads, products, content, or operations is not a `tooling
 
 | Display name | Slug | Track | Result | Exact repository path |
 | --- | --- | --- | --- | --- |
+| AIBP 总路由 | `sg-aibp` | `core` (entry) | Selects a primary Skill and necessary sequence across ten specialist capabilities | `skills/sg-aibp` |
 | CEO视角 | `sg-ceo-vision` | `core` | Turns business materials into direction, resources, and a 12-month path | `skills/sg-ceo-vision` |
+| 深度研究 | `sg-research` | `core` | Turns complex questions into source-auditable reports or executable research task packs | `skills/sg-research` |
+| 黑猫 | `sg-blackcat` | `core` | Turns an unfamiliar topic into a knowledge map that supports deeper exploration | `skills/sg-blackcat` |
 | 电商经营结构化拆解 | `sg-mece` | `ecommerce` | Turns ambiguous cross-functional issues into testable causes and actions | `skills/sg-mece` |
+| 电商评价分析 | `sg-review` | `ecommerce` | Turns ecommerce reviews into five-module analysis, opportunities, and actions | `skills/sg-review` |
+| 识物｜产品特征提取专家 | `sg-shiwu` | `ecommerce` | Turns product images into visual fingerprints, identity anchors, and anti-drift constraints | `skills/sg-shiwu` |
+| 竞品排名分析师 | `sg-toplist` | `ecommerce` | Turns Tmall product rankings into traceable changes and opportunity hypotheses | `skills/sg-toplist` |
+| 电商标题优化师 | `sg-title` | `ecommerce` | Creates or improves truthful product titles for domestic marketplace platforms | `skills/sg-title` |
 | 天猫推广诊断 | `sg-tmads-report` | `ecommerce` | Turns Tmall advertising reports into an audit, diagnosis, and priorities | `skills/sg-tmads-report` |
 | SG Skill 优化师 | `sg-skill-optimizer` | `tooling` | Improves existing Skills with evidence and regression validation | `skills/sg-skill-optimizer` |
 
-Live detail paths for the four Skills:
+Live detail paths for the ten specialist Skills and the router:
 
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-aibp`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-blackcat`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-ceo-vision`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-mece`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-research`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-review`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-shiwu`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-tmads-report`
 - `https://github.com/sgskills/aibp/tree/main/skills/sg-skill-optimizer`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-title`
+- `https://github.com/sgskills/aibp/tree/main/skills/sg-toplist`
 
 Stable release and package downloads: [Latest stable release](https://github.com/sgskills/aibp/releases/latest).
 
@@ -55,14 +82,21 @@ Stable release and package downloads: [Latest stable release](https://github.com
 
 ### Download installation packages
 
-These links download the stable `3.0.7` packages, including the reminder-only 30-day update check. Earlier releases remain available in the release history for rollback.
+After `v3.1.0` is formally released, these fixed links download its packages. Before release, build from source; consult [Releases](https://github.com/sgskills/aibp/releases) for the currently published stable version. Every `3.1.0` candidate package includes the reminder-only 30-day update check, and earlier releases remain available for rollback.
 
-- [CEO Vision](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-ceo-vision-3.0.7.zip)
-- [Structured Ecommerce Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-mece-3.0.7.zip)
-- [Tmall Advertising Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-tmads-report-3.0.7.zip)
-- [SG Skill Optimizer](https://github.com/sgskills/aibp/releases/download/v3.0.7/sg-skill-optimizer-3.0.7.zip)
-- [Complete AIBP bundle](https://github.com/sgskills/aibp/releases/download/v3.0.7/aibp-3.0.7.zip)
-- [SHA256 checksum manifest](https://github.com/sgskills/aibp/releases/download/v3.0.7/SHA256SUMS.txt)
+- [CEO Vision](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-ceo-vision-3.1.0.zip)
+- [AIBP umbrella router](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-aibp-3.1.0.zip)
+- [Black Cat knowledge map](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-blackcat-3.1.0.zip)
+- [Deep Research](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-research-3.1.0.zip)
+- [Ecommerce Review Analysis](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-review-3.1.0.zip)
+- [Product Feature Extractor](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-shiwu-3.1.0.zip)
+- [Structured Ecommerce Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-mece-3.1.0.zip)
+- [Competitor Ranking Analyst](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-toplist-3.1.0.zip)
+- [Ecommerce Title Optimizer](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-title-3.1.0.zip)
+- [Tmall Advertising Diagnosis](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-tmads-report-3.1.0.zip)
+- [SG Skill Optimizer](https://github.com/sgskills/aibp/releases/download/v3.1.0/sg-skill-optimizer-3.1.0.zip)
+- [Complete ten-specialist plus router AIBP bundle](https://github.com/sgskills/aibp/releases/download/v3.1.0/aibp-3.1.0.zip)
+- [SHA256 checksum manifest](https://github.com/sgskills/aibp/releases/download/v3.1.0/SHA256SUMS.txt)
 
 Extract a single package and place its `sg-*` folder in the Agent runtime's configured Skills directory. The repository uses a platform-neutral Agent Skill structure. Codex, WorkBuddy, and other runtimes still require separate real-world validation; this structure alone is not a claim of perfect or production compatibility.
 
@@ -76,11 +110,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build.ps1
 
 Build artifacts:
 
-- `dist/sg-ceo-vision-3.0.7.zip`
-- `dist/sg-mece-3.0.7.zip`
-- `dist/sg-tmads-report-3.0.7.zip`
-- `dist/sg-skill-optimizer-3.0.7.zip`
-- `dist/aibp-3.0.7.zip`
+- `dist/sg-aibp-3.1.0.zip`
+- `dist/sg-blackcat-3.1.0.zip`
+- `dist/sg-ceo-vision-3.1.0.zip`
+- `dist/sg-mece-3.1.0.zip`
+- `dist/sg-research-3.1.0.zip`
+- `dist/sg-review-3.1.0.zip`
+- `dist/sg-shiwu-3.1.0.zip`
+- `dist/sg-skill-optimizer-3.1.0.zip`
+- `dist/sg-title-3.1.0.zip`
+- `dist/sg-tmads-report-3.1.0.zip`
+- `dist/sg-toplist-3.1.0.zip`
+- `dist/aibp-3.1.0.zip`
 - `dist/SHA256SUMS.txt`
 
 ### 30-day update check
@@ -97,10 +138,17 @@ A notice refers to a source version and does not promise matching published inst
 aibp/
 ├── skills/
 │   ├── README.md
+│   ├── sg-aibp/
+│   ├── sg-blackcat/
 │   ├── sg-ceo-vision/
 │   ├── sg-mece/
+│   ├── sg-research/
+│   ├── sg-review/
+│   ├── sg-shiwu/
 │   ├── sg-skill-optimizer/
-│   └── sg-tmads-report/
+│   ├── sg-title/
+│   ├── sg-tmads-report/
+│   └── sg-toplist/
 ├── docs/superpowers/
 ├── tests/
 ├── tools/
@@ -108,7 +156,7 @@ aibp/
 └── VERSION
 ```
 
-The physical layout remains flat even when the portfolio grows to 10–20 Skills. After adding or changing a Skill, or changing the repository version, prepare the update files before the normal validation and build steps:
+The physical layout remains flat as the portfolio grows. After adding or changing a Skill, or changing the repository version, prepare the update files before the normal validation and build steps:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\sync-update-check.ps1
@@ -134,7 +182,7 @@ See [AGENTS.md](AGENTS.md) for all required pre-commit checks. Update-check CI r
 - The `v1.4.0` tag and full Git history remain available.
 - The local checkpoint for the dirty v2.0 state is `cfcad564de627172e23c0e2d26b7d4e80d620510`.
 - `sgs-mece` moved to `sg-mece` in v2.0; there is no legacy compatibility shell.
-- The two independent source directories used during migration remain outside this repository; only their imported copies are maintained here.
+- Independent development sources remain outside this repository. This repository is the single release source of truth; source changes enter it through a reviewed manifest/hash import, not automatic two-way overwrite.
 
 ## License
 
@@ -142,5 +190,9 @@ This repository is source available, not open source. The license permits use fo
 
 ---
 作者： [诗光聊AI电商](微信公众号/视频号/抖音号) · [Github](https://github.com/sgskills) · [DOUYIN](https://v.douyin.com/O8hIsRzfjqQ/)
+
+Follow the author's WeChat official account: 「诗光聊AI电商」
+
+Chinese Skill collection: https://sgskills.com
 
 Built by  [@xstevenzhang](https://x.com/xstevenzhang)

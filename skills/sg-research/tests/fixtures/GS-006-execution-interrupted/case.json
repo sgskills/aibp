@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-006-execution-interrupted",
+  "category": "execution-interrupted",
+  "prompt": "请查清 2026 年全球可持续航空燃料产能是否足以支撑已公布需求，并写研究报告。",
+  "tool_state": "FAIL_AFTER_LEDGER_1",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": false,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "interrupted",
+  "expected": {
+    "route": "research_degraded_bundle",
+    "contracts": [
+      "ROUTE-PARTIAL",
+      "PARTIAL-DELIVERY",
+      "TASK-PACK-SECTIONS"
+    ]
+  }
+}

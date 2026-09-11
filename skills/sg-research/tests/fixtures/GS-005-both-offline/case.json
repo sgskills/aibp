@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "id": "GS-005-both-offline",
+  "category": "dual-delivery-offline",
+  "prompt": "请查清德国热泵补贴的最新变化并写报告，同时附上可交给外部工具继续执行的提示词。",
+  "tool_state": "OFFLINE",
+  "intent": {
+    "research": true,
+    "wants_report": true,
+    "wants_task_pack": true,
+    "explicit_task_pack_only": false
+  },
+  "execution_state": "not_started",
+  "expected": {
+    "route": "research_task_pack",
+    "contracts": [
+      "TOOL-PREFLIGHT",
+      "ROUTE-TASK-PACK",
+      "OFFLINE-DISCLOSURE",
+      "TASK-PACK-SECTIONS"
+    ]
+  }
+}

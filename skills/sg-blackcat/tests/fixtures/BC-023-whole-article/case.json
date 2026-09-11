@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-023-whole-article",
+  "category": "whole_article_non_trigger",
+  "prompt": "围绕“路径依赖”替我写一篇3000字公众号文章，含开头故事、五章和结尾金句。",
+  "scenario": {
+    "request_kind": "whole_article",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": []
+  },
+  "expected": {
+    "route": "non_trigger",
+    "contracts": [
+      "[ROUTE-NOT-APPLICABLE]"
+    ]
+  }
+}

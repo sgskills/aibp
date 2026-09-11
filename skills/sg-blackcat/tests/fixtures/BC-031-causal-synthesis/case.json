@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-031-causal-synthesis",
+  "category": "causal_synthesis_label",
+  "prompt": "资料显示一个团队更换负责人后改用新架构。请解释“技术路线”，但不要把先后关系直接写成负责人决定了一切。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "causal_claim"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[CAUSALITY-GATE]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]",
+      "[UNCERTAINTY-TYPES]"
+    ]
+  }
+}

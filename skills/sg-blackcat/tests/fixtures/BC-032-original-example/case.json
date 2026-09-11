@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "id": "BC-032-original-example",
+  "category": "original_example_label",
+  "prompt": "讲清“网络效应”，请构造一个原创例子并明确它不是真实案例。",
+  "scenario": {
+    "request_kind": "concept_explanation",
+    "object_kind": "bounded_concept",
+    "concept_count": 1,
+    "ambiguity": "none",
+    "evidence_state": "online_fulltext",
+    "risk": "ordinary",
+    "flags": [
+      "original_example"
+    ]
+  },
+  "expected": {
+    "route": "concept_card",
+    "contracts": [
+      "[ADAPTIVE-OUTPUT]",
+      "[DEFINITION-BOUNDARY]",
+      "[DOMAIN-LOCK]",
+      "[EVIDENCE-LABELS]",
+      "[EXAMPLE-CONTRAST]",
+      "[ROUTE-CONCEPT]",
+      "[THIRTY-SECOND]"
+    ]
+  }
+}

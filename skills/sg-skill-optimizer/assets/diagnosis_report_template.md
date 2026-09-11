@@ -65,6 +65,17 @@
 | 工具失败/缺文件/缺权限降级 | {{fallback_status}} | {{fallback_evidence}} | {{fallback_recommendation}} |
 | 依赖与前置条件 | {{dependency_status}} | {{dependency_evidence}} | {{dependency_recommendation}} |
 
+### 6.1 更新检查专项（所有报告保留；不适用也说明原因）
+- 规范版本：1；适用性：{{update_check_applicability}}；原因：{{update_check_reason}}
+- 固定真源 / 安装版本 / 缓存命名空间：{{update_check_source_version_cache}}
+- 总体状态：{{update_check_status}}；可见实现证据：{{update_check_evidence}}
+- UPD 规则命中与具体接入清单：{{update_check_findings_and_plan}}
+- 首次 / 30 天间隔 / 严格新版 / 失败冷却 / 无自动更新：{{update_check_behavior_evidence}}
+- Windows / macOS / Linux 分平台实跑状态：{{update_check_platforms}}
+- 任意新增 Skill 缺契约红 → 补齐绿、动态单包/总包、仓库外执行及可复现性：{{update_check_discovery_packaging}}
+- 本轮真实命令与退出码 / 历史证据 / 未运行项：{{update_check_verification}}
+- 尚需授权或来源选择：{{update_check_pending_actions}}
+
 ## 7. 已做到（保持）
 | 维度 | 方法 | 现状 |
 |------|------|------|

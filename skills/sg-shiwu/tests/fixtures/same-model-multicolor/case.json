@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "case_id": "same-model-multicolor",
+  "title": "同款多色变体",
+  "kind": "positive",
+  "tags": ["same_model_multicolor", "variant_separation"],
+  "request": "这三张图是同款的三种颜色，请提取共同结构和各自防漂移锚点。",
+  "input_manifest": {"images": [{"id": "IMG-01", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}, {"id": "IMG-02", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}, {"id": "IMG-03", "source_kind": "uploaded", "availability": "readable", "quality_flags": []}], "trusted_user_facts": ["同款三色"], "untrusted_payloads": []},
+  "expected": {"route": "analyze", "handoff_target": null, "grouping": "separate_variants", "required_sections": ["输入质量审计与图片编号", "产品/变体/配件/包装/道具分组", "视觉指纹证据表", "工具中立的固定身份锚点", "场景变量", "负面约束与易漂移点", "未知、冲突和最小补拍清单"], "must_assert": ["shared_identity_anchor", "variant_specific_anchor"], "must_not_claim": ["merge_variant_colors", "invent_backend_sku"]}
+}
